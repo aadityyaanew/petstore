@@ -6,8 +6,8 @@ export const metadata = {
   description: 'Premium pet accessories crafted with care. Natural wood bird stands, hand-knitted cat collars, and more. Non-toxic, durable, and designed to enrich your pet\'s life.',
   keywords: 'pet store, bird accessories, cat collars, dog accessories, natural wood, non-toxic pet toys',
   icons: {
-    icon: '/logo.jpeg',
-    apple: '/logo.jpeg',
+    icon: '/assets/logowhite.jpeg',
+    apple: '/assets/logowhite.jpeg',
   },
   other: {
     'theme-color': '#1A1A2E',

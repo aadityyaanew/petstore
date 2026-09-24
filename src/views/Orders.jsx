@@ -64,7 +64,7 @@ const Orders = () => {
                   {order.items.map((item, idx) => (
                     <div key={idx} className="flex items-center gap-4 p-3 border border-border rounded-xl bg-accent/20">
                       <img 
-                        src={item.image || 'https://images.unsplash.com/photo-1595246140625-573b715d11dc?w=100&h=100&fit=crop'} 
+                        src={item.image || '/assets/asset-058339ca.jpeg'} 
                         alt={item.name}
                         className="w-16 h-16 object-cover rounded-lg shrink-0" 
                       />

@@ -16,7 +16,7 @@ const ProductCard = ({ product }) => {
     ? product.image.startsWith('http')
       ? product.image
       : `${BASE_URL}${product.image}`
-    : 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400&h=400&fit=crop';
+    : '/assets/asset-058339ca.jpeg';
 
   return (
     <div

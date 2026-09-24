@@ -66,7 +66,7 @@ const Navbar = () => {
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2.5 group">
               <img
-                src="/logo.jpeg"
+                src="/assets/logowhite.jpeg"
                 alt="Poonch Pet Store"
                 className="w-10 h-10 rounded-full object-cover border-2 border-brand-pink/25 group-hover:border-brand-pink transition-all duration-300 group-hover:scale-105"
               />

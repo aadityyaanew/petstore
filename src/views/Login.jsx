@@ -32,7 +32,7 @@ const Login = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center justify-center mb-6">
-            <img src="/logo.jpeg" alt="Poonch Pet Store" className="w-16 h-16 rounded-full object-cover border-2 border-brand-pink/30" />
+            <img src="/assets/logowhite.jpeg" alt="Poonch Pet Store" className="w-16 h-16 rounded-full object-cover border-2 border-brand-pink/30" />
           </Link>
           <h1 className="text-3xl font-extrabold text-foreground mb-2">Welcome back 🐾</h1>
           <p className="text-muted-foreground">Sign in to your Poonch Pet Store account</p>

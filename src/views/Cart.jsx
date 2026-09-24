@@ -56,7 +56,7 @@ const Cart = () => {
               return (
                 <div key={item._id || product._id} className="flex gap-4 p-4 bg-white rounded-2xl border border-border shadow-sm">
                   <img 
-                    src={product.image || 'https://images.unsplash.com/photo-1595246140625-573b715d11dc?w=200&h=200&fit=crop'} 
+                    src={product.image || '/assets/asset-058339ca.jpeg'} 
                     alt={product.name || item.name}
                     className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-xl shrink-0"
                   />

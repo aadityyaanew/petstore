@@ -87,7 +87,7 @@ const ProductDetails = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 mb-16">
         <div className="bg-white rounded-3xl border border-border p-6 flex items-center justify-center shadow-sm">
           <img 
-            src={product.images?.[0] || 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&h=800&fit=crop'} 
+            src={product.images?.[0] || '/assets/asset-058339ca.jpeg'} 
             alt={product.name}
             className="w-full h-auto max-h-[500px] object-contain"
           />

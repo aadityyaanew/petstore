@@ -38,7 +38,7 @@ const Footer = () => {
           <div className="col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-4 group w-fit">
               <img
-                src="/logo.jpeg"
+                src="/assets/logowhite.jpeg"
                 alt="Poonch Pet Store"
                 className="w-12 h-12 rounded-full object-cover border-2 border-brand-pink/40 group-hover:border-brand-pink transition-all"
               />

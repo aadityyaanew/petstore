@@ -28,7 +28,7 @@ const AboutUs = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-center mb-20">
           <div className="flex justify-center">
             <img
-              src="/logo.jpeg"
+              src="/assets/logowhite.jpeg"
               alt="Poonch Pet Store"
               className="w-72 h-72 md:w-80 md:h-80 rounded-full object-cover shadow-[0_20px_60px_rgba(233,30,140,0.2)] border-4 border-brand-pink/20"
             />

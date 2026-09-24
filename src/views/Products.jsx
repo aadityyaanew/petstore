@@ -192,7 +192,7 @@ const Products = () => {
                   >
                     <div className="overflow-hidden" style={{ height: 200 }}>
                       <img
-                        src={product.images?.[0] || 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400&h=400&fit=crop'}
+                        src={product.images?.[0] || '/assets/asset-058339ca.jpeg'}
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
