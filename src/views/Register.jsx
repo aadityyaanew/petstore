@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Box, Container, Typography, TextField, Button, Paper, Link as MuiLink } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -9,6 +10,7 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -20,91 +22,97 @@ const Register = () => {
       return setError('Passwords do not match');
     }
     
+    setLoading(true);
     try {
       await register(name, email, password);
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to create account.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Container maxWidth="sm" sx={{ py: 8 }}>
-      <Paper elevation={0} sx={{ p: 5, borderRadius: '24px', border: '1px solid #E2E8F0', boxShadow: '0 4px 24px rgba(0,0,0,0.02)' }}>
-        <Typography variant="h4" component="h1" sx={{ fontWeight: 800, mb: 1, textAlign: 'center' }}>
-          Create an Account
-        </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 4, textAlign: 'center' }}>
-          Join Luxe to checkout securely and track your orders.
-        </Typography>
+    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 bg-background">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <Link to="/" className="inline-flex items-center justify-center mb-6">
+            <img src="/logo.jpeg" alt="Poonch Pet Store" className="w-16 h-16 rounded-full object-cover border-2 border-brand-pink/30" />
+          </Link>
+          <h1 className="text-3xl font-extrabold text-foreground mb-2">Create an Account</h1>
+          <p className="text-muted-foreground">Join Poonch Pet Store to checkout securely.</p>
+        </div>
 
-        {error && (
-          <Typography color="error" sx={{ mb: 3, textAlign: 'center', bgcolor: '#FEF2F2', p: 2, borderRadius: 2 }}>
-            {error}
-          </Typography>
-        )}
+        <div className="bg-white rounded-2xl border border-border p-8 shadow-sm">
+          {error && (
+            <div className="mb-5 p-3.5 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-medium">
+              {error}
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="Full Name"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <TextField
-            label="Email Address"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            required
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextField
-            label="Password"
-            type="password"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <TextField
-            label="Confirm Password"
-            type="password"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            required
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-          
-          <Button 
-            type="submit" 
-            variant="contained" 
-            color="primary" 
-            size="large" 
-            fullWidth 
-            sx={{ mt: 4, mb: 3, py: 1.5, borderRadius: '12px', fontSize: '1.1rem' }}
-          >
-            Create Account
-          </Button>
-          
-          <Typography variant="body2" sx={{ textAlign: 'center' }}>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-foreground">Full Name</label>
+              <Input
+                type="text"
+                placeholder="Jane Doe"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-foreground">Email Address</label>
+              <Input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-foreground">Password</label>
+              <Input
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-foreground">Confirm Password</label>
+              <Input
+                type="password"
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <Button
+              type="submit"
+              variant="secondary"
+              size="lg"
+              className="w-full mt-4"
+              disabled={loading}
+            >
+              {loading ? 'Creating...' : 'Create Account'}
+            </Button>
+          </form>
+
+          <p className="text-center text-sm text-muted-foreground mt-6">
             Already have an account?{' '}
-            <MuiLink component={Link} to="/login" color="primary" sx={{ fontWeight: 600 }}>
+            <Link to="/login" className="text-brand-pink font-semibold hover:underline">
               Sign In
-            </MuiLink>
-          </Typography>
-        </form>
-      </Paper>
-    </Container>
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
 

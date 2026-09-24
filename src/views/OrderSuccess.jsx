@@ -1,30 +1,28 @@
-import { Box, Typography, Button, Container } from '@mui/material';
-import { CheckCircleOutline } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '../components/ui/button';
+import { CheckCircle } from 'lucide-react';
 
 const OrderSuccess = () => {
   const navigate = useNavigate();
 
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', textAlign: 'center' }}>
-        <CheckCircleOutline sx={{ fontSize: 100, color: '#4caf50', mb: 3 }} />
-        <Typography variant="h3" sx={{ fontWeight: 800, mb: 2, color: '#1a1a1a' }}>
-          Payment Successful!
-        </Typography>
-        <Typography variant="h6" sx={{ color: 'text.secondary', mb: 4, fontWeight: 400 }}>
-          Thank you for your purchase. Your order has been placed successfully and is being processed.
-        </Typography>
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button variant="outlined" size="large" onClick={() => navigate('/orders')} sx={{ borderRadius: '8px', px: 4 }}>
-            View Orders
-          </Button>
-          <Button variant="contained" color="primary" size="large" onClick={() => navigate('/')} sx={{ borderRadius: '8px', px: 4 }}>
-            Continue Shopping
-          </Button>
-        </Box>
-      </Box>
-    </Container>
+    <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 text-center">
+      <CheckCircle size={100} className="text-emerald-500 mb-6" />
+      <h1 className="text-4xl font-extrabold text-foreground mb-4">
+        Payment Successful!
+      </h1>
+      <p className="text-lg text-muted-foreground mb-8 max-w-md">
+        Thank you for your purchase. Your order has been placed successfully and is being processed.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Button variant="outline" size="lg" onClick={() => navigate('/orders')}>
+          View Orders
+        </Button>
+        <Button variant="secondary" size="lg" onClick={() => navigate('/')}>
+          Continue Shopping
+        </Button>
+      </div>
+    </div>
   );
 };
 

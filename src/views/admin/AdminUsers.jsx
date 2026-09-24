@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Chip } from '@mui/material';
+import { Users, Trash2 } from 'lucide-react';
+import { Badge } from '../../components/ui/badge';
 import api from '../../services/api';
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchUsers = async () => {
     try {
@@ -11,6 +13,8 @@ const AdminUsers = () => {
       setUsers(res.data);
     } catch (error) {
       console.error('Error fetching users:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -30,54 +34,67 @@ const AdminUsers = () => {
     }
   };
 
+  if (loading) return (
+    <div className="flex justify-center py-20">
+      <div className="w-10 h-10 border-4 border-brand-pink/20 border-t-brand-pink rounded-full animate-spin" />
+    </div>
+  );
+
   return (
-    <Box>
-      <Typography variant="h4" sx={{ fontWeight: 700, mb: 4, color: '#1a1a1a' }}>
-        Manage Users
-      </Typography>
+    <div className="max-w-6xl mx-auto">
+      <div className="flex items-center gap-3 mb-8">
+        <div className="w-12 h-12 rounded-xl bg-brand-pink/10 text-brand-pink flex items-center justify-center">
+          <Users size={24} />
+        </div>
+        <h1 className="text-3xl font-extrabold text-foreground">Manage Users</h1>
+      </div>
       
-      <TableContainer component={Paper} sx={{ borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-        <Table>
-          <TableHead sx={{ bgcolor: 'rgba(0,0,0,0.02)' }}>
-            <TableRow>
-              <TableCell sx={{ fontWeight: 600 }}>ID</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Name</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Email</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Role</TableCell>
-              <TableCell sx={{ fontWeight: 600, textAlign: 'right' }}>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users.map((user) => (
-              <TableRow key={user._id} hover>
-                <TableCell>{user._id}</TableCell>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>
-                  <Chip 
-                    label={user.role} 
-                    color={user.role === 'admin' ? 'primary' : 'default'} 
-                    size="small" 
-                    sx={{ fontWeight: 600 }}
-                  />
-                </TableCell>
-                <TableCell sx={{ textAlign: 'right' }}>
-                  <Button 
-                    variant="outlined" 
-                    color="error" 
-                    size="small"
-                    onClick={() => handleDelete(user._id)}
-                    disabled={user.role === 'admin'}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+      <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-accent/50 text-muted-foreground">
+              <tr>
+                <th className="px-6 py-4 font-semibold">ID</th>
+                <th className="px-6 py-4 font-semibold">Name</th>
+                <th className="px-6 py-4 font-semibold">Email</th>
+                <th className="px-6 py-4 font-semibold">Role</th>
+                <th className="px-6 py-4 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {users.map((user) => (
+                <tr key={user._id} className="hover:bg-accent/30 transition-colors">
+                  <td className="px-6 py-4 font-mono text-xs text-muted-foreground">{user._id}</td>
+                  <td className="px-6 py-4 font-medium">{user.name}</td>
+                  <td className="px-6 py-4">{user.email}</td>
+                  <td className="px-6 py-4">
+                    <Badge variant={user.role === 'admin' ? 'pink' : 'outline'}>
+                      {user.role}
+                    </Badge>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <button 
+                      onClick={() => handleDelete(user._id)}
+                      disabled={user.role === 'admin'}
+                      className="p-2 text-red-500 hover:bg-red-50 disabled:opacity-50 disabled:hover:bg-transparent rounded-lg transition-colors"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {users.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">
+                    No users found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 };
 

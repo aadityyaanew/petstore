@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Card, CardContent, Grid, Button, TextField, Select, MenuItem, FormControl, InputLabel, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, CircularProgress } from '@mui/material';
-import { Delete, LocalOffer } from '@mui/icons-material';
+import { Tag, Trash2, Plus } from 'lucide-react';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Badge } from '../../components/ui/badge';
 import api from '../../services/api';
 
 const AdminCoupons = () => {
@@ -61,139 +63,140 @@ const AdminCoupons = () => {
     }
   };
 
-  if (loading) return <CircularProgress />;
+  if (loading) return (
+    <div className="flex justify-center py-20">
+      <div className="w-10 h-10 border-4 border-brand-pink/20 border-t-brand-pink rounded-full animate-spin" />
+    </div>
+  );
 
   return (
-    <Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 4, gap: 2 }}>
-        <LocalOffer color="primary" sx={{ fontSize: 32 }} />
-        <Typography variant="h4" sx={{ fontWeight: 800 }}>Manage Coupons</Typography>
-      </Box>
+    <div className="max-w-6xl mx-auto">
+      <div className="flex items-center gap-3 mb-8">
+        <div className="w-12 h-12 rounded-xl bg-brand-pink/10 text-brand-pink flex items-center justify-center">
+          <Tag size={24} />
+        </div>
+        <h1 className="text-3xl font-extrabold text-foreground">Manage Coupons</h1>
+      </div>
 
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={4}>
-          <Card sx={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-            <CardContent sx={{ p: 4 }}>
-              <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>Create New Coupon</Typography>
-              <form onSubmit={handleCreateCoupon}>
-                <TextField 
-                  label="Coupon Code (e.g. SAVE20)" 
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-1">
+          <div className="bg-white rounded-2xl border border-border shadow-sm p-6 sticky top-8">
+            <h2 className="text-xl font-bold mb-6 flex items-center gap-2"><Plus size={20} /> Create Coupon</h2>
+            <form onSubmit={handleCreateCoupon} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold">Coupon Code</label>
+                <Input 
                   name="code" 
                   value={formData.code} 
                   onChange={handleChange} 
-                  fullWidth 
                   required 
-                  sx={{ mb: 3 }}
-                  inputProps={{ style: { textTransform: 'uppercase' } }}
+                  className="uppercase"
+                  placeholder="e.g. SAVE20"
                 />
-                
-                <FormControl fullWidth sx={{ mb: 3 }}>
-                  <InputLabel>Discount Type</InputLabel>
-                  <Select
-                    name="discountType"
-                    value={formData.discountType}
-                    label="Discount Type"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value="percentage">Percentage (%)</MenuItem>
-                    <MenuItem value="fixed">Fixed Amount (₹)</MenuItem>
-                  </Select>
-                </FormControl>
+              </div>
+              
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold">Discount Type</label>
+                <select
+                  name="discountType"
+                  value={formData.discountType}
+                  onChange={handleChange}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="percentage">Percentage (%)</option>
+                  <option value="fixed">Fixed Amount (₹)</option>
+                </select>
+              </div>
 
-                <TextField 
-                  label={`Discount Value ${formData.discountType === 'percentage' ? '(1-100)' : '(₹)'}`}
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold">
+                  Discount Value {formData.discountType === 'percentage' ? '(1-100)' : '(₹)'}
+                </label>
+                <Input 
                   name="discountValue" 
                   type="number"
                   value={formData.discountValue} 
                   onChange={handleChange} 
-                  fullWidth 
                   required 
-                  sx={{ mb: 3 }}
                 />
+              </div>
 
-                <TextField 
-                  label="Expiry Date" 
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold">Expiry Date</label>
+                <Input 
                   name="expiryDate" 
                   type="date"
                   value={formData.expiryDate} 
                   onChange={handleChange} 
-                  fullWidth 
                   required 
-                  InputLabelProps={{ shrink: true }}
-                  sx={{ mb: 4 }}
                 />
+              </div>
 
-                <Button 
-                  type="submit" 
-                  variant="contained" 
-                  fullWidth 
-                  size="large"
-                  disabled={creating}
-                  sx={{ py: 1.5, borderRadius: '8px', fontWeight: 700 }}
-                >
-                  {creating ? 'Creating...' : 'Create Coupon'}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </Grid>
+              <Button 
+                type="submit" 
+                variant="secondary" 
+                className="w-full mt-2"
+                disabled={creating}
+              >
+                {creating ? 'Creating...' : 'Create Coupon'}
+              </Button>
+            </form>
+          </div>
+        </div>
 
-        <Grid item xs={12} md={8}>
-          <Card sx={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-            <TableContainer>
-              <Table>
-                <TableHead sx={{ bgcolor: 'rgba(0,0,0,0.02)' }}>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 600 }}>Code</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Discount</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Valid Until</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
-                    <TableCell align="right" sx={{ fontWeight: 600 }}>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
+        <div className="lg:col-span-2">
+          <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-accent/50 text-muted-foreground">
+                  <tr>
+                    <th className="px-6 py-4 font-semibold">Code</th>
+                    <th className="px-6 py-4 font-semibold">Discount</th>
+                    <th className="px-6 py-4 font-semibold">Valid Until</th>
+                    <th className="px-6 py-4 font-semibold">Status</th>
+                    <th className="px-6 py-4 font-semibold text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
                   {coupons.map((coupon) => {
                     const isExpired = new Date(coupon.expiryDate) < new Date();
                     return (
-                      <TableRow key={coupon._id} hover>
-                        <TableCell sx={{ fontWeight: 800, color: 'primary.main' }}>{coupon.code}</TableCell>
-                        <TableCell>
+                      <tr key={coupon._id} className="hover:bg-accent/30 transition-colors">
+                        <td className="px-6 py-4 font-bold text-brand-pink">{coupon.code}</td>
+                        <td className="px-6 py-4 font-medium">
                           {coupon.discountType === 'percentage' ? `${coupon.discountValue}%` : `₹${coupon.discountValue}`}
-                        </TableCell>
-                        <TableCell>{new Date(coupon.expiryDate).toLocaleDateString()}</TableCell>
-                        <TableCell>
-                          <Typography variant="body2" sx={{ 
-                            color: isExpired ? 'error.main' : 'success.main',
-                            fontWeight: 600,
-                            bgcolor: isExpired ? 'error.50' : 'success.50',
-                            display: 'inline-block',
-                            px: 1, py: 0.5, borderRadius: '4px'
-                          }}>
+                        </td>
+                        <td className="px-6 py-4">{new Date(coupon.expiryDate).toLocaleDateString()}</td>
+                        <td className="px-6 py-4">
+                          <Badge variant={isExpired ? "destructive" : "success"}>
                             {isExpired ? 'Expired' : 'Active'}
-                          </Typography>
-                        </TableCell>
-                        <TableCell align="right">
-                          <IconButton onClick={() => handleDelete(coupon._id)} color="error">
-                            <Delete />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
+                          </Badge>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <button 
+                            onClick={() => handleDelete(coupon._id)}
+                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </td>
+                      </tr>
                     );
                   })}
                   {coupons.length === 0 && (
-                    <TableRow>
-                      <TableCell colSpan={5} align="center" sx={{ py: 4, color: 'text.secondary' }}>
+                    <tr>
+                      <td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">
                         No coupons created yet.
-                      </TableCell>
-                    </TableRow>
+                      </td>
+                    </tr>
                   )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Card>
-        </Grid>
-      </Grid>
-    </Box>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

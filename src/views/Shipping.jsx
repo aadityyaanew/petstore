@@ -1,69 +1,82 @@
-import { Box, Container, Typography, Grid, Card, CardContent, Divider } from '@mui/material';
+import { Truck, Zap, Globe, Package } from 'lucide-react';
+
+const PLANS = [
+  { icon: Truck, iconColor: 'text-blue-500 bg-blue-50', title: 'Standard Shipping', desc: 'Processing: 1–3 business days. Delivery: 3–7 business days depending on your destination.', price: 'Calculated at Checkout', note: 'Free on orders over ₹1000', featured: false },
+  { icon: Zap, iconColor: 'text-brand-pink bg-brand-pink/10', title: 'Express Shipping', desc: 'Priority processing within 1 business day. Delivery in 2–3 business days. Order by 2 PM for same-day dispatch.', price: '₹299.00', note: 'Flat rate, nationwide', featured: true },
+  { icon: Globe, iconColor: 'text-emerald-500 bg-emerald-50', title: 'International', desc: 'Delivery times vary by destination (typically 7–14 business days). Customs fees may apply.', price: 'Calculated at Checkout', note: 'Based on destination', featured: false },
+];
+
+const POLICIES = [
+  { emoji: '⏱️', title: 'Processing Time', desc: 'All orders are processed within 1–3 business days after payment confirmation.' },
+  { emoji: '📬', title: 'Tracking Updates', desc: 'Tracking links are provided via email upon dispatch. Allow 24 hours for updates.' },
+  { emoji: '📋', title: 'Care Instructions', desc: 'Every shipped package includes a Care Instructions Card for wood and knitted products.' },
+];
 
 const Shipping = () => {
   return (
-    <Container maxWidth="lg" sx={{ py: 8, minHeight: '60vh' }}>
-      <Typography variant="h3" component="h1" sx={{ fontWeight: 800, mb: 2, textAlign: 'center' }}>
-        Shipping Information
-      </Typography>
-      <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 6, textAlign: 'center', maxWidth: 600, mx: 'auto' }}>
-        Everything you need to know about our shipping policies, delivery times, and costs.
-      </Typography>
+    <div>
+      <div className="relative bg-brand-charcoal text-white py-16 md:py-20 overflow-hidden mb-12">
+        <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-brand-pink/20 blur-3xl" />
+        <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
+          <span className="pink-badge mb-4 inline-block">Fast & Reliable</span>
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-3">Shipping Information 📦</h1>
+          <p className="text-lg text-white/75 max-w-xl mx-auto">Everything you need to know about shipping, processing, and delivery times.</p>
+        </div>
+      </div>
 
-      <Grid container spacing={4} sx={{ mt: 2 }}>
-        <Grid item xs={12} md={4}>
-          <Card sx={{ height: '100%', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', borderRadius: 4 }}>
-            <CardContent sx={{ p: 4, textAlign: 'center' }}>
-              <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>Standard Shipping</Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 2, minHeight: 80 }}>
-                Delivery in 3-5 business days. Available for all addresses within the contiguous United States.
-              </Typography>
-              <Divider sx={{ my: 2 }} />
-              <Typography variant="h4" color="primary.main" sx={{ fontWeight: 800 }}>₹79.00</Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>Free on orders over ₹1000</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        
-        <Grid item xs={12} md={4}>
-          <Card sx={{ height: '100%', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', borderRadius: 4, position: 'relative', overflow: 'hidden' }}>
-            <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, bgcolor: 'primary.main' }} />
-            <CardContent sx={{ p: 4, textAlign: 'center' }}>
-              <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>Express Shipping</Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 2, minHeight: 80 }}>
-                Fast delivery within 1-2 business days. Order by 2 PM EST for same-day processing.
-              </Typography>
-              <Divider sx={{ my: 2 }} />
-              <Typography variant="h4" color="primary.main" sx={{ fontWeight: 800 }}>₹299.00</Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>Flat rate nationwide</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
+        {/* Plans */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12">
+          {PLANS.map((p, i) => {
+            const Icon = p.icon;
+            return (
+              <div key={i} className={`relative bg-white rounded-2xl border p-6 shadow-sm ${p.featured ? 'border-brand-pink shadow-[0_8px_32px_rgba(233,30,140,0.15)]' : 'border-border'}`}>
+                {p.featured && (
+                  <>
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-brand-pink rounded-t-2xl" />
+                    <span className="absolute top-4 right-4 text-[10px] font-bold uppercase tracking-wider bg-brand-pink text-white px-2 py-0.5 rounded-full">Popular</span>
+                  </>
+                )}
+                <div className={`inline-flex w-14 h-14 rounded-2xl items-center justify-center mb-4 ${p.iconColor}`}>
+                  <Icon size={28} />
+                </div>
+                <h3 className="font-bold text-lg text-foreground mb-2">{p.title}</h3>
+                <p className="text-sm text-muted-foreground mb-4 min-h-[56px] leading-relaxed">{p.desc}</p>
+                <div className="border-t border-border pt-4">
+                  <p className="text-2xl font-extrabold text-brand-pink">{p.price}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{p.note}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
 
-        <Grid item xs={12} md={4}>
-          <Card sx={{ height: '100%', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', borderRadius: 4 }}>
-            <CardContent sx={{ p: 4, textAlign: 'center' }}>
-              <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>International</Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 2, minHeight: 80 }}>
-                Delivery times vary by destination (typically 7-14 business days). Customs fees may apply.
-              </Typography>
-              <Divider sx={{ my: 2 }} />
-              <Typography variant="h4" color="primary.main" sx={{ fontWeight: 800 }}>Calculated</Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>Based on destination</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-      
-      <Box sx={{ mt: 8, p: 4, bgcolor: 'rgba(0,0,0,0.02)', borderRadius: 4 }}>
-        <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>Order Tracking</Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.8 }}>
-          Once your order has been dispatched, you will receive an email containing a tracking number. 
-          You can use this number to track your package on our carrier's website. Please allow 24 hours 
-          for the tracking information to update after receiving your dispatch email.
-        </Typography>
-      </Box>
-    </Container>
+        {/* Policy Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+          {POLICIES.map((p, i) => (
+            <div key={i} className="p-5 bg-white rounded-2xl border border-border text-center hover:border-brand-pink/25 hover:shadow-[0_4px_20px_rgba(233,30,140,0.08)] transition-all">
+              <div className="text-4xl mb-3">{p.emoji}</div>
+              <p className="font-bold text-foreground mb-1">{p.title}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Tracking Info */}
+        <div className="p-6 md:p-8 rounded-2xl bg-brand-pink/5 border border-brand-pink/15">
+          <div className="flex items-center gap-3 mb-3">
+            <Package size={24} className="text-brand-pink" />
+            <h3 className="font-bold text-lg text-foreground">Order Tracking</h3>
+          </div>
+          <p className="text-muted-foreground leading-relaxed text-sm">
+            Once your Poonch Pet Store order has been dispatched, you'll receive an email with your tracking number and carrier link. 
+            Please allow up to <strong>24 hours</strong> for updates. If you haven't received tracking within 5 business days, contact us at{' '}
+            <a href="mailto:support@poonchpetstore.com" className="text-brand-pink font-semibold hover:underline">support@poonchpetstore.com</a> or call{' '}
+            <a href="tel:+18001234567" className="text-brand-pink font-semibold hover:underline">+1 (800) 123-4567</a>.
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
 

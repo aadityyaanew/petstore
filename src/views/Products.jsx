@@ -1,239 +1,254 @@
 import { useState, useEffect } from 'react';
-import { Box, Container, Grid, Typography, Card, CardMedia, CardContent, Divider, Checkbox, FormControlLabel, FormGroup, Slider, Button, Pagination, Drawer, IconButton, useMediaQuery, useTheme } from '@mui/material';
-import { FilterList, Close } from '@mui/icons-material';
 import { Link, useSearchParams } from 'react-router-dom';
+import { SlidersHorizontal, X } from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { Badge } from '../components/ui/badge';
+import { cn } from '@/lib/utils';
 import api from '../services/api';
 
-const categoriesList = ['Electronics', 'Clothing', 'Footwear', 'Books', 'Home & Kitchen', 'Sports', 'Beauty', 'Toys'];
+const CATEGORIES_LIST = [
+  'All', 'Birds', 'Cats', 'Dogs', 'Small Animals',
+  'Bird Toys', 'Bird Stands', 'Cat Collars', 'Dog Leashes'
+];
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const search = searchParams.get('search') || '';
   const initialCategory = searchParams.get('category') || 'All';
-  
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
-  // Filters State
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [priceRange, setPriceRange] = useState([0, 5000]);
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchProducts();
-    // eslint-disable-next-line
-  }, [search, selectedCategory, priceRange, page]);
+  }, [search, selectedCategory, page]);
 
   useEffect(() => {
-    if (initialCategory !== selectedCategory) {
-      setSelectedCategory(initialCategory);
-    }
-    // eslint-disable-next-line
+    if (initialCategory !== selectedCategory) setSelectedCategory(initialCategory);
   }, [initialCategory]);
 
   const fetchProducts = async () => {
     setLoading(true);
     try {
       const { data } = await api.getProducts({
-        search,
-        category: selectedCategory,
-        minPrice: priceRange[0],
-        maxPrice: priceRange[1],
-        page,
-        limit: 12
+        search, category: selectedCategory === 'All' ? '' : selectedCategory,
+        minPrice: priceRange[0], maxPrice: priceRange[1], page, limit: 12
       });
       setProducts(data.products || []);
       setTotalPages(data.pages || 1);
-    } catch (error) {
-      console.error('Error fetching products:', error);
+    } catch (e) {
+      console.error(e);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCategoryChange = (cat) => {
+  const handleCategory = (cat) => {
     setSelectedCategory(cat);
     setPage(1);
-    if (cat !== 'All') {
-      setSearchParams({ ...Object.fromEntries([...searchParams]), category: cat });
-    } else {
-      const params = Object.fromEntries([...searchParams]);
-      delete params.category;
-      setSearchParams(params);
-    }
+    const params = Object.fromEntries([...searchParams]);
+    if (cat !== 'All') params.category = cat;
+    else delete params.category;
+    setSearchParams(params);
+    setSidebarOpen(false);
   };
 
-  const handlePriceChange = (event, newValue) => {
-    setPriceRange(newValue);
-    setPage(1);
-  };
+  const FilterPanel = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between md:block">
+        <h2 className="text-base font-bold text-foreground">Filters</h2>
+        <button className="md:hidden p-1" onClick={() => setSidebarOpen(false)}>
+          <X size={20} />
+        </button>
+      </div>
 
-  const FilterContent = (
-    <Box sx={{ p: isMobile ? 3 : 0, width: isMobile ? 280 : 'auto' }}>
-      {isMobile && (
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 800 }}>Filters</Typography>
-          <IconButton onClick={() => setMobileFiltersOpen(false)}><Close /></IconButton>
-        </Box>
-      )}
-      {!isMobile && <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>Filters</Typography>}
-      <Divider sx={{ mb: 3 }} />
+      <div className="border-t border-border pt-4">
+        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">Categories</p>
+        <div className="space-y-1">
+          {CATEGORIES_LIST.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => handleCategory(cat)}
+              className={cn(
+                "w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150",
+                selectedCategory === cat
+                  ? "bg-brand-pink text-white font-semibold"
+                  : "text-foreground hover:bg-accent hover:text-accent-foreground"
+              )}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </div>
 
-      <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>Categories</Typography>
-      <FormGroup sx={{ mb: 4 }}>
-        <FormControlLabel 
-          control={<Checkbox checked={selectedCategory === 'All'} onChange={() => handleCategoryChange('All')} />} 
-          label="All Categories" 
-        />
-        {categoriesList.map(cat => (
-          <FormControlLabel
-            key={cat}
-            control={<Checkbox checked={selectedCategory === cat} onChange={() => handleCategoryChange(cat)} />}
-            label={cat}
+      <div className="border-t border-border pt-4">
+        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">Price Range (₹)</p>
+        <div className="space-y-3">
+          <input
+            type="range"
+            min={0}
+            max={5000}
+            step={100}
+            value={priceRange[1]}
+            onChange={(e) => { setPriceRange([0, Number(e.target.value)]); setPage(1); }}
+            className="w-full accent-brand-pink"
           />
-        ))}
-      </FormGroup>
+          <div className="flex justify-between text-sm text-muted-foreground">
+            <span>₹0</span>
+            <span className="font-semibold text-brand-pink">Up to ₹{priceRange[1]}</span>
+          </div>
+        </div>
+      </div>
 
-      <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2 }}>Price Range (₹)</Typography>
-      <Slider
-        value={priceRange}
-        onChange={handlePriceChange}
-        valueLabelDisplay="auto"
-        min={0}
-        max={5000}
-        sx={{ color: 'primary.main', mb: 2 }}
-      />
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="body2" color="text.secondary">₹{priceRange[0]}</Typography>
-        <Typography variant="body2" color="text.secondary">₹{priceRange[1]}</Typography>
-      </Box>
-    </Box>
+      <Button
+        variant="outline-pink"
+        size="sm"
+        className="w-full"
+        onClick={() => { setSelectedCategory('All'); setPriceRange([0, 5000]); setPage(1); setSearchParams({}); }}
+      >
+        Clear Filters
+      </Button>
+    </div>
   );
 
   return (
-    <Container maxWidth="xl" sx={{ py: { xs: 3, md: 6 } }}>
-      {search && (
-        <Typography variant="h5" sx={{ mb: 4, fontWeight: 700 }}>
-          Search results for: "{search}"
-        </Typography>
-      )}
-
-      {isMobile && (
-        <Box sx={{ mb: 3, display: 'flex' }}>
-          <Button 
-            variant="outlined" 
-            startIcon={<FilterList />} 
-            onClick={() => setMobileFiltersOpen(true)}
-            sx={{ borderRadius: '20px', fontWeight: 600 }}
-          >
-            Filters
-          </Button>
-        </Box>
-      )}
-
-      <Drawer
-        anchor="left"
-        open={isMobile && mobileFiltersOpen}
-        onClose={() => setMobileFiltersOpen(false)}
-        ModalProps={{ keepMounted: true }}
-      >
-        {FilterContent}
-      </Drawer>
-
-      <Grid container spacing={4}>
-        {/* Sidebar Filters */}
-        {!isMobile && (
-          <Grid item xs={12} md={3}>
-            <Box sx={{ position: 'sticky', top: 100 }}>
-              {FilterContent}
-            </Box>
-          </Grid>
-        )}
-
-        {/* Product Grid */}
-        <Grid item xs={12} md={9}>
-          {loading ? (
-            <Typography>Loading...</Typography>
-          ) : products.length === 0 ? (
-            <Box sx={{ textAlign: 'center', py: 8 }}>
-              <Typography variant="h5" color="text.secondary">No products found matching your criteria.</Typography>
-              <Button onClick={() => { setSelectedCategory('All'); setPriceRange([0, 5000]); setSearchParams({}); }} variant="outlined" sx={{ mt: 3 }}>
-                Clear Filters
-              </Button>
-            </Box>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          {search ? (
+            <h1 className="text-2xl font-bold text-foreground">
+              Search results for: <span className="text-brand-pink">"{search}"</span>
+            </h1>
           ) : (
             <>
-              <Grid container spacing={4}>
-                {products.map((product) => (
-                  <Grid item key={product._id} xs={12} sm={6} md={4}>
-                    <Card
-                      component={Link}
-                      to={`/product/${product._id}`}
-                      sx={{
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        textDecoration: 'none',
-                        borderRadius: '16px',
-                        transition: 'all 0.3s ease',
-                        border: '1px solid rgba(0,0,0,0.05)',
-                        boxShadow: 'none',
-                        '&:hover': {
-                          transform: 'translateY(-8px)',
-                          boxShadow: '0 12px 24px rgba(0,0,0,0.1)',
-                        },
-                      }}
-                    >
-                      <CardMedia
-                        component="img"
-                        height="240"
-                        image={product.images?.[0] || 'https://images.unsplash.com/photo-1595246140625-573b715d11dc?w=400&h=400&fit=crop'}
-                        alt={product.name}
-                        sx={{ objectFit: 'cover' }}
-                      />
-                      <CardContent sx={{ flexGrow: 1 }}>
-                        <Typography variant="overline" color="text.secondary" sx={{ fontWeight: 600 }}>
-                          {product.category}
-                        </Typography>
-                        <Typography gutterBottom variant="h6" component="h2" sx={{ fontWeight: 700, lineHeight: 1.2, mb: 1, color: 'text.primary' }}>
-                          {product.name}
-                        </Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2 }}>
-                          <Typography variant="h6" color="primary.main" sx={{ fontWeight: 800 }}>
-                            ₹{product.price.toFixed(2)}
-                          </Typography>
-                          {product.originalPrice > product.price && (
-                            <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
-                              ₹{product.originalPrice.toFixed(2)}
-                            </Typography>
-                          )}
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-
-              {totalPages > 1 && (
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
-                  <Pagination 
-                    count={totalPages} 
-                    page={page} 
-                    onChange={(e, val) => setPage(val)} 
-                    color="primary" 
-                    size="large" 
-                  />
-                </Box>
+              <h1 className="text-2xl font-bold text-foreground">
+                {selectedCategory === 'All' ? 'All Products 🐾' : selectedCategory}
+              </h1>
+              {selectedCategory !== 'All' && (
+                <Badge variant="pink" className="mt-1">{selectedCategory}</Badge>
               )}
             </>
           )}
-        </Grid>
-      </Grid>
-    </Container>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          className="md:hidden gap-2"
+          onClick={() => setSidebarOpen(true)}
+        >
+          <SlidersHorizontal size={15} /> Filters
+        </Button>
+      </div>
+
+      <div className="flex gap-8">
+        {/* Desktop Sidebar */}
+        <aside className="hidden md:block w-56 shrink-0">
+          <div className="sticky top-24">
+            <FilterPanel />
+          </div>
+        </aside>
+
+        {/* Mobile Sidebar Overlay */}
+        {sidebarOpen && (
+          <div className="fixed inset-0 z-50 flex md:hidden">
+            <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
+            <div className="relative w-72 bg-white h-full shadow-xl p-5 overflow-y-auto animate-slide-in">
+              <FilterPanel />
+            </div>
+          </div>
+        )}
+
+        {/* Products Grid */}
+        <div className="flex-1 min-w-0">
+          {loading ? (
+            <div className="flex justify-center py-20">
+              <div className="w-12 h-12 rounded-full border-4 border-brand-pink/20 border-t-brand-pink animate-spin" />
+            </div>
+          ) : products.length === 0 ? (
+            <div className="text-center py-20">
+              <div className="text-5xl mb-3">🐾</div>
+              <p className="text-xl font-bold text-foreground mb-2">No products found</p>
+              <p className="text-muted-foreground mb-5">Try adjusting your filters or search terms.</p>
+              <Button variant="outline-pink" onClick={() => { setSelectedCategory('All'); setPriceRange([0, 5000]); setSearchParams({}); }}>
+                Clear All Filters
+              </Button>
+            </div>
+          ) : (
+            <>
+              <p className="text-sm text-muted-foreground mb-4">{products.length} products found</p>
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {products.map((product) => (
+                  <Link
+                    key={product._id}
+                    to={`/product/${product._id}`}
+                    className="group relative flex flex-col bg-white rounded-2xl border border-border overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(233,30,140,0.12)] hover:border-brand-pink/25"
+                  >
+                    <div className="overflow-hidden" style={{ height: 200 }}>
+                      <img
+                        src={product.images?.[0] || 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400&h=400&fit=crop'}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                    <div className="p-4 flex flex-col flex-1">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-brand-pink mb-1">{product.category}</p>
+                      <h3 className="font-bold text-sm text-foreground line-clamp-2 leading-snug mb-2">{product.name}</h3>
+                      <div className="flex items-center gap-2 mt-auto">
+                        <span className="text-xl font-extrabold text-brand-charcoal">₹{product.price?.toFixed(2)}</span>
+                        {product.originalPrice > product.price && (
+                          <span className="text-sm text-muted-foreground line-through">₹{product.originalPrice?.toFixed(2)}</span>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex justify-center items-center gap-2 mt-10">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={page === 1}
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  >
+                    ← Prev
+                  </Button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                    <button
+                      key={p}
+                      onClick={() => setPage(p)}
+                      className={cn(
+                        "w-9 h-9 rounded-lg text-sm font-semibold transition-all",
+                        p === page ? "bg-brand-pink text-white" : "hover:bg-accent text-foreground"
+                      )}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={page === totalPages}
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  >
+                    Next →
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 

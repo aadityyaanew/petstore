@@ -1,17 +1,9 @@
 import { useState } from 'react';
-import {
-  Box,
-  Container,
-  Typography,
-  TextField,
-  Button,
-  Paper,
-  Link as MuiLink,
-  Alert,
-} from '@mui/material';
 import { Link } from 'react-router-dom';
 import { api } from '../services/api';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Mail } from 'lucide-react';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -35,103 +27,65 @@ const ForgotPassword = () => {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ py: 8 }}>
-      <Paper
-        elevation={0}
-        sx={{
-          p: 5,
-          borderRadius: '24px',
-          border: '1px solid #E2E8F0',
-          boxShadow: '0 4px 24px rgba(0,0,0,0.04)',
-        }}
-      >
-        {/* Icon */}
-        <Box
-          sx={{
-            width: 72,
-            height: 72,
-            borderRadius: '20px',
-            bgcolor: 'rgba(15, 23, 42, 0.06)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            mx: 'auto',
-            mb: 3,
-          }}
-        >
-          <EmailOutlinedIcon sx={{ fontSize: 36, color: 'primary.main' }} />
-        </Box>
+    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 bg-background">
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-2xl border border-border p-8 shadow-sm text-center">
+          <div className="w-16 h-16 rounded-2xl bg-brand-pink/10 flex items-center justify-center mx-auto mb-6">
+            <Mail size={32} className="text-brand-pink" />
+          </div>
 
-        <Typography
-          variant="h4"
-          component="h1"
-          sx={{ fontWeight: 800, mb: 1, textAlign: 'center', color: '#1E293B' }}
-        >
-          Forgot Password?
-        </Typography>
-        <Typography
-          variant="body1"
-          color="text.secondary"
-          sx={{ mb: 4, textAlign: 'center', lineHeight: 1.7 }}
-        >
-          No worries! Enter your registered email and we'll send you a secure link to reset your password.
-        </Typography>
+          <h1 className="text-2xl font-extrabold text-foreground mb-2">Forgot Password?</h1>
+          <p className="text-muted-foreground mb-6 text-sm">
+            No worries! Enter your registered email and we'll send you a secure link to reset your password.
+          </p>
 
-        {success && (
-          <Alert severity="success" sx={{ mb: 3, borderRadius: 2 }}>
-            {success}
-          </Alert>
-        )}
+          {success && (
+            <div className="mb-5 p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-sm font-medium">
+              {success}
+            </div>
+          )}
 
-        {error && (
-          <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
-            {error}
-          </Alert>
-        )}
+          {error && (
+            <div className="mb-5 p-3.5 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-medium">
+              {error}
+            </div>
+          )}
 
-        {!success && (
-          <form onSubmit={handleSubmit}>
-            <TextField
-              label="Email Address"
-              type="email"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={loading}
-              placeholder="you@example.com"
-            />
+          {!success && (
+            <form onSubmit={handleSubmit} className="space-y-4 text-left">
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold text-foreground">Email Address</label>
+                <Input
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={loading}
+                  required
+                />
+              </div>
 
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              size="large"
-              fullWidth
-              disabled={loading}
-              sx={{
-                mt: 4,
-                mb: 3,
-                py: 1.5,
-                borderRadius: '12px',
-                fontSize: '1.1rem',
-              }}
-            >
-              {loading ? 'Sending...' : 'Send Reset Link'}
-            </Button>
-          </form>
-        )}
+              <Button
+                type="submit"
+                variant="secondary"
+                size="lg"
+                className="w-full"
+                disabled={loading}
+              >
+                {loading ? 'Sending...' : 'Send Reset Link'}
+              </Button>
+            </form>
+          )}
 
-        <Typography variant="body2" sx={{ textAlign: 'center', color: 'text.secondary' }}>
-          Remember your password?{' '}
-          <MuiLink component={Link} to="/login" color="primary" sx={{ fontWeight: 600 }}>
-            Back to Sign In
-          </MuiLink>
-        </Typography>
-      </Paper>
-    </Container>
+          <p className="text-center text-sm text-muted-foreground mt-6">
+            Remember your password?{' '}
+            <Link to="/login" className="text-brand-pink font-semibold hover:underline">
+              Back to Sign In
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
 

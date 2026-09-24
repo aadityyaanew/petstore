@@ -1,118 +1,111 @@
-import { Card, CardMedia, CardContent, CardActions, Typography, Button, IconButton, Box, Chip } from '@mui/material';
-import { ShoppingCart, FavoriteBorder } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../services/api';
+import { Heart, ShoppingCart } from 'lucide-react';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
+import { cn } from '@/lib/utils';
 
 const LOW_STOCK_THRESHOLD = 5;
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
-
   const isOutOfStock = product.stock === 0;
   const isLowStock = product.stock > 0 && product.stock <= (product.lowStockThreshold ?? LOW_STOCK_THRESHOLD);
 
+  const imageUrl = product.image
+    ? product.image.startsWith('http')
+      ? product.image
+      : `${BASE_URL}${product.image}`
+    : 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400&h=400&fit=crop';
+
   return (
-    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', opacity: isOutOfStock ? 0.85 : 1 }}>
-      
-      {/* Stock Status Badges */}
-      {isOutOfStock ? (
-        <Chip
-          label="OUT OF STOCK"
-          size="small"
-          sx={{
-            position: 'absolute', top: 12, left: 12, zIndex: 2,
-            fontWeight: 700, fontSize: '0.65rem', letterSpacing: '0.05em',
-            bgcolor: '#EF4444', color: 'white',
-          }}
-        />
-      ) : isLowStock ? (
-        <Chip
-          label={`Only ${product.stock} left!`}
-          size="small"
-          sx={{
-            position: 'absolute', top: 12, left: 12, zIndex: 2,
-            fontWeight: 700, fontSize: '0.65rem',
-            bgcolor: '#F59E0B', color: 'white',
-          }}
-        />
-      ) : product.isNew ? (
-        <Chip label="NEW" color="secondary" size="small" sx={{ position: 'absolute', top: 12, left: 12, fontWeight: 700, zIndex: 1 }} />
-      ) : null}
+    <div
+      className={cn(
+        "group relative flex flex-col bg-white rounded-2xl border border-border overflow-hidden transition-all duration-300",
+        "hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(233,30,140,0.12)] hover:border-brand-pink/25",
+        isOutOfStock && "opacity-80"
+      )}
+    >
+      {/* Stock Badge */}
+      <div className="absolute top-3 left-3 z-10">
+        {isOutOfStock ? (
+          <Badge variant="destructive" className="text-[10px] font-bold tracking-wider uppercase">
+            Out of Stock
+          </Badge>
+        ) : isLowStock ? (
+          <Badge variant="warning" className="text-[10px] font-bold">
+            Only {product.stock} left!
+          </Badge>
+        ) : product.isNew ? (
+          <Badge variant="secondary" className="text-[10px] font-bold tracking-wider uppercase">
+            New
+          </Badge>
+        ) : null}
+      </div>
 
-      <IconButton
-        sx={{
-          position: 'absolute',
-          top: 8,
-          right: 8,
-          bgcolor: 'rgba(255,255,255,0.7)',
-          backdropFilter: 'blur(4px)',
-          '&:hover': { bgcolor: 'white' }
-        }}
-        size="small"
+      {/* Wishlist */}
+      <button
+        className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-brand-pink hover:text-white shadow-sm"
+        aria-label="Add to wishlist"
       >
-        <FavoriteBorder fontSize="small" />
-      </IconButton>
+        <Heart size={14} />
+      </button>
 
-      <Box
-        sx={{ overflow: 'hidden', cursor: 'pointer', position: 'relative' }}
+      {/* Image */}
+      <div
+        className="relative overflow-hidden cursor-pointer"
+        style={{ height: 220 }}
         onClick={() => navigate(`/product/${product.id}`)}
       >
-        <CardMedia
-          component="img"
-          height="240"
-          image={product.image.startsWith('http') ? product.image : `${BASE_URL}${product.image}`}
+        <img
+          src={imageUrl}
           alt={product.title}
-          sx={{
-            objectFit: 'cover',
-            transition: 'transform 0.4s',
-            '&:hover': { transform: isOutOfStock ? 'none' : 'scale(1.05)' },
-            filter: isOutOfStock ? 'grayscale(30%)' : 'none',
-          }}
+          className={cn(
+            "w-full h-full object-cover transition-transform duration-500",
+            !isOutOfStock && "group-hover:scale-105",
+            isOutOfStock && "grayscale-[30%]"
+          )}
         />
-        {/* Out of stock overlay */}
         {isOutOfStock && (
-          <Box
-            sx={{
-              position: 'absolute', inset: 0,
-              bgcolor: 'rgba(0,0,0,0.35)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
-          >
-            <Typography sx={{ color: 'white', fontWeight: 800, fontSize: '1rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              Unavailable
-            </Typography>
-          </Box>
+          <div className="absolute inset-0 bg-black/35 flex items-center justify-center">
+            <span className="text-white font-bold text-sm uppercase tracking-widest">Unavailable</span>
+          </div>
         )}
-      </Box>
+      </div>
 
-      <CardContent sx={{ flexGrow: 1, pb: 1, cursor: 'pointer' }} onClick={() => navigate(`/product/${product.id}`)}>
-        <Typography gutterBottom variant="subtitle2" sx={{ color: 'text.secondary', mb: 0.5 }}>
+      {/* Content */}
+      <div
+        className="flex flex-col flex-1 p-4 cursor-pointer"
+        onClick={() => navigate(`/product/${product.id}`)}
+      >
+        <p className="text-xs font-semibold text-brand-pink uppercase tracking-wider mb-1">
           {product.category}
-        </Typography>
-        <Typography gutterBottom variant="h6" component="h2" sx={{ fontWeight: 700, lineHeight: 1.2, mb: 1 }}>
+        </p>
+        <h3 className="font-bold text-sm leading-snug text-foreground mb-2 line-clamp-2">
           {product.title}
-        </Typography>
-        <Typography variant="h6" color="primary" sx={{ fontWeight: 800 }}>
-          ₹{product.price.toFixed(2)}
-        </Typography>
-      </CardContent>
+        </h3>
+        <p className="text-xl font-extrabold text-brand-charcoal mt-auto">
+          ₹{product.price?.toFixed(2)}
+        </p>
+      </div>
 
-      <CardActions sx={{ px: 2, pb: 2 }}>
+      {/* CTA */}
+      <div className="px-4 pb-4">
         <Button
-          fullWidth
-          variant={isOutOfStock ? 'outlined' : 'contained'}
-          startIcon={<ShoppingCart />}
+          variant={isOutOfStock ? "outline" : "secondary"}
+          size="sm"
+          className="w-full gap-2"
           disabled={isOutOfStock}
-          sx={{ borderRadius: '8px' }}
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/product/${product.id}`);
           }}
         >
+          <ShoppingCart size={14} />
           {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
         </Button>
-      </CardActions>
-    </Card>
+      </div>
+    </div>
   );
 };
 

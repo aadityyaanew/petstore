@@ -2,14 +2,15 @@ import '../index.css';
 import Script from 'next/script';
 
 export const metadata = {
-  title: 'ShopEase',
-  description: 'A premium e-commerce experience',
+  title: 'Poonch Pet Store – Safe Play, Happy Tails & Feathered Friends',
+  description: 'Premium pet accessories crafted with care. Natural wood bird stands, hand-knitted cat collars, and more. Non-toxic, durable, and designed to enrich your pet\'s life.',
+  keywords: 'pet store, bird accessories, cat collars, dog accessories, natural wood, non-toxic pet toys',
   icons: {
-    icon: '/logo.svg',
-    apple: '/logo.svg',
+    icon: '/logo.jpeg',
+    apple: '/logo.jpeg',
   },
   other: {
-    'theme-color': '#1976d2',
+    'theme-color': '#1A1A2E',
     'apple-mobile-web-app-capable': 'yes',
   },
 };
@@ -19,7 +20,7 @@ export const viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: '#1976d2',
+  themeColor: '#1A1A2E',
 };
 
 export default function RootLayout({ children }) {
@@ -40,7 +41,7 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body>
+      <body className="antialiased min-h-screen bg-background font-sans">
         {children}
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"

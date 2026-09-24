@@ -1,81 +1,53 @@
-import { Box, Drawer, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
-import { Dashboard, ShoppingCart, People, Inventory, Storefront, LocalOffer, ViewCarousel } from '@mui/icons-material';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-
-const drawerWidth = 240;
+import { LayoutDashboard, Package, ShoppingCart, Users, Tag, Image as ImageIcon, Store } from 'lucide-react';
 
 const AdminLayout = () => {
   const location = useLocation();
 
   const menuItems = [
-    { text: 'Dashboard', icon: <Dashboard />, path: '/admin' },
-    { text: 'Products', icon: <Inventory />, path: '/admin/products' },
-    { text: 'Orders', icon: <ShoppingCart />, path: '/admin/orders' },
-    { text: 'Users', icon: <People />, path: '/admin/users' },
-    { text: 'Coupons', icon: <LocalOffer />, path: '/admin/coupons' },
-    { text: 'Banners', icon: <ViewCarousel />, path: '/admin/banners' },
-    { text: 'Back to Store', icon: <Storefront />, path: '/' },
+    { text: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/admin' },
+    { text: 'Products', icon: <Package size={20} />, path: '/admin/products' },
+    { text: 'Orders', icon: <ShoppingCart size={20} />, path: '/admin/orders' },
+    { text: 'Users', icon: <Users size={20} />, path: '/admin/users' },
+    { text: 'Coupons', icon: <Tag size={20} />, path: '/admin/coupons' },
+    { text: 'Banners', icon: <ImageIcon size={20} />, path: '/admin/banners' },
+    { text: 'Back to Store', icon: <Store size={20} />, path: '/' },
   ];
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box',
-            bgcolor: 'background.paper',
-            borderRight: '1px solid rgba(0,0,0,0.08)',
-          },
-        }}
-      >
-        <Box sx={{ p: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Storefront color="primary" sx={{ fontSize: 32 }} />
-          <Typography variant="h6" sx={{ fontWeight: 800, color: 'primary.main' }}>
-            ADMIN
-          </Typography>
-        </Box>
-        <List sx={{ px: 2 }}>
+    <div className="flex min-h-screen bg-accent/20">
+      <aside className="w-64 bg-white border-r border-border flex flex-col shrink-0">
+        <div className="p-6 flex items-center gap-3 border-b border-border">
+          <div className="w-8 h-8 rounded-lg bg-brand-pink text-white flex items-center justify-center">
+            <Store size={18} />
+          </div>
+          <span className="font-extrabold text-brand-pink tracking-widest uppercase">Admin</span>
+        </div>
+        <nav className="p-4 flex-1 space-y-1">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path || (item.path !== '/admin' && location.pathname.startsWith(item.path) && item.path !== '/');
             return (
-              <ListItem
-                button
-                component={Link}
-                to={item.path}
+              <Link
                 key={item.text}
-                sx={{
-                  borderRadius: '8px',
-                  mb: 1,
-                  bgcolor: isActive ? 'primary.50' : 'transparent',
-                  color: isActive ? 'primary.main' : 'text.secondary',
-                  '&:hover': {
-                    bgcolor: isActive ? 'primary.50' : 'action.hover',
-                  },
-                }}
+                to={item.path}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors font-medium text-sm ${
+                  isActive 
+                    ? 'bg-brand-pink/10 text-brand-pink font-bold' 
+                    : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground'
+                }`}
               >
-                <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText 
-                  primary={item.text} 
-                  primaryTypographyProps={{ 
-                    fontWeight: isActive ? 700 : 500,
-                    fontSize: '0.95rem'
-                  }} 
-                />
-              </ListItem>
+                {item.icon}
+                {item.text}
+              </Link>
             );
           })}
-        </List>
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 4, bgcolor: '#f8f9fa', minHeight: '100vh' }}>
+        </nav>
+      </aside>
+      
+      <main className="flex-1 p-8 overflow-y-auto">
         <Outlet />
-      </Box>
-    </Box>
+      </main>
+    </div>
   );
 };
 

@@ -1,89 +1,110 @@
 import { useState } from 'react';
-import { Box, Container, Typography, TextField, Button, Paper, Link as MuiLink } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
     try {
       await login(email, password);
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to login. Please check your credentials.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Container maxWidth="sm" sx={{ py: 8 }}>
-      <Paper elevation={0} sx={{ p: 5, borderRadius: '24px', border: '1px solid #E2E8F0', boxShadow: '0 4px 24px rgba(0,0,0,0.02)' }}>
-        <Typography variant="h4" component="h1" sx={{ fontWeight: 800, mb: 1, textAlign: 'center' }}>
-          Welcome back
-        </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 4, textAlign: 'center' }}>
-          Enter your details to access your account.
-        </Typography>
+    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 bg-background">
+      <div className="w-full max-w-md">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <Link to="/" className="inline-flex items-center justify-center mb-6">
+            <img src="/logo.jpeg" alt="Poonch Pet Store" className="w-16 h-16 rounded-full object-cover border-2 border-brand-pink/30" />
+          </Link>
+          <h1 className="text-3xl font-extrabold text-foreground mb-2">Welcome back 🐾</h1>
+          <p className="text-muted-foreground">Sign in to your Poonch Pet Store account</p>
+        </div>
 
-        {error && (
-          <Typography color="error" sx={{ mb: 3, textAlign: 'center', bgcolor: '#FEF2F2', p: 2, borderRadius: 2 }}>
-            {error}
-          </Typography>
-        )}
+        {/* Card */}
+        <div className="bg-white rounded-2xl border border-border p-8 shadow-sm">
+          {error && (
+            <div className="mb-5 p-3.5 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-medium">
+              {error}
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="Email Address"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextField
-            label="Password"
-            type="password"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-foreground" htmlFor="login-email">
+                Email Address
+              </label>
+              <Input
+                id="login-email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
 
-          <Box sx={{ textAlign: 'right', mt: 0.5, mb: 1 }}>
-            <MuiLink component={Link} to="/forgot-password" color="primary" variant="body2" sx={{ fontWeight: 500 }}>
-              Forgot Password?
-            </MuiLink>
-          </Box>
-          
-          <Button 
-            type="submit" 
-            variant="contained" 
-            color="primary" 
-            size="large" 
-            fullWidth 
-            sx={{ mt: 4, mb: 3, py: 1.5, borderRadius: '12px', fontSize: '1.1rem' }}
-          >
-            Sign In
-          </Button>
-          
-          <Typography variant="body2" sx={{ textAlign: 'center' }}>
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-semibold text-foreground" htmlFor="login-password">
+                  Password
+                </label>
+                <Link to="/forgot-password" className="text-xs text-brand-pink font-semibold hover:underline">
+                  Forgot Password?
+                </Link>
+              </div>
+              <Input
+                id="login-password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <Button
+              type="submit"
+              variant="secondary"
+              size="lg"
+              className="w-full mt-2"
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Signing in…
+                </span>
+              ) : 'Sign In'}
+            </Button>
+          </form>
+
+          <p className="text-center text-sm text-muted-foreground mt-6">
             Don't have an account?{' '}
-            <MuiLink component={Link} to="/register" color="primary" sx={{ fontWeight: 600 }}>
-              Create an account
-            </MuiLink>
-          </Typography>
-        </form>
-      </Paper>
-    </Container>
+            <Link to="/register" className="text-brand-pink font-semibold hover:underline">
+              Create one
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
 

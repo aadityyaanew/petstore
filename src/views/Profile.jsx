@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Box, Typography, Card, CardContent, TextField, Button, Grid, Avatar } from '@mui/material';
-import { Person } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { User } from 'lucide-react';
 
 const Profile = () => {
-  const { user } = useAuth(); // Assuming login context updates user state if we call it with new user data?  We'll see.
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -18,6 +19,7 @@ const Profile = () => {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [isError, setIsError] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,9 +29,9 @@ const Profile = () => {
     e.preventDefault();
     setLoading(true);
     setMessage('');
+    setIsError(false);
 
     try {
-      // In a real app we'd define api.updateProfile. For now we can use raw fetch wrapper or add it to api.js.
       const token = localStorage.getItem('token');
       const res = await fetch('http://localhost:5000/api/users/profile', {
         method: 'PUT',
@@ -43,72 +45,97 @@ const Profile = () => {
       if (!res.ok) throw new Error(data.message);
       
       setMessage('Profile updated successfully!');
-      // Update Auth context (simplistic way)
       localStorage.setItem('user', JSON.stringify(data.user));
-      // Reset passwords
       setFormData(prev => ({ ...prev, currentPassword: '', newPassword: '' }));
     } catch (error) {
       console.error(error);
       setMessage(error.message || 'Error updating profile');
+      setIsError(true);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Box sx={{ maxWidth: 800, mx: 'auto', p: 4 }}>
-      <Typography variant="h4" sx={{ fontWeight: 800, mb: 4, textAlign: 'center' }}>My Profile</Typography>
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <h1 className="text-3xl font-extrabold text-center mb-8">My Profile</h1>
 
-      <Card sx={{ borderRadius: '16px', boxShadow: '0 8px 32px rgba(0,0,0,0.06)' }}>
-        <CardContent sx={{ p: 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 4, gap: 2 }}>
-            <Avatar sx={{ width: 64, height: 64, bgcolor: 'primary.main' }}>
-              <Person sx={{ fontSize: 40 }} />
-            </Avatar>
-            <Box>
-              <Typography variant="h6" sx={{ fontWeight: 700 }}>{user?.name}</Typography>
-              <Typography variant="body2" color="text.secondary">{user?.email}</Typography>
-            </Box>
-          </Box>
+      <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
+        <div className="p-6 sm:p-8">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-16 h-16 rounded-full bg-brand-pink text-white flex items-center justify-center shrink-0">
+              <User size={32} />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-foreground">{user?.name}</h2>
+              <p className="text-muted-foreground">{user?.email}</p>
+            </div>
+          </div>
 
-          <form onSubmit={handleSubmit}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
-                <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>Personal Info</Typography>
-                <TextField label="Full Name" name="name" value={formData.name} onChange={handleChange} fullWidth sx={{ mb: 2 }} />
-                <TextField label="Email" name="email" value={formData.email} onChange={handleChange} InputProps={{ readOnly: true }} fullWidth disabled />
-              </Grid>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-4">
+                <h3 className="font-semibold text-lg border-b border-border pb-2">Personal Info</h3>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">Full Name</label>
+                  <Input name="name" value={formData.name} onChange={handleChange} />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">Email</label>
+                  <Input name="email" value={formData.email} disabled className="bg-muted" />
+                </div>
+              </div>
 
-              <Grid item xs={12} md={6}>
-                <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>Change Password</Typography>
-                <TextField label="Current Password" name="currentPassword" type="password" value={formData.currentPassword} onChange={handleChange} fullWidth sx={{ mb: 2 }} />
-                <TextField label="New Password" name="newPassword" type="password" value={formData.newPassword} onChange={handleChange} fullWidth />
-              </Grid>
+              <div className="space-y-4">
+                <h3 className="font-semibold text-lg border-b border-border pb-2">Change Password</h3>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">Current Password</label>
+                  <Input type="password" name="currentPassword" value={formData.currentPassword} onChange={handleChange} />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">New Password</label>
+                  <Input type="password" name="newPassword" value={formData.newPassword} onChange={handleChange} />
+                </div>
+              </div>
+            </div>
 
-              <Grid item xs={12}>
-                <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600, mt: 2 }}>Address Details</Typography>
-              </Grid>
-              <Grid item xs={12}><TextField label="Street Address" name="street" value={formData.street} onChange={handleChange} fullWidth /></Grid>
-              <Grid item xs={6} md={4}><TextField label="City" name="city" value={formData.city} onChange={handleChange} fullWidth /></Grid>
-              <Grid item xs={6} md={4}><TextField label="State" name="state" value={formData.state} onChange={handleChange} fullWidth /></Grid>
-              <Grid item xs={12} md={4}><TextField label="ZIP Code" name="zipCode" value={formData.zipCode} onChange={handleChange} fullWidth /></Grid>
-            </Grid>
+            <div className="space-y-4">
+              <h3 className="font-semibold text-lg border-b border-border pb-2 mt-4">Address Details</h3>
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold">Street Address</label>
+                <Input name="street" value={formData.street} onChange={handleChange} />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">City</label>
+                  <Input name="city" value={formData.city} onChange={handleChange} />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">State</label>
+                  <Input name="state" value={formData.state} onChange={handleChange} />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">ZIP Code</label>
+                  <Input name="zipCode" value={formData.zipCode} onChange={handleChange} />
+                </div>
+              </div>
+            </div>
 
             {message && (
-              <Typography color={message.includes('success') ? 'success.main' : 'error.main'} sx={{ mt: 3, fontWeight: 600, textAlign: 'center' }}>
+              <div className={`p-4 rounded-xl text-sm font-medium ${isError ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`}>
                 {message}
-              </Typography>
+              </div>
             )}
 
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-              <Button type="submit" variant="contained" color="primary" disabled={loading} sx={{ px: 6, py: 1.5, borderRadius: '8px', fontSize: '1rem' }}>
+            <div className="flex justify-center pt-4">
+              <Button type="submit" variant="secondary" size="lg" disabled={loading} className="w-full sm:w-auto min-w-[200px]">
                 {loading ? 'Saving...' : 'Save Changes'}
               </Button>
-            </Box>
+            </div>
           </form>
-        </CardContent>
-      </Card>
-    </Box>
+        </div>
+      </div>
+    </div>
   );
 };
 

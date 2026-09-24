@@ -1,19 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem, CircularProgress, ImageList, ImageListItem, ImageListItemBar, Tooltip, Chip, Tabs, Tab } from '@mui/material';
-import { Edit, Delete, Add, CloudUpload, DeleteOutline, Warning, CheckCircle } from '@mui/icons-material';
+import { Package, Plus, Edit, Trash2, UploadCloud, X, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Textarea } from '../../components/ui/textarea';
+import { Badge } from '../../components/ui/badge';
 import api, { BASE_URL } from '../../services/api';
 
 const categories = ['Electronics', 'Clothing', 'Footwear', 'Books', 'Home & Kitchen', 'Sports', 'Beauty', 'Toys'];
-
-const getStockChip = (stock, threshold = 5) => {
-  if (stock === 0) {
-    return <Chip label="Out of Stock" size="small" sx={{ bgcolor: '#FEE2E2', color: '#DC2626', fontWeight: 700, minWidth: 100 }} />;
-  }
-  if (stock <= threshold) {
-    return <Chip label={`Low Stock (${stock})`} size="small" sx={{ bgcolor: '#FEF3C7', color: '#D97706', fontWeight: 700, minWidth: 100 }} />;
-  }
-  return <Chip label={`In Stock (${stock})`} size="small" sx={{ bgcolor: '#DCFCE7', color: '#16A34A', fontWeight: 700, minWidth: 100 }} />;
-};
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
@@ -21,7 +14,7 @@ const AdminProducts = () => {
   const [uploading, setUploading] = useState(false);
   const [open, setOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [activeTab, setActiveTab] = useState(0); // 0 = All, 1 = Low Stock / Out of Stock
+  const [activeTab, setActiveTab] = useState(0); 
   const [formData, setFormData] = useState({
     name: '', description: '', price: '', category: 'Electronics', stock: '', lowStockThreshold: 5, images: []
   });
@@ -145,176 +138,187 @@ const AdminProducts = () => {
   const lowStockCount = products.filter((p) => p.stock <= (p.lowStockThreshold ?? 5)).length;
 
   return (
-    <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a1a1a' }}>
-          Manage Products
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<Add />}
-          onClick={() => handleOpen()}
-          sx={{ borderRadius: '8px', px: 3 }}
-        >
-          Add Product
+    <div className="max-w-7xl mx-auto">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl bg-brand-pink/10 text-brand-pink flex items-center justify-center">
+            <Package size={24} />
+          </div>
+          <h1 className="text-3xl font-extrabold text-foreground">Manage Products</h1>
+        </div>
+        <Button onClick={() => handleOpen()} variant="secondary" className="gap-2">
+          <Plus size={18} /> Add Product
         </Button>
-      </Box>
+      </div>
 
-      {/* Filter Tabs */}
-      <Box sx={{ mb: 3, borderBottom: '1px solid #E2E8F0' }}>
-        <Tabs value={activeTab} onChange={(_, v) => setActiveTab(v)}>
-          <Tab label={`All Products (${products.length})`} />
-          <Tab
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Warning sx={{ fontSize: 18, color: '#D97706' }} />
-                Low / Out of Stock
-                {lowStockCount > 0 && (
-                  <Chip label={lowStockCount} size="small" sx={{ bgcolor: '#EF4444', color: 'white', fontWeight: 700, height: 20, fontSize: '0.7rem' }} />
-                )}
-              </Box>
-            }
-          />
-        </Tabs>
-      </Box>
+      <div className="flex gap-4 border-b border-border mb-6">
+        <button 
+          onClick={() => setActiveTab(0)}
+          className={`pb-3 font-semibold text-sm transition-colors border-b-2 ${activeTab === 0 ? 'border-brand-pink text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}`}
+        >
+          All Products ({products.length})
+        </button>
+        <button 
+          onClick={() => setActiveTab(1)}
+          className={`pb-3 font-semibold text-sm flex items-center gap-2 transition-colors border-b-2 ${activeTab === 1 ? 'border-brand-pink text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}`}
+        >
+          <AlertCircle size={16} className={activeTab === 1 ? 'text-amber-500' : ''} /> 
+          Low / Out of Stock
+          {lowStockCount > 0 && (
+            <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{lowStockCount}</span>
+          )}
+        </button>
+      </div>
 
       {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}><CircularProgress /></Box>
+        <div className="flex justify-center py-20">
+          <div className="w-10 h-10 border-4 border-brand-pink/20 border-t-brand-pink rounded-full animate-spin" />
+        </div>
       ) : (
-        <TableContainer component={Paper} sx={{ borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-          <Table>
-            <TableHead sx={{ bgcolor: 'rgba(0,0,0,0.02)' }}>
-              <TableRow>
-                <TableCell sx={{ fontWeight: 600 }}>Name</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Category</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Price</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Stock Status</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Threshold</TableCell>
-                <TableCell sx={{ fontWeight: 600, textAlign: 'right' }}>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredProducts.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} align="center" sx={{ py: 6 }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+        <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-accent/50 text-muted-foreground">
+                <tr>
+                  <th className="px-6 py-4 font-semibold">Name</th>
+                  <th className="px-6 py-4 font-semibold">Category</th>
+                  <th className="px-6 py-4 font-semibold">Price</th>
+                  <th className="px-6 py-4 font-semibold">Stock Status</th>
+                  <th className="px-6 py-4 font-semibold text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {filteredProducts.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-6 py-16 text-center">
                       {activeTab === 1 ? (
-                        <>
-                          <CheckCircle sx={{ fontSize: 48, color: 'success.main', mb: 1, opacity: 0.8 }} />
-                          <Typography variant="h6" color="text.primary">All caught up!</Typography>
-                          <Typography variant="body2" color="text.secondary">No low stock products. Everything is well stocked.</Typography>
-                        </>
+                        <div className="flex flex-col items-center">
+                          <CheckCircle2 size={48} className="text-emerald-500 mb-2 opacity-80" />
+                          <h3 className="font-bold text-lg mb-1">All caught up!</h3>
+                          <p className="text-muted-foreground">No low stock products. Everything is well stocked.</p>
+                        </div>
                       ) : (
-                        <Typography color="text.secondary">No products found.</Typography>
+                        <p className="text-muted-foreground">No products found.</p>
                       )}
-                    </Box>
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filteredProducts.map((product) => (
-                  <TableRow key={product._id} hover sx={{ '&:last-child td': { border: 0 } }}>
-                    <TableCell sx={{ fontWeight: 500 }}>{product.name}</TableCell>
-                    <TableCell>{product.category}</TableCell>
-                    <TableCell>₹{product.price.toFixed(2)}</TableCell>
-                    <TableCell>{getStockChip(product.stock, product.lowStockThreshold)}</TableCell>
-                    <TableCell>
-                      <Typography variant="body2" color="text.secondary">
-                        Alert at ≤ {product.lowStockThreshold ?? 5}
-                      </Typography>
-                    </TableCell>
-                    <TableCell sx={{ textAlign: 'right' }}>
-                      <Tooltip title="Edit Product">
-                        <IconButton color="primary" onClick={() => handleOpen(product)}><Edit /></IconButton>
-                      </Tooltip>
-                      <Tooltip title="Delete Product">
-                        <IconButton color="error" onClick={() => handleDelete(product._id)}><Delete /></IconButton>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                    </td>
+                  </tr>
+                ) : (
+                  filteredProducts.map((product) => (
+                    <tr key={product._id} className="hover:bg-accent/30 transition-colors">
+                      <td className="px-6 py-4 font-medium max-w-[250px] truncate">{product.name}</td>
+                      <td className="px-6 py-4">{product.category}</td>
+                      <td className="px-6 py-4 font-bold text-brand-pink">₹{product.price.toFixed(2)}</td>
+                      <td className="px-6 py-4">
+                        {product.stock === 0 ? (
+                          <Badge variant="destructive">Out of Stock</Badge>
+                        ) : product.stock <= (product.lowStockThreshold ?? 5) ? (
+                          <Badge variant="warning">Low Stock ({product.stock})</Badge>
+                        ) : (
+                          <Badge variant="success">In Stock ({product.stock})</Badge>
+                        )}
+                        <p className="text-xs text-muted-foreground mt-1">Alert ≤ {product.lowStockThreshold ?? 5}</p>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex justify-end gap-2">
+                          <button onClick={() => handleOpen(product)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                            <Edit size={18} />
+                          </button>
+                          <button onClick={() => handleDelete(product._id)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       )}
 
-      {/* Add/Edit Dialog */}
-      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-        <form onSubmit={handleSubmit}>
-          <DialogTitle>{editingId ? 'Edit Product' : 'Add New Product'}</DialogTitle>
-          <DialogContent dividers sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <TextField label="Product Name" name="name" value={formData.name} onChange={handleChange} required fullWidth />
-            <TextField label="Description" name="description" value={formData.description} onChange={handleChange} required multiline rows={3} fullWidth />
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              <TextField label="Price (₹)" name="price" type="number" inputProps={{ min: 0, step: "0.01" }} value={formData.price} onChange={handleChange} required fullWidth />
-              <TextField label="Stock Quantity" name="stock" type="number" inputProps={{ min: 0 }} value={formData.stock} onChange={handleChange} required fullWidth />
-            </Box>
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              <TextField select label="Category" name="category" value={formData.category} onChange={handleChange} required fullWidth>
-                {categories.map(cat => (
-                  <MenuItem key={cat} value={cat}>{cat}</MenuItem>
-                ))}
-              </TextField>
-              <Tooltip title="Trigger low-stock alert email when stock reaches this number">
-                <TextField
-                  label="Low Stock Alert At"
-                  name="lowStockThreshold"
-                  type="number"
-                  inputProps={{ min: 0 }}
-                  value={formData.lowStockThreshold}
-                  onChange={handleChange}
-                  fullWidth
-                  helperText="Email alert threshold"
-                />
-              </Tooltip>
-            </Box>
+      {open && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div className="p-6 border-b border-border flex justify-between items-center sticky top-0 bg-white/95 backdrop-blur z-10">
+              <h2 className="text-xl font-bold">{editingId ? 'Edit Product' : 'Add New Product'}</h2>
+              <button onClick={handleClose} className="p-2 hover:bg-accent rounded-full text-muted-foreground"><X size={20} /></button>
+            </div>
+            
+            <form onSubmit={handleSubmit} className="p-6 space-y-6">
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold">Product Name</label>
+                <Input name="name" value={formData.name} onChange={handleChange} required />
+              </div>
+              
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold">Description</label>
+                <Textarea name="description" value={formData.description} onChange={handleChange} required rows={3} />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">Price (₹)</label>
+                  <Input name="price" type="number" min="0" step="0.01" value={formData.price} onChange={handleChange} required />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">Stock Quantity</label>
+                  <Input name="stock" type="number" min="0" value={formData.stock} onChange={handleChange} required />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">Category</label>
+                  <select name="category" value={formData.category} onChange={handleChange} required className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                    {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">Low Stock Alert At</label>
+                  <Input name="lowStockThreshold" type="number" min="0" value={formData.lowStockThreshold} onChange={handleChange} />
+                </div>
+              </div>
 
-            <Box>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>Product Images</Typography>
-              <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-                <input type="file" hidden ref={fileInputRef} onChange={handleFileChange} accept="image/*" />
-                <Button
-                  variant="outlined"
-                  startIcon={uploading ? <CircularProgress size={20} /> : <CloudUpload />}
-                  onClick={handleUploadClick}
-                  disabled={uploading}
-                >
-                  {uploading ? 'Uploading...' : 'Add Image'}
-                </Button>
-              </Box>
+              <div className="space-y-3">
+                <label className="text-sm font-semibold">Product Images</label>
+                <div className="flex gap-4 mb-4">
+                  <input type="file" hidden ref={fileInputRef} onChange={handleFileChange} accept="image/*" />
+                  <Button type="button" variant="outline" onClick={handleUploadClick} disabled={uploading} className="gap-2">
+                    {uploading ? <div className="w-4 h-4 border-2 border-primary/20 border-t-primary rounded-full animate-spin" /> : <UploadCloud size={18} />}
+                    {uploading ? 'Uploading...' : 'Add Image'}
+                  </Button>
+                </div>
 
-              {formData.images.length > 0 && (
-                <ImageList sx={{ height: 160, borderRadius: 2 }} cols={3} rowHeight={120}>
-                  {formData.images.map((img, index) => (
-                    <ImageListItem key={index}>
-                      <img
-                        src={img.startsWith('http') ? img : `${BASE_URL}${img}`}
-                        alt={`product-${index}`}
-                        loading="lazy"
-                        style={{ objectFit: 'cover' }}
-                      />
-                      <ImageListItemBar
-                        sx={{ background: 'transparent' }}
-                        actionIcon={
-                          <IconButton sx={{ color: 'white', bgcolor: 'rgba(0,0,0,0.5)', m: 0.5 }} size="small" onClick={() => removeImage(index)}>
-                            <DeleteOutline />
-                          </IconButton>
-                        }
-                      />
-                    </ImageListItem>
-                  ))}
-                </ImageList>
-              )}
-            </Box>
-          </DialogContent>
-          <DialogActions sx={{ p: 2 }}>
-            <Button onClick={handleClose} color="inherit">Cancel</Button>
-            <Button type="submit" variant="contained" color="primary">Save Product</Button>
-          </DialogActions>
-        </form>
-      </Dialog>
-    </Box>
+                {formData.images.length > 0 && (
+                  <div className="grid grid-cols-3 gap-4">
+                    {formData.images.map((img, index) => (
+                      <div key={index} className="relative group rounded-xl overflow-hidden border border-border h-32">
+                        <img 
+                          src={img.startsWith('http') ? img : `${BASE_URL}${img}`} 
+                          alt={`product-${index}`} 
+                          className="w-full h-full object-cover"
+                        />
+                        <button 
+                          type="button"
+                          onClick={() => removeImage(index)}
+                          className="absolute top-2 right-2 p-1.5 bg-black/50 hover:bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex justify-end gap-3 pt-6 border-t border-border">
+                <Button type="button" variant="outline" onClick={handleClose}>Cancel</Button>
+                <Button type="submit" variant="secondary">Save Product</Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

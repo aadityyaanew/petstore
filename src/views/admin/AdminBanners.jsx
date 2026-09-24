@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Switch, FormControlLabel, Chip, CircularProgress } from '@mui/material';
-import { Edit, Delete, ViewCarousel, Add, CloudUpload } from '@mui/icons-material';
+import { Image as ImageIcon, Plus, Edit, Trash2, UploadCloud, X } from 'lucide-react';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Badge } from '../../components/ui/badge';
 import api, { BASE_URL } from '../../services/api';
 
 const AdminBanners = () => {
@@ -137,212 +139,163 @@ const AdminBanners = () => {
     }
   };
 
-  if (loading) return <Box p={4}><Typography>Loading banners...</Typography></Box>;
+  if (loading) return (
+    <div className="flex justify-center py-20">
+      <div className="w-10 h-10 border-4 border-brand-pink/20 border-t-brand-pink rounded-full animate-spin" />
+    </div>
+  );
 
   return (
-    <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <ViewCarousel color="primary" sx={{ fontSize: 40 }} />
-          <Typography variant="h4" sx={{ fontWeight: 800 }}>Manage Banners</Typography>
-        </Box>
-        <Button 
-          variant="contained" 
-          startIcon={<Add />} 
-          onClick={() => handleOpen()}
-          sx={{ borderRadius: 2, px: 3 }}
-        >
-          Add Banner
+    <div className="max-w-6xl mx-auto">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl bg-brand-pink/10 text-brand-pink flex items-center justify-center">
+            <ImageIcon size={24} />
+          </div>
+          <h1 className="text-3xl font-extrabold text-foreground">Manage Banners</h1>
+        </div>
+        <Button onClick={() => handleOpen()} variant="secondary" className="gap-2">
+          <Plus size={18} /> Add Banner
         </Button>
-      </Box>
+      </div>
 
-      <Paper sx={{ borderRadius: 3, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-        <TableContainer>
-          <Table>
-            <TableHead sx={{ bgcolor: 'rgba(0,0,0,0.02)' }}>
-              <TableRow>
-                <TableCell sx={{ fontWeight: 600 }}>Preview / Title</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Order</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
-                <TableCell sx={{ fontWeight: 600 }} align="right">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
+      <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-accent/50 text-muted-foreground">
+              <tr>
+                <th className="px-6 py-4 font-semibold">Preview / Title</th>
+                <th className="px-6 py-4 font-semibold">Order</th>
+                <th className="px-6 py-4 font-semibold">Status</th>
+                <th className="px-6 py-4 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
               {banners.map((banner) => (
-                <TableRow key={banner._id} hover>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Box 
-                        sx={{ 
-                          width: 80, 
-                          height: 45, 
-                          borderRadius: 1, 
-                          background: banner.image 
-                            ? `url(${banner.image.startsWith('http') ? banner.image : `${BASE_URL}${banner.image}`}) center/cover` 
-                            : banner.gradient,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
+                <tr key={banner._id} className="hover:bg-accent/30 transition-colors">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-4">
+                      <div 
+                        className="w-20 h-12 rounded-lg bg-cover bg-center flex flex-col items-center justify-center relative overflow-hidden"
+                        style={{ background: banner.image ? `url(${banner.image.startsWith('http') ? banner.image : `${BASE_URL}${banner.image}`}) center/cover` : banner.gradient }}
                       >
-                        {!banner.image && <Typography variant="caption" color="white" sx={{ fontSize: '0.6rem', fontWeight: 700 }}>CSS</Typography>}
-                      </Box>
-                      <Box>
-                        <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>{banner.title}</Typography>
-                        <Typography variant="caption" color="text.secondary">{banner.subtitle}</Typography>
-                      </Box>
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    <Chip label={`Order: ${banner.order}`} size="small" />
-                  </TableCell>
-                  <TableCell>
-                     <FormControlLabel
-                        control={<Switch checked={banner.isActive} onChange={() => handleToggleActive(banner)} color="success" />}
-                        label={banner.isActive ? "Active" : "Hidden"}
-                      />
-                  </TableCell>
-                  <TableCell align="right">
-                    <IconButton color="primary" onClick={() => handleOpen(banner)}>
-                      <Edit />
-                    </IconButton>
-                    <IconButton color="error" onClick={() => handleDelete(banner._id)}>
-                      <Delete />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
+                        {!banner.image && <span className="text-[10px] font-bold text-white z-10 relative">CSS</span>}
+                      </div>
+                      <div>
+                        <p className="font-bold">{banner.title}</p>
+                        <p className="text-xs text-muted-foreground truncate max-w-[200px]">{banner.subtitle}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <Badge variant="outline">Order: {banner.order}</Badge>
+                  </td>
+                  <td className="px-6 py-4">
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" className="sr-only peer" checked={banner.isActive} onChange={() => handleToggleActive(banner)} />
+                      <div className="w-11 h-6 bg-accent peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                    </label>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex justify-end gap-2">
+                      <button onClick={() => handleOpen(banner)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                        <Edit size={18} />
+                      </button>
+                      <button onClick={() => handleDelete(banner._id)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
               ))}
               {banners.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={4} align="center" sx={{ py: 4 }}>No banners defined. Add one to show on the homepage.</TableCell>
-                </TableRow>
+                <tr>
+                  <td colSpan={4} className="px-6 py-12 text-center text-muted-foreground">
+                    No banners defined. Add one to show on the homepage.
+                  </td>
+                </tr>
               )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-      {/* Form Dialog */}
-      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ fontWeight: 800 }}>
-          {editingBanner ? 'Edit Banner' : 'New Banner'}
-        </DialogTitle>
-        <form onSubmit={handleSubmit}>
-          <DialogContent dividers>
-            <TextField
-              autoFocus
-              margin="dense"
-              name="title"
-              label="Banner Title"
-              type="text"
-              fullWidth
-              required
-              value={formData.title}
-              onChange={handleChange}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              margin="dense"
-              name="subtitle"
-              label="Subtitle"
-              type="text"
-              fullWidth
-              value={formData.subtitle}
-              onChange={handleChange}
-              sx={{ mb: 2 }}
-            />
-            <Box sx={{ mb: 2 }}>
-              <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
-                <TextField
-                  margin="dense"
-                  name="image"
-                  label="Background Image URL"
-                  type="text"
-                  fullWidth
-                  value={formData.image}
-                  onChange={handleChange}
-                  placeholder="https://example.com/banner.jpg or upload below"
-                />
-                <input
-                  type="file"
-                  hidden
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  accept="image/*"
-                />
-                <Button
-                  variant="outlined"
-                  component="span"
-                  startIcon={uploading ? <CircularProgress size={20} /> : <CloudUpload />}
-                  onClick={handleUploadClick}
-                  disabled={uploading}
-                  sx={{ mt: 1, minWidth: 140, height: 56, borderRadius: 2 }}
-                >
-                  {uploading ? 'Uploading...' : 'Upload File'}
-                </Button>
-              </Box>
-              {formData.image && (
-                <Box sx={{ 
-                  mt: 2, 
-                  height: 100, 
-                  borderRadius: 2, 
-                  background: `url(${formData.image.startsWith('http') ? formData.image : `${BASE_URL}${formData.image}`}) center/cover`, 
-                  border: '1px solid #ddd' 
-                }} />
-              )}
-            </Box>
-            <TextField
-              margin="dense"
-              name="gradient"
-              label="Fallback CSS Gradient"
-              type="text"
-              fullWidth
-              value={formData.gradient}
-              onChange={handleChange}
-              sx={{ mb: 2 }}
-              helperText="E.g., linear-gradient(135deg, #0F172A 0%, #1E293B 100%)"
-            />
-            <Box sx={{ display: 'flex', gap: 2, mb: 2, mt: 1 }}>
-              <TextField
-                name="buttonText"
-                label="Button Text"
-                type="text"
-                fullWidth
-                value={formData.buttonText}
-                onChange={handleChange}
-              />
-              <TextField
-                name="buttonLink"
-                label="Button Link"
-                type="text"
-                fullWidth
-                value={formData.buttonLink}
-                onChange={handleChange}
-                helperText="E.g., /products"
-              />
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-              <TextField
-                name="order"
-                label="Sorting Order"
-                type="number"
-                value={formData.order}
-                onChange={handleChange}
-                sx={{ width: 120 }}
-              />
-              <FormControlLabel
-                control={<Switch name="isActive" checked={formData.isActive} onChange={handleChange} color="success" />}
-                label="Is Active"
-              />
-            </Box>
-          </DialogContent>
-          <DialogActions sx={{ p: 2 }}>
-            <Button onClick={handleClose} color="inherit">Cancel</Button>
-            <Button type="submit" variant="contained" color="primary">Save Banner</Button>
-          </DialogActions>
-        </form>
-      </Dialog>
-    </Box>
+      {open && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div className="p-6 border-b border-border flex justify-between items-center sticky top-0 bg-white/95 backdrop-blur z-10">
+              <h2 className="text-xl font-bold">{editingBanner ? 'Edit Banner' : 'New Banner'}</h2>
+              <button onClick={handleClose} className="p-2 hover:bg-accent rounded-full text-muted-foreground"><X size={20} /></button>
+            </div>
+            
+            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold">Banner Title</label>
+                <Input name="title" value={formData.title} onChange={handleChange} required />
+              </div>
+              
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold">Subtitle</label>
+                <Input name="subtitle" value={formData.subtitle} onChange={handleChange} />
+              </div>
+              
+              <div className="space-y-3">
+                <label className="text-sm font-semibold">Background Image URL</label>
+                <div className="flex gap-2">
+                  <Input name="image" value={formData.image} onChange={handleChange} placeholder="https://..." className="flex-1" />
+                  <input type="file" hidden ref={fileInputRef} onChange={handleFileChange} accept="image/*" />
+                  <Button type="button" variant="outline" onClick={handleUploadClick} disabled={uploading}>
+                    {uploading ? <div className="w-4 h-4 border-2 border-primary/20 border-t-primary rounded-full animate-spin" /> : <UploadCloud size={18} className="mr-2" />}
+                    {uploading ? 'Uploading...' : 'Upload'}
+                  </Button>
+                </div>
+                {formData.image && (
+                  <div 
+                    className="h-24 rounded-lg bg-cover bg-center border border-border" 
+                    style={{ background: `url(${formData.image.startsWith('http') ? formData.image : `${BASE_URL}${formData.image}`}) center/cover` }}
+                  />
+                )}
+              </div>
+              
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold">Fallback CSS Gradient</label>
+                <Input name="gradient" value={formData.gradient} onChange={handleChange} placeholder="linear-gradient(...)" />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">Button Text</label>
+                  <Input name="buttonText" value={formData.buttonText} onChange={handleChange} />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">Button Link</label>
+                  <Input name="buttonLink" value={formData.buttonLink} onChange={handleChange} />
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center pt-2">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold">Sorting Order</label>
+                  <Input name="order" type="number" value={formData.order} onChange={handleChange} className="w-24" />
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm font-semibold">Is Active</label>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="isActive" className="sr-only peer" checked={formData.isActive} onChange={handleChange} />
+                    <div className="w-11 h-6 bg-accent peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-6 border-t border-border mt-6">
+                <Button type="button" variant="outline" onClick={handleClose}>Cancel</Button>
+                <Button type="submit" variant="secondary">Save Banner</Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

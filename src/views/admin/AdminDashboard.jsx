@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Grid, Card, CardContent, CircularProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip, Button, Alert } from '@mui/material';
-import { Inventory, ShoppingCart, People, AttachMoney, TrendingUp, Warning } from '@mui/icons-material';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { TrendingUp, Package, ShoppingCart, Users, DollarSign, AlertTriangle } from 'lucide-react';
+import { Badge } from '../../components/ui/badge';
 import api from '../../services/api';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 
 const AdminDashboard = () => {
   const [data, setData] = useState({
@@ -48,155 +48,125 @@ const AdminDashboard = () => {
 
     fetchDashboardData();
 
-    // Fetch low stock products in parallel
     api.getLowStockProducts()
       .then((res) => setLowStockProducts(res.data || []))
       .catch((e) => console.error('Low stock fetch failed:', e.message));
   }, []);
 
-  if (loading) {
-    return <Box display="flex" justifyContent="center" alignItems="center" height="80vh"><CircularProgress size={60} thickness={4} /></Box>;
-  }
+  if (loading) return (
+    <div className="flex justify-center py-32">
+      <div className="w-12 h-12 border-4 border-brand-pink/20 border-t-brand-pink rounded-full animate-spin" />
+    </div>
+  );
 
   const statCards = [
-    { title: 'Total Revenue', value: `₹${data.revenue.toFixed(2)}`, icon: <AttachMoney sx={{ fontSize: 36, color: '#fff' }} />, gradient: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)' },
-    { title: 'Total Orders', value: data.orders, icon: <ShoppingCart sx={{ fontSize: 36, color: '#fff' }} />, gradient: 'linear-gradient(135deg, #2D9CDB 0%, #56CCF2 100%)' },
-    { title: 'Total Products', value: data.products, icon: <Inventory sx={{ fontSize: 36, color: '#fff' }} />, gradient: 'linear-gradient(135deg, #F2994A 0%, #F2C94C 100%)' },
-    { title: 'Total Users', value: data.users, icon: <People sx={{ fontSize: 36, color: '#fff' }} />, gradient: 'linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%)' },
+    { title: 'Total Revenue', value: `₹${data.revenue.toFixed(2)}`, icon: <DollarSign size={24} className="text-white" />, gradient: 'bg-gradient-to-br from-emerald-400 to-teal-500' },
+    { title: 'Total Orders', value: data.orders, icon: <ShoppingCart size={24} className="text-white" />, gradient: 'bg-gradient-to-br from-blue-400 to-cyan-500' },
+    { title: 'Total Products', value: data.products, icon: <Package size={24} className="text-white" />, gradient: 'bg-gradient-to-br from-amber-400 to-orange-500' },
+    { title: 'Total Users', value: data.users, icon: <Users size={24} className="text-white" />, gradient: 'bg-gradient-to-br from-purple-500 to-indigo-600' },
   ];
 
   return (
-    <Box sx={{ pb: 6 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 5, gap: 2 }}>
-        <TrendingUp color="primary" sx={{ fontSize: 40 }} />
-        <Typography variant="h3" sx={{ fontWeight: 900, color: '#1a1a1a', letterSpacing: '-0.02em' }}>
-          Analytics & Dashboard
-        </Typography>
-      </Box>
+    <div className="max-w-7xl mx-auto">
+      <div className="flex items-center gap-3 mb-8">
+        <TrendingUp className="text-brand-pink" size={36} />
+        <h1 className="text-4xl font-extrabold text-foreground">Analytics & Dashboard</h1>
+      </div>
       
       {/* Stat Cards */}
-      <Grid container spacing={3} sx={{ mb: 6 }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {statCards.map((card, index) => (
-          <Grid item xs={12} sm={6} md={3} key={index}>
-            <Card sx={{ 
-              borderRadius: '24px', 
-              background: card.gradient,
-              color: 'white',
-              boxShadow: '0 12px 24px rgba(0,0,0,0.1)',
-              position: 'relative',
-              overflow: 'hidden',
-              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-              '&:hover': {
-                transform: 'translateY(-8px)',
-                boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
-              }
-            }}>
-              <Box sx={{ position: 'absolute', top: -20, right: -20, opacity: 0.1, transform: 'scale(3)' }}>
-                {card.icon}
-              </Box>
-              <CardContent sx={{ p: '32px !important', zIndex: 1, position: 'relative' }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 700, textTransform: 'uppercase', mb: 1, letterSpacing: '0.1em', opacity: 0.9 }}>
-                  {card.title}
-                </Typography>
-                <Typography variant="h3" sx={{ fontWeight: 900 }}>
-                  {card.value}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+          <div key={index} className={`relative overflow-hidden rounded-3xl ${card.gradient} text-white p-8 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all`}>
+            <div className="absolute -right-4 -top-4 opacity-20 scale-[2.5]">
+              {card.icon}
+            </div>
+            <div className="relative z-10">
+              <p className="text-sm font-bold uppercase tracking-wider mb-2 opacity-90">{card.title}</p>
+              <h2 className="text-4xl font-black">{card.value}</h2>
+            </div>
+          </div>
         ))}
-      </Grid>
+      </div>
 
       {/* Low Stock Alert Panel */}
       {lowStockProducts.length > 0 && (
-        <Box sx={{ mb: 6 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
-            <Warning sx={{ color: '#D97706', fontSize: 28 }} />
-            <Typography variant="h6" sx={{ fontWeight: 800 }}>Low Stock Alerts</Typography>
-            <Chip
-              label={`${lowStockProducts.length} product${lowStockProducts.length > 1 ? 's' : ''} need restocking`}
-              size="small"
-              sx={{ bgcolor: '#FEF3C7', color: '#D97706', fontWeight: 700 }}
-            />
-          </Box>
-          <Paper sx={{ borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', border: '1px solid #FDE68A' }}>
-            <TableContainer>
-              <Table size="small">
-                <TableHead sx={{ bgcolor: '#FFFBEB' }}>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 700, color: '#92400E' }}>Product Name</TableCell>
-                    <TableCell sx={{ fontWeight: 700, color: '#92400E' }}>Category</TableCell>
-                    <TableCell sx={{ fontWeight: 700, color: '#92400E' }}>Current Stock</TableCell>
-                    <TableCell sx={{ fontWeight: 700, color: '#92400E' }}>Alert Threshold</TableCell>
-                    <TableCell sx={{ fontWeight: 700, color: '#92400E' }}>Status</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <AlertTriangle className="text-amber-500" size={24} />
+            <h2 className="text-xl font-bold">Low Stock Alerts</h2>
+            <Badge variant="warning">{lowStockProducts.length} items</Badge>
+          </div>
+          <div className="bg-amber-50 rounded-2xl border border-amber-200 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="text-amber-900 border-b border-amber-200">
+                  <tr>
+                    <th className="px-6 py-3 font-bold">Product Name</th>
+                    <th className="px-6 py-3 font-bold">Category</th>
+                    <th className="px-6 py-3 font-bold">Stock</th>
+                    <th className="px-6 py-3 font-bold">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-amber-200 text-amber-950">
                   {lowStockProducts.map((product) => (
-                    <TableRow key={product._id} hover sx={{ '&:last-child td': { border: 0 } }}>
-                      <TableCell sx={{ fontWeight: 600 }}>{product.name}</TableCell>
-                      <TableCell>{product.category}</TableCell>
-                      <TableCell>
-                        <Typography sx={{ fontWeight: 800, color: product.stock === 0 ? '#DC2626' : '#D97706' }}>
-                          {product.stock}
-                        </Typography>
-                      </TableCell>
-                      <TableCell sx={{ color: 'text.secondary' }}>≤ {product.lowStockThreshold ?? 5}</TableCell>
-                      <TableCell>
+                    <tr key={product._id} className="hover:bg-amber-100/50">
+                      <td className="px-6 py-3 font-semibold">{product.name}</td>
+                      <td className="px-6 py-3">{product.category}</td>
+                      <td className={`px-6 py-3 font-bold ${product.stock === 0 ? 'text-red-600' : 'text-amber-600'}`}>
+                        {product.stock} (≤ {product.lowStockThreshold ?? 5})
+                      </td>
+                      <td className="px-6 py-3">
                         {product.stock === 0 ? (
-                          <Chip label="Out of Stock" size="small" sx={{ bgcolor: '#FEE2E2', color: '#DC2626', fontWeight: 700 }} />
+                          <span className="bg-red-100 text-red-700 px-2 py-1 rounded-md text-xs font-bold border border-red-200">Out of Stock</span>
                         ) : (
-                          <Chip label="Low Stock" size="small" sx={{ bgcolor: '#FEF3C7', color: '#D97706', fontWeight: 700 }} />
+                          <span className="bg-amber-200 text-amber-800 px-2 py-1 rounded-md text-xs font-bold">Low Stock</span>
                         )}
-                      </TableCell>
-                    </TableRow>
+                      </td>
+                    </tr>
                   ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
-        </Box>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Charts Section 1: Revenue & Order Status */}
-      <Grid container spacing={4} sx={{ mb: 6 }}>
-        <Grid item xs={12} lg={8}>
-          <Paper sx={{ p: 4, borderRadius: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', height: 450 }}>
-            <Typography variant="h6" sx={{ fontWeight: 800, mb: 4 }}>Revenue Trends (Last 30 Days)</Typography>
-            <ResponsiveContainer width="100%" height="80%">
-              {data.salesData.length > 0 ? (
-                <AreaChart data={data.salesData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="lg:col-span-2 bg-white rounded-3xl p-6 sm:p-8 border border-border shadow-sm">
+          <h3 className="text-xl font-bold mb-6">Revenue Trends (Last 30 Days)</h3>
+          <div className="h-[300px] w-full">
+            {data.salesData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={data.salesData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#11998e" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#11998e" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#10B981" stopOpacity={0.4}/>
+                      <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <XAxis dataKey="date" axisLine={false} tickLine={false} tickMargin={10} 
-                        tickFormatter={(val) => new Date(val).toLocaleDateString(undefined, {month:'short', day:'numeric'})} />
-                  <YAxis tickFormatter={(val) => `₹${val}`} axisLine={false} tickLine={false} tickMargin={10} width={80} />
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#eee" />
+                  <XAxis dataKey="date" axisLine={false} tickLine={false} tickMargin={10} tick={{fontSize: 12, fill: '#64748b'}} tickFormatter={(val) => new Date(val).toLocaleDateString(undefined, {month:'short', day:'numeric'})} />
+                  <YAxis axisLine={false} tickLine={false} tickMargin={10} tick={{fontSize: 12, fill: '#64748b'}} tickFormatter={(val) => `₹${val}`} />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                   <Tooltip 
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }}
+                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
                     formatter={(value) => [`₹${value.toFixed(2)}`, 'Revenue']}
                     labelFormatter={(label) => new Date(label).toLocaleDateString()}
                   />
-                  <Area type="monotone" dataKey="amount" stroke="#11998e" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
+                  <Area type="monotone" dataKey="amount" stroke="#10B981" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
                 </AreaChart>
-              ) : (
-                <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-                  <Typography color="text.secondary">No revenue data available.</Typography>
-                </Box>
-              )}
-            </ResponsiveContainer>
-          </Paper>
-        </Grid>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-muted-foreground">No revenue data available.</div>
+            )}
+          </div>
+        </div>
 
-        <Grid item xs={12} lg={4}>
-          <Paper sx={{ p: 4, borderRadius: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', height: 450, display: 'flex', flexDirection: 'column' }}>
-            <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>Order Status</Typography>
-            <ResponsiveContainer width="100%" height="100%">
-              {data.statusData.length > 0 ? (
+        <div className="lg:col-span-1 bg-white rounded-3xl p-6 sm:p-8 border border-border shadow-sm flex flex-col">
+          <h3 className="text-xl font-bold mb-2">Order Status</h3>
+          <div className="flex-1 min-h-[250px]">
+            {data.statusData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={data.statusData}
@@ -206,163 +176,135 @@ const AdminDashboard = () => {
                     outerRadius="80%"
                     paddingAngle={5}
                     dataKey="value"
+                    stroke="none"
                   >
                     {data.statusData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                  <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} />
                 </PieChart>
-              ) : (
-                <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-                  <Typography color="text.secondary">No orders yet.</Typography>
-                </Box>
-              )}
-            </ResponsiveContainer>
-            
-            {/* Custom Legend */}
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, justifyContent: 'center', mt: 2 }}>
-              {data.statusData.map((entry, index) => (
-                <Box key={entry.name} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: COLORS[index % COLORS.length] }} />
-                  <Typography variant="body2" sx={{ textTransform: 'capitalize', fontWeight: 600 }}>{entry.name}</Typography>
-                </Box>
-              ))}
-            </Box>
-          </Paper>
-        </Grid>
-      </Grid>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-muted-foreground">No orders yet.</div>
+            )}
+          </div>
+          
+          <div className="flex flex-wrap gap-x-4 gap-y-2 justify-center mt-4">
+            {data.statusData.map((entry, index) => (
+              <div key={entry.name} className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                <span className="text-sm font-semibold capitalize">{entry.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* Analytics Section 2: User Growth */}
-      <Grid container spacing={4} sx={{ mb: 6 }}>
-        <Grid item xs={12}>
-          <Paper sx={{ p: 4, borderRadius: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', height: 400 }}>
-            <Typography variant="h6" sx={{ fontWeight: 800, mb: 4 }}>User Registrations (Last 30 Days)</Typography>
-            <ResponsiveContainer width="100%" height="80%">
-              {data.newUsersData.length > 0 ? (
-                <AreaChart data={data.newUsersData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#8E2DE2" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#8E2DE2" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <XAxis dataKey="date" axisLine={false} tickLine={false} tickMargin={10} 
-                         tickFormatter={(val) => new Date(val).toLocaleDateString(undefined, {month:'short', day:'numeric'})} />
-                  <YAxis axisLine={false} tickLine={false} tickMargin={10} />
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#eee" />
-                  <Tooltip 
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }}
-                    formatter={(value) => [value, 'New Users']}
-                    labelFormatter={(label) => new Date(label).toLocaleDateString()}
-                  />
-                  <Area type="monotone" dataKey="users" stroke="#8E2DE2" strokeWidth={3} fillOpacity={1} fill="url(#colorUsers)" />
-                </AreaChart>
-              ) : (
-                <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-                  <Typography color="text.secondary">No user data available.</Typography>
-                </Box>
-              )}
+      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-border shadow-sm mb-8">
+        <h3 className="text-xl font-bold mb-6">User Registrations (Last 30 Days)</h3>
+        <div className="h-[250px] w-full">
+          {data.newUsersData.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={data.newUsersData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.4}/>
+                    <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="date" axisLine={false} tickLine={false} tickMargin={10} tick={{fontSize: 12, fill: '#64748b'}} tickFormatter={(val) => new Date(val).toLocaleDateString(undefined, {month:'short', day:'numeric'})} />
+                <YAxis axisLine={false} tickLine={false} tickMargin={10} tick={{fontSize: 12, fill: '#64748b'}} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <Tooltip 
+                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
+                  formatter={(value) => [value, 'New Users']}
+                  labelFormatter={(label) => new Date(label).toLocaleDateString()}
+                />
+                <Area type="monotone" dataKey="users" stroke="#8B5CF6" strokeWidth={3} fillOpacity={1} fill="url(#colorUsers)" />
+              </AreaChart>
             </ResponsiveContainer>
-          </Paper>
-        </Grid>
-      </Grid>
+          ) : (
+            <div className="h-full flex items-center justify-center text-muted-foreground">No user data available.</div>
+          )}
+        </div>
+      </div>
 
-      <Grid container spacing={4}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Products */}
-        <Grid item xs={12} lg={6}>
-          <Paper sx={{ p: 0, borderRadius: '24px', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', height: '100%' }}>
-            <Box sx={{ p: 4, pb: 2, borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
-              <Typography variant="h6" sx={{ fontWeight: 800 }}>Top Selling Products</Typography>
-            </Box>
-            <TableContainer>
-              <Table>
-                <TableHead sx={{ bgcolor: 'rgba(0,0,0,0.02)' }}>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 600 }}>Product Name</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }} align="right">Qty Sold</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }} align="right">Revenue</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data.topProducts.map((product) => (
-                    <TableRow key={product._id} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                      <TableCell sx={{ fontWeight: 500 }}>{product.name}</TableCell>
-                      <TableCell align="right">
-                        <Chip label={product.quantity} size="small" color="primary" variant="outlined" sx={{ fontWeight: 'bold' }} />
-                      </TableCell>
-                      <TableCell align="right" sx={{ fontWeight: 700, color: 'success.main' }}>
-                        ₹{product.revenue.toFixed(2)}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  {data.topProducts.length === 0 && (
-                    <TableRow>
-                      <TableCell colSpan={3} align="center" sx={{ py: 3, color: 'text.secondary' }}>
-                        No products sold yet.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
-        </Grid>
+        <div className="bg-white rounded-3xl border border-border shadow-sm overflow-hidden flex flex-col h-full">
+          <div className="p-6 border-b border-border bg-accent/20">
+            <h3 className="text-xl font-bold">Top Selling Products</h3>
+          </div>
+          <div className="overflow-x-auto flex-1">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-accent/30 text-muted-foreground">
+                <tr>
+                  <th className="px-6 py-3 font-semibold">Product Name</th>
+                  <th className="px-6 py-3 font-semibold text-right">Qty Sold</th>
+                  <th className="px-6 py-3 font-semibold text-right">Revenue</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {data.topProducts.map((product) => (
+                  <tr key={product._id} className="hover:bg-accent/10">
+                    <td className="px-6 py-4 font-medium">{product.name}</td>
+                    <td className="px-6 py-4 text-right">
+                      <Badge variant="outline">{product.quantity}</Badge>
+                    </td>
+                    <td className="px-6 py-4 text-right font-bold text-emerald-600">₹{product.revenue.toFixed(2)}</td>
+                  </tr>
+                ))}
+                {data.topProducts.length === 0 && (
+                  <tr>
+                    <td colSpan={3} className="px-6 py-8 text-center text-muted-foreground">No products sold yet.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         {/* Recent Orders */}
-        <Grid item xs={12} lg={6}>
-          <Paper sx={{ p: 0, borderRadius: '24px', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', height: '100%' }}>
-            <Box sx={{ p: 4, pb: 2, borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
-              <Typography variant="h6" sx={{ fontWeight: 800 }}>Recent Orders</Typography>
-            </Box>
-            <TableContainer>
-              <Table>
-                <TableHead sx={{ bgcolor: 'rgba(0,0,0,0.02)' }}>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 600 }}>Order ID</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Customer</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Total</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data.recentOrders.map((order) => (
-                    <TableRow key={order._id} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                      <TableCell sx={{ fontFamily: 'monospace' }}>{order._id.substring(18)}</TableCell>
-                      <TableCell sx={{ fontWeight: 500 }}>{order.user?.name || 'Guest'}</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>₹{order.totalPrice.toFixed(2)}</TableCell>
-                      <TableCell>
-                        <Chip 
-                          label={order.status} 
-                          size="small"
-                          sx={{ 
-                            textTransform: 'capitalize', 
-                            fontWeight: 700,
-                            bgcolor: order.status === 'delivered' ? 'success.light' : 
-                                     order.status === 'processing' ? 'warning.light' : 
-                                     order.status === 'shipped' ? 'info.light' : 'grey.200',
-                            color: order.status === 'delivered' ? 'success.dark' : 
-                                   order.status === 'processing' ? 'warning.dark' : 
-                                   order.status === 'shipped' ? 'info.dark' : 'text.primary',
-                          }} 
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  {data.recentOrders.length === 0 && (
-                    <TableRow>
-                      <TableCell colSpan={4} align="center" sx={{ py: 3, color: 'text.secondary' }}>
-                        No orders found.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
-        </Grid>
-      </Grid>
-    </Box>
+        <div className="bg-white rounded-3xl border border-border shadow-sm overflow-hidden flex flex-col h-full">
+          <div className="p-6 border-b border-border bg-accent/20">
+            <h3 className="text-xl font-bold">Recent Orders</h3>
+          </div>
+          <div className="overflow-x-auto flex-1">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-accent/30 text-muted-foreground">
+                <tr>
+                  <th className="px-6 py-3 font-semibold">Order ID</th>
+                  <th className="px-6 py-3 font-semibold">Customer</th>
+                  <th className="px-6 py-3 font-semibold">Total</th>
+                  <th className="px-6 py-3 font-semibold">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {data.recentOrders.map((order) => (
+                  <tr key={order._id} className="hover:bg-accent/10">
+                    <td className="px-6 py-4 font-mono text-xs text-muted-foreground">{order._id.substring(18)}</td>
+                    <td className="px-6 py-4 font-medium">{order.user?.name || 'Guest'}</td>
+                    <td className="px-6 py-4 font-bold">₹{order.totalPrice.toFixed(2)}</td>
+                    <td className="px-6 py-4">
+                      <Badge variant={order.status === 'delivered' ? 'success' : order.status === 'processing' ? 'warning' : order.status === 'shipped' ? 'default' : 'outline'} className="capitalize">
+                        {order.status}
+                      </Badge>
+                    </td>
+                  </tr>
+                ))}
+                {data.recentOrders.length === 0 && (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-8 text-center text-muted-foreground">No orders found.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

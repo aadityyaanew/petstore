@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Chip, Select, MenuItem } from '@mui/material';
+import { ShoppingCart } from 'lucide-react';
+import { Badge } from '../../components/ui/badge';
 import api from '../../services/api';
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchOrders = async () => {
     try {
@@ -11,6 +13,8 @@ const AdminOrders = () => {
       setOrders(res.data);
     } catch (error) {
       console.error('Error fetching orders:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -28,78 +32,90 @@ const AdminOrders = () => {
     }
   };
 
-  const getStatusColor = (status) => {
+  const getStatusVariant = (status) => {
     switch (status) {
       case 'processing': return 'warning';
       case 'confirmed': return 'info';
-      case 'shipped': return 'primary';
+      case 'shipped': return 'default';
       case 'delivered': return 'success';
-      case 'cancelled': return 'error';
-      default: return 'default';
+      case 'cancelled': return 'destructive';
+      default: return 'outline';
     }
   };
 
+  if (loading) return (
+    <div className="flex justify-center py-20">
+      <div className="w-10 h-10 border-4 border-brand-pink/20 border-t-brand-pink rounded-full animate-spin" />
+    </div>
+  );
+
   return (
-    <Box>
-      <Typography variant="h4" sx={{ fontWeight: 700, mb: 4, color: '#1a1a1a' }}>
-        Manage Orders
-      </Typography>
+    <div className="max-w-6xl mx-auto">
+      <div className="flex items-center gap-3 mb-8">
+        <div className="w-12 h-12 rounded-xl bg-brand-pink/10 text-brand-pink flex items-center justify-center">
+          <ShoppingCart size={24} />
+        </div>
+        <h1 className="text-3xl font-extrabold text-foreground">Manage Orders</h1>
+      </div>
       
-      <TableContainer component={Paper} sx={{ borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-        <Table>
-          <TableHead sx={{ bgcolor: 'rgba(0,0,0,0.02)' }}>
-            <TableRow>
-              <TableCell sx={{ fontWeight: 600 }}>Order ID</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>User</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Date</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Total</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Payment</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Update Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {orders.map((order) => (
-              <TableRow key={order._id} hover>
-                <TableCell>{order._id.substring(18)}</TableCell>
-                <TableCell>{order.user?.name || 'Unknown'}</TableCell>
-                <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
-                <TableCell>₹{order.totalPrice.toFixed(2)}</TableCell>
-                <TableCell>
-                  <Chip 
-                    label={order.paymentStatus} 
-                    color={order.paymentStatus === 'paid' ? 'success' : 'warning'} 
-                    size="small" 
-                  />
-                </TableCell>
-                <TableCell>
-                  <Chip 
-                    label={order.status} 
-                    color={getStatusColor(order.status)} 
-                    size="small" 
-                    sx={{ textTransform: 'capitalize' }}
-                  />
-                </TableCell>
-                <TableCell>
-                  <Select
-                    size="small"
-                    value={order.status}
-                    onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                    sx={{ minWidth: 120 }}
-                  >
-                    <MenuItem value="processing">Processing</MenuItem>
-                    <MenuItem value="confirmed">Confirmed</MenuItem>
-                    <MenuItem value="shipped">Shipped</MenuItem>
-                    <MenuItem value="delivered">Delivered</MenuItem>
-                    <MenuItem value="cancelled">Cancelled</MenuItem>
-                  </Select>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+      <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-accent/50 text-muted-foreground">
+              <tr>
+                <th className="px-6 py-4 font-semibold">Order ID</th>
+                <th className="px-6 py-4 font-semibold">User</th>
+                <th className="px-6 py-4 font-semibold">Date</th>
+                <th className="px-6 py-4 font-semibold">Total</th>
+                <th className="px-6 py-4 font-semibold">Payment</th>
+                <th className="px-6 py-4 font-semibold">Status</th>
+                <th className="px-6 py-4 font-semibold">Update Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {orders.map((order) => (
+                <tr key={order._id} className="hover:bg-accent/30 transition-colors">
+                  <td className="px-6 py-4 font-mono text-xs text-muted-foreground">{order._id.substring(18)}</td>
+                  <td className="px-6 py-4 font-medium">{order.user?.name || 'Unknown'}</td>
+                  <td className="px-6 py-4 text-muted-foreground">{new Date(order.createdAt).toLocaleDateString()}</td>
+                  <td className="px-6 py-4 font-bold text-brand-pink">₹{order.totalPrice.toFixed(2)}</td>
+                  <td className="px-6 py-4">
+                    <Badge variant={order.paymentStatus === 'paid' ? 'success' : 'warning'}>
+                      {order.paymentStatus}
+                    </Badge>
+                  </td>
+                  <td className="px-6 py-4">
+                    <Badge variant={getStatusVariant(order.status)} className="capitalize">
+                      {order.status}
+                    </Badge>
+                  </td>
+                  <td className="px-6 py-4">
+                    <select
+                      value={order.status}
+                      onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                      className="flex h-9 w-full min-w-[120px] rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <option value="processing">Processing</option>
+                      <option value="confirmed">Confirmed</option>
+                      <option value="shipped">Shipped</option>
+                      <option value="delivered">Delivered</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
+                  </td>
+                </tr>
+              ))}
+              {orders.length === 0 && (
+                <tr>
+                  <td colSpan={7} className="px-6 py-12 text-center text-muted-foreground">
+                    No orders found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 };
 

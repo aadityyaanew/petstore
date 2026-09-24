@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Box, Typography, Card, CardContent, TextField, Button, Grid, Stepper, Step, StepLabel, RadioGroup, FormControlLabel, Radio, Divider } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import api from '../services/api';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
 
-const steps = ['Shipping Address', 'Payment Details'];
+const STEPS = ['Shipping Address', 'Payment Details'];
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -83,7 +84,6 @@ const Checkout = () => {
       const { data } = await api.placeOrder(orderData);
       
       if (data.razorpayOrderId) {
-        // Razorpay flow for Card / UPI
         const keyData = await api.getRazorpayKey();
         
         const options = {
@@ -104,7 +104,7 @@ const Checkout = () => {
               navigate('/order-success');
             } catch (err) {
               alert('Payment verification failed.');
-              navigate('/orders'); // Take to orders page so they can retry or see pending order
+              navigate('/orders'); 
             }
           },
           prefill: {
@@ -128,9 +128,7 @@ const Checkout = () => {
           alert('Payment Failed! ' + response.error.description);
         });
         rzp.open();
-
       } else {
-        // COD flow
         await emptyCart();
         navigate('/order-success');
       }
@@ -142,10 +140,10 @@ const Checkout = () => {
 
   if (!cart?.items?.length) {
     return (
-      <Box sx={{ p: 4, textAlign: 'center' }}>
-        <Typography variant="h5">Your cart is empty.</Typography>
-        <Button onClick={() => navigate('/')} variant="contained" sx={{ mt: 2 }}>Go Shopping</Button>
-      </Box>
+      <div className="py-20 text-center px-4">
+        <h2 className="text-2xl font-bold mb-4">Your cart is empty.</h2>
+        <Button onClick={() => navigate('/')} variant="secondary">Go Shopping</Button>
+      </div>
     );
   }
 
@@ -154,124 +152,162 @@ const Checkout = () => {
   const discountAmount = appliedCoupon?.discountAmount || 0;
 
   return (
-    <Box sx={{ maxWidth: 1000, mx: 'auto', p: 4 }}>
-      <Typography variant="h4" sx={{ fontWeight: 800, mb: 4, textAlign: 'center' }}>Checkout</Typography>
+    <div className="max-w-5xl mx-auto px-4 py-8">
+      <h1 className="text-3xl font-extrabold text-center mb-8">Checkout</h1>
       
-      <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
-        {steps.map((label) => (
-          <Step key={label}><StepLabel>{label}</StepLabel></Step>
-        ))}
-      </Stepper>
+      <div className="flex justify-center mb-8">
+        <div className="flex items-center space-x-4">
+          {STEPS.map((label, index) => (
+            <div key={label} className="flex items-center">
+              <div className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${activeStep >= index ? 'border-brand-pink bg-brand-pink text-white' : 'border-border text-muted-foreground'}`}>
+                {index + 1}
+              </div>
+              <span className={`ml-2 text-sm font-medium ${activeStep >= index ? 'text-foreground' : 'text-muted-foreground'}`}>{label}</span>
+              {index < STEPS.length - 1 && <div className="w-10 h-0.5 mx-4 bg-border" />}
+            </div>
+          ))}
+        </div>
+      </div>
 
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={8}>
-          <Card sx={{ borderRadius: '16px', boxShadow: '0 8px 32px rgba(0,0,0,0.06)' }}>
-            <CardContent sx={{ p: 4 }}>
-              {activeStep === 0 && (
-                <Box>
-                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>Shipping Address</Typography>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}><TextField label="Full Name" name="fullName" value={formData.fullName} onChange={handleChange} fullWidth /></Grid>
-                    <Grid item xs={12}><TextField label="Street Address" name="street" value={formData.street} onChange={handleChange} fullWidth /></Grid>
-                    <Grid item xs={6}><TextField label="City" name="city" value={formData.city} onChange={handleChange} fullWidth /></Grid>
-                    <Grid item xs={6}><TextField label="State" name="state" value={formData.state} onChange={handleChange} fullWidth /></Grid>
-                    <Grid item xs={6}><TextField label="ZIP Code" name="zipCode" value={formData.zipCode} onChange={handleChange} fullWidth /></Grid>
-                    <Grid item xs={6}><TextField label="Phone Number" name="phone" value={formData.phone} onChange={handleChange} fullWidth /></Grid>
-                  </Grid>
-                </Box>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          <div className="bg-white rounded-2xl border border-border shadow-sm p-6 sm:p-8">
+            {activeStep === 0 && (
+              <div className="space-y-4">
+                <h2 className="text-xl font-bold mb-4">Shipping Address</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <label className="text-sm font-semibold">Full Name</label>
+                    <Input name="fullName" value={formData.fullName} onChange={handleChange} />
+                  </div>
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <label className="text-sm font-semibold">Street Address</label>
+                    <Input name="street" value={formData.street} onChange={handleChange} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold">City</label>
+                    <Input name="city" value={formData.city} onChange={handleChange} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold">State</label>
+                    <Input name="state" value={formData.state} onChange={handleChange} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold">ZIP Code</label>
+                    <Input name="zipCode" value={formData.zipCode} onChange={handleChange} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold">Phone Number</label>
+                    <Input name="phone" value={formData.phone} onChange={handleChange} />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeStep === 1 && (
+              <div className="space-y-4">
+                <h2 className="text-xl font-bold mb-4">Payment Method</h2>
+                <div className="space-y-3">
+                  {['Card', 'UPI', 'COD'].map((method) => (
+                    <label key={method} className="flex items-center gap-3 p-4 border border-border rounded-xl cursor-pointer hover:bg-accent/50 transition-colors">
+                      <input 
+                        type="radio" 
+                        name="paymentMethod" 
+                        value={method} 
+                        checked={formData.paymentMethod === method}
+                        onChange={handleChange}
+                        className="w-4 h-4 text-brand-pink focus:ring-brand-pink"
+                      />
+                      <span className="font-medium">
+                        {method === 'Card' ? 'Credit / Debit Card' : method === 'UPI' ? 'UPI' : 'Cash on Delivery (COD)'}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="flex justify-between items-center mt-8 pt-6 border-t border-border">
+              <Button disabled={activeStep === 0} onClick={handleBack} variant="outline">
+                Back
+              </Button>
+              {activeStep === STEPS.length - 1 ? (
+                <Button onClick={handlePlaceOrder} variant="secondary" size="lg">
+                  Place Order
+                </Button>
+              ) : (
+                <Button onClick={handleNext} variant="secondary">
+                  Next
+                </Button>
               )}
+            </div>
+          </div>
+        </div>
 
-              {activeStep === 1 && (
-                <Box>
-                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>Payment Method</Typography>
-                  <RadioGroup name="paymentMethod" value={formData.paymentMethod} onChange={handleChange}>
-                    <FormControlLabel value="Card" control={<Radio />} label="Credit / Debit Card" />
-                    <FormControlLabel value="UPI" control={<Radio />} label="UPI" />
-                    <FormControlLabel value="COD" control={<Radio />} label="Cash on Delivery (COD)" />
-                  </RadioGroup>
-                </Box>
-              )}
-
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
-                <Button disabled={activeStep === 0} onClick={handleBack} variant="outlined">Back</Button>
-                {activeStep === steps.length - 1 ? (
-                  <Button variant="contained" color="primary" onClick={handlePlaceOrder} sx={{ px: 4, py: 1, borderRadius: '8px', fontSize: '1.1rem' }}>
-                    Place Order
-                  </Button>
-                ) : (
-                  <Button variant="contained" color="primary" onClick={handleNext}>Next</Button>
-                )}
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Card sx={{ borderRadius: '16px', bgcolor: '#f8f9fa', boxShadow: 'none', border: '1px solid rgba(0,0,0,0.08)' }}>
-            <CardContent sx={{ p: 3 }}>
-              <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>Order Summary</Typography>
+        <div className="lg:col-span-1">
+          <div className="bg-accent/20 rounded-2xl border border-border p-6 sticky top-24">
+            <h2 className="text-lg font-bold mb-4">Order Summary</h2>
+            
+            <div className="space-y-3 mb-6 max-h-60 overflow-y-auto pr-2">
               {cart.items.map((item) => (
-                <Box key={item.product._id} sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <div key={item.product._id} className="flex justify-between items-center">
+                  <p className="text-sm text-muted-foreground truncate pr-2">
                     {item.product.name} (x{item.quantity})
-                  </Typography>
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                  </p>
+                  <p className="text-sm font-semibold shrink-0">
                     ₹{(item.product.price * item.quantity).toFixed(2)}
-                  </Typography>
-                </Box>
+                  </p>
+                </div>
               ))}
-              <Divider sx={{ my: 2 }} />
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                <Typography variant="body1">Subtotal:</Typography>
-                <Typography variant="body1">₹{itemsPrice.toFixed(2)}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                <Typography variant="body1">Shipping:</Typography>
-                <Typography variant="body1">₹{shippingPrice.toFixed(2)}</Typography>
-              </Box>
+            </div>
+            
+            <div className="space-y-2 text-sm border-t border-border pt-4 mb-4">
+              <div className="flex justify-between">
+                <span>Subtotal:</span>
+                <span className="font-medium">₹{itemsPrice.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Shipping:</span>
+                <span className="font-medium">₹{shippingPrice.toFixed(2)}</span>
+              </div>
               {appliedCoupon && (
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                  <Typography variant="body1" color="success.main">Discount ({appliedCoupon.code}):</Typography>
-                  <Typography variant="body1" color="success.main">-₹{appliedCoupon.discountAmount.toFixed(2)}</Typography>
-                </Box>
+                <div className="flex justify-between text-emerald-600 font-medium">
+                  <span>Discount ({appliedCoupon.code}):</span>
+                  <span>-₹{appliedCoupon.discountAmount.toFixed(2)}</span>
+                </div>
               )}
-              <Divider sx={{ my: 2 }} />
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="h5" sx={{ fontWeight: 800 }}>Total:</Typography>
-                <Typography variant="h5" sx={{ fontWeight: 800, color: 'primary.main' }}>
-                  ₹{(itemsPrice + shippingPrice - discountAmount).toFixed(2)}
-                </Typography>
-              </Box>
+            </div>
+            
+            <div className="flex justify-between items-center pt-4 border-t border-border mb-6">
+              <span className="text-lg font-bold">Total:</span>
+              <span className="text-2xl font-extrabold text-brand-pink">
+                ₹{(itemsPrice + shippingPrice - discountAmount).toFixed(2)}
+              </span>
+            </div>
 
-              {/* Coupon Section */}
-              <Box sx={{ mt: 4, pt: 3, borderTop: '1px dashed rgba(0,0,0,0.1)' }}>
-                <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 700 }}>Have a Coupon?</Typography>
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                  <TextField 
-                    size="small" 
-                    placeholder="Enter code" 
-                    value={couponCode} 
-                    onChange={(e) => setCouponCode(e.target.value)}
-                    disabled={!!appliedCoupon}
-                    fullWidth
-                    inputProps={{ style: { textTransform: 'uppercase' } }}
-                  />
-                  <Button 
-                    variant={appliedCoupon ? "outlined" : "contained"}
-                    color={appliedCoupon ? "error" : "primary"}
-                    onClick={appliedCoupon ? () => { setAppliedCoupon(null); setCouponCode(''); } : handleApplyCoupon}
-                    disableElevation
-                  >
-                    {appliedCoupon ? 'Remove' : 'Apply'}
-                  </Button>
-                </Box>
-                {couponError && <Typography variant="caption" color="error" sx={{ mt: 0.5, display: 'block' }}>{couponError}</Typography>}
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    </Box>
+            <div className="pt-4 border-t border-dashed border-border">
+              <p className="text-sm font-bold mb-2">Have a Coupon?</p>
+              <div className="flex gap-2">
+                <Input 
+                  placeholder="Enter code" 
+                  value={couponCode} 
+                  onChange={(e) => setCouponCode(e.target.value)}
+                  disabled={!!appliedCoupon}
+                  className="uppercase"
+                />
+                <Button 
+                  variant={appliedCoupon ? "destructive" : "default"}
+                  onClick={appliedCoupon ? () => { setAppliedCoupon(null); setCouponCode(''); } : handleApplyCoupon}
+                >
+                  {appliedCoupon ? 'Remove' : 'Apply'}
+                </Button>
+              </div>
+              {couponError && <p className="text-xs text-red-500 mt-2">{couponError}</p>}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

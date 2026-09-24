@@ -1,28 +1,117 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-html,
-body {
-  padding: 0;
-  margin: 0;
-  overflow-x: hidden;
-  max-width: 100vw;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
+@layer base {
+  :root {
+    /* shadcn/ui CSS variables — Poonch Pet Store theme */
+    --background: 270 40% 98%;        /* very light lavender-white */
+    --foreground: 240 30% 10%;        /* near-black charcoal */
+    --card: 0 0% 100%;
+    --card-foreground: 240 30% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 30% 10%;
+    --primary: 240 30% 14%;           /* #1A1A2E charcoal */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 325 82% 52%;         /* #E91E8C hot pink */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 270 30% 94%;
+    --muted-foreground: 240 10% 45%;
+    --accent: 325 82% 95%;            /* very light pink */
+    --accent-foreground: 325 82% 40%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 270 20% 88%;
+    --input: 270 20% 88%;
+    --ring: 325 82% 52%;
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden;
+    max-width: 100vw;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    @apply bg-background text-foreground;
+  }
+
+  input, textarea, select {
+    user-select: text;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
-input, textarea {
-  user-select: text;
+@layer components {
+  /* Poonch brand reusable classes */
+  .brand-gradient {
+    @apply bg-gradient-to-br from-brand-charcoal via-[#2D1B4E] to-brand-charcoal;
+  }
+
+  .brand-glow {
+    @apply shadow-[0_0_40px_rgba(233,30,140,0.3)];
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_32px_rgba(233,30,140,0.12)];
+  }
+
+  .btn-primary {
+    @apply bg-brand-charcoal text-white font-semibold px-6 py-2.5 rounded-lg
+           transition-all duration-200 hover:bg-[#2D2D4A] hover:-translate-y-0.5
+           hover:shadow-[0_4px_16px_rgba(26,26,46,0.3)] active:translate-y-0 cursor-pointer;
+  }
+
+  .btn-secondary {
+    @apply bg-brand-pink text-white font-semibold px-6 py-2.5 rounded-lg
+           transition-all duration-200 hover:bg-brand-pink-dark hover:-translate-y-0.5
+           hover:shadow-[0_4px_16px_rgba(233,30,140,0.4)] active:translate-y-0 cursor-pointer;
+  }
+
+  .btn-outline-pink {
+    @apply border-2 border-brand-pink text-brand-pink font-semibold px-6 py-2.5 rounded-lg
+           transition-all duration-200 hover:bg-brand-pink hover:text-white hover:-translate-y-0.5
+           active:translate-y-0 cursor-pointer bg-transparent;
+  }
+
+  .section-heading {
+    @apply text-3xl md:text-4xl font-extrabold tracking-tight text-foreground;
+  }
+
+  .section-subheading {
+    @apply text-base md:text-lg text-muted-foreground mt-1;
+  }
+
+  .pink-badge {
+    @apply inline-flex items-center gap-1 text-xs font-bold tracking-wider uppercase
+           bg-brand-pink/10 text-brand-pink border border-brand-pink/20 px-3 py-1 rounded-full;
+  }
+
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl;
+  }
 }
 
-* {
-  box-sizing: border-box;
-}
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
+  .animation-delay-100 { animation-delay: 100ms; }
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
 }
