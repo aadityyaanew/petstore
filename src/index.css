@@ -4,27 +4,27 @@
 
 @layer base {
   :root {
-    /* shadcn/ui CSS variables — Poonch Pet Store theme */
-    --background: 270 40% 98%;        /* very light lavender-white */
-    --foreground: 240 30% 10%;        /* near-black charcoal */
+    /* Pet Store Theme - Matching logo.jpeg Orchid Pink & Sleek Dark Accents */
+    --background: 0 0% 100%;
+    --foreground: 222 20% 11%;        /* Rich deep dark */
     --card: 0 0% 100%;
-    --card-foreground: 240 30% 10%;
+    --card-foreground: 222 20% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 30% 10%;
-    --primary: 240 30% 14%;           /* #1A1A2E charcoal */
+    --popover-foreground: 222 20% 11%;
+    --primary: 222 20% 11%;           /* Pitch charcoal/black */
     --primary-foreground: 0 0% 100%;
-    --secondary: 325 82% 52%;         /* #E91E8C hot pink */
+    --secondary: 304 74% 60%;         /* #E050D0 Logo Orchid Pink */
     --secondary-foreground: 0 0% 100%;
-    --muted: 270 30% 94%;
-    --muted-foreground: 240 10% 45%;
-    --accent: 325 82% 95%;            /* very light pink */
-    --accent-foreground: 325 82% 40%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 304 80% 97%;            /* Soft logo pink tint */
+    --accent-foreground: 304 74% 45%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 270 20% 88%;
-    --input: 270 20% 88%;
-    --ring: 325 82% 52%;
-    --radius: 0.75rem;
+    --border: 220 13% 92%;
+    --input: 220 13% 92%;
+    --ring: 304 74% 60%;
+    --radius: 1rem;
   }
 
   * {
@@ -38,11 +38,10 @@
     margin: 0;
     overflow-x: hidden;
     max-width: 100vw;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: transparent;
-    user-select: none;
     @apply bg-background text-foreground;
   }
 
@@ -57,52 +56,33 @@
 }
 
 @layer components {
-  /* Poonch brand reusable classes */
-  .brand-gradient {
-    @apply bg-gradient-to-br from-brand-charcoal via-[#2D1B4E] to-brand-charcoal;
+  /* Pill Buttons matching the mockups */
+  .btn-pill-black {
+    @apply inline-flex items-center justify-center font-bold text-sm bg-black text-white px-8 py-3.5 rounded-full
+           hover:bg-neutral-800 transition-all duration-200 active:scale-95 shadow-sm hover:shadow-md cursor-pointer;
   }
 
-  .brand-glow {
-    @apply shadow-[0_0_40px_rgba(233,30,140,0.3)];
+  .btn-pill-pink {
+    @apply inline-flex items-center justify-center font-bold text-sm bg-[#E050D0] text-white px-8 py-3.5 rounded-full
+           hover:bg-[#C035B0] transition-all duration-200 active:scale-95 shadow-sm hover:shadow-md cursor-pointer;
   }
 
-  .card-hover {
-    @apply transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_32px_rgba(233,30,140,0.12)];
+  .btn-circle-black {
+    @apply w-10 h-10 rounded-full bg-black text-white flex items-center justify-center
+           hover:bg-neutral-800 active:scale-95 transition-all shadow-sm cursor-pointer;
   }
 
-  .btn-primary {
-    @apply bg-brand-charcoal text-white font-semibold px-6 py-2.5 rounded-lg
-           transition-all duration-200 hover:bg-[#2D2D4A] hover:-translate-y-0.5
-           hover:shadow-[0_4px_16px_rgba(26,26,46,0.3)] active:translate-y-0 cursor-pointer;
+  .btn-circle-pink-arrow {
+    @apply w-8 h-8 rounded-full border border-[#E050D0] text-[#E050D0] flex items-center justify-center
+           hover:bg-[#E050D0] hover:text-white transition-all cursor-pointer;
   }
 
-  .btn-secondary {
-    @apply bg-brand-pink text-white font-semibold px-6 py-2.5 rounded-lg
-           transition-all duration-200 hover:bg-brand-pink-dark hover:-translate-y-0.5
-           hover:shadow-[0_4px_16px_rgba(233,30,140,0.4)] active:translate-y-0 cursor-pointer;
+  .section-title {
+    @apply text-2xl sm:text-3xl lg:text-[34px] font-extrabold tracking-tight text-gray-900;
   }
 
-  .btn-outline-pink {
-    @apply border-2 border-brand-pink text-brand-pink font-semibold px-6 py-2.5 rounded-lg
-           transition-all duration-200 hover:bg-brand-pink hover:text-white hover:-translate-y-0.5
-           active:translate-y-0 cursor-pointer bg-transparent;
-  }
-
-  .section-heading {
-    @apply text-3xl md:text-4xl font-extrabold tracking-tight text-foreground;
-  }
-
-  .section-subheading {
-    @apply text-base md:text-lg text-muted-foreground mt-1;
-  }
-
-  .pink-badge {
-    @apply inline-flex items-center gap-1 text-xs font-bold tracking-wider uppercase
-           bg-brand-pink/10 text-brand-pink border border-brand-pink/20 px-3 py-1 rounded-full;
-  }
-
-  .glass-card {
-    @apply bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl;
+  .tag-pink {
+    @apply font-bold text-xs uppercase tracking-wider text-[#E050D0];
   }
 }
 
@@ -111,7 +91,12 @@
     text-wrap: balance;
   }
 
-  .animation-delay-100 { animation-delay: 100ms; }
-  .animation-delay-200 { animation-delay: 200ms; }
-  .animation-delay-300 { animation-delay: 300ms; }
+  /* Custom scrollbar hiding for horizontal category carousel */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }

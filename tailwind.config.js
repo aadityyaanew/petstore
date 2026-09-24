@@ -48,12 +48,14 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Poonch brand tokens
+        // Poonch Pet Shop brand tokens (matching logo.jpeg)
         brand: {
-          charcoal: "#1A1A2E",
-          pink: "#E91E8C",
-          "pink-light": "#FF4DB8",
-          "pink-dark": "#C0166E",
+          pink: "#E050D0",
+          "pink-light": "#FBA8FA",
+          "pink-dark": "#B828A8",
+          charcoal: "#111827",
+          theme: "#E050D0",
+          accent: "#FDF0FD",
         },
       },
       borderRadius: {

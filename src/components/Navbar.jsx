@@ -1,35 +1,35 @@
 'use client';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { usePWAInstall } from '../hooks/usePWAInstall';
+import { useWishlist } from '../context/WishlistContext';
 import { Button } from './ui/button';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 import {
-  ShoppingCart, Search, Menu, X, Download, User, Home,
-  Package, Info, Phone, ChevronDown, Paw
+  ShoppingCart, Search, Menu, X, User,
+  Package, Phone, Mail, MapPin, Heart, ChevronDown
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
   { to: '/', label: 'Home' },
   { to: '/products', label: 'Shop' },
-  { to: '/about', label: 'About' },
-  { to: '/contact', label: 'Contact' },
+  { to: '/about', label: 'About Us' },
+  { to: '/contact', label: 'Contact Us' },
 ];
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, logout } = useAuth();
   const { cart } = useCart();
+  const { count: wishlistCount } = useWishlist();
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const { isInstallable, installPWA } = usePWAInstall();
 
   const cartCount = cart?.items?.length || 0;
 
@@ -38,7 +38,6 @@ const Navbar = () => {
     if (searchQuery.trim()) {
       navigate(`/products?search=${encodeURIComponent(searchQuery)}`);
       setSearchQuery('');
-      setSearchOpen(false);
       setMobileOpen(false);
     }
   };
@@ -50,116 +49,143 @@ const Navbar = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-brand-pink/10 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-
-            {/* Mobile menu toggle */}
-            <button
-              className="md:hidden p-2 rounded-lg hover:bg-accent transition-colors"
-              onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label="Toggle menu"
+      {/* ── TOP CONTACT INFO BAR (Image 2) ── */}
+      <div className="bg-[#FAFBFD] border-b border-gray-100 text-xs md:text-sm text-gray-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-col sm:flex-row items-center justify-between gap-2">
+          {/* Left: Phone & Email */}
+          <div className="flex items-center gap-6">
+            <a
+              href="tel:+3798718371"
+              className="flex items-center gap-1.5 hover:text-[#E050D0] transition-colors"
             >
-              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
+              <Phone size={14} className="text-gray-900" />
+              <span className="font-medium">+379 871-8371</span>
+            </a>
+            <a
+              href="mailto:rgarton@outlook.com"
+              className="flex items-center gap-1.5 hover:text-[#E050D0] transition-colors"
+            >
+              <Mail size={14} className="text-gray-900" />
+              <span className="font-medium">rgarton@outlook.com</span>
+            </a>
+          </div>
 
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <img
-                src="/assets/logowhite.jpeg"
-                alt="Poonch Pet Store"
-                className="w-10 h-10 rounded-full object-cover border-2 border-brand-pink/25 group-hover:border-brand-pink transition-all duration-300 group-hover:scale-105"
-              />
-              <div className="hidden sm:block">
-                <p className="text-sm font-extrabold text-brand-charcoal leading-none tracking-tight">
-                  Poonch Pet Store
-                </p>
-                <p className="text-[10px] font-semibold text-brand-pink uppercase tracking-widest leading-none mt-0.5">
-                  Safe Play, Happy Tails 🐾
-                </p>
-              </div>
-            </Link>
+          {/* Right: Address */}
+          <div className="flex items-center gap-1.5 text-gray-700">
+            <MapPin size={14} className="text-gray-900 shrink-0" />
+            <span className="font-medium truncate">8582 Fairground St. Tallahassee, FL 32303</span>
+          </div>
+        </div>
+      </div>
 
-            {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-1">
-              {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className="px-4 py-2 text-sm font-semibold text-foreground rounded-lg transition-all duration-200 hover:bg-brand-pink/8 hover:text-brand-pink"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-
-            {/* Right Actions */}
-            <div className="flex items-center gap-2">
-              {/* Search */}
-              <div className="hidden md:flex items-center">
-                {searchOpen ? (
-                  <form onSubmit={handleSearchSubmit} className="flex items-center animate-fade-in">
-                    <div className="flex items-center gap-2 bg-brand-pink/5 border border-brand-pink/20 rounded-lg px-3 py-1.5">
-                      <Search size={16} className="text-brand-pink shrink-0" />
-                      <input
-                        autoFocus
-                        type="text"
-                        placeholder="Search products..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="bg-transparent text-sm outline-none w-44 placeholder:text-muted-foreground"
-                      />
-                      <button type="button" onClick={() => setSearchOpen(false)}>
-                        <X size={14} className="text-muted-foreground hover:text-foreground" />
-                      </button>
-                    </div>
-                  </form>
-                ) : (
-                  <button
-                    onClick={() => setSearchOpen(true)}
-                    className="p-2 rounded-lg hover:bg-accent transition-colors"
-                    aria-label="Search"
-                  >
-                    <Search size={20} />
-                  </button>
-                )}
-              </div>
-
-              {/* Install PWA */}
-              {isInstallable && (
-                <Button variant="outline-pink" size="sm" onClick={installPWA} className="hidden sm:flex gap-1.5">
-                  <Download size={14} />
-                  Install
-                </Button>
-              )}
-
-              {/* Cart */}
+      {/* ── MAIN FLOATING NAVBAR (Image 2) ── */}
+      <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md py-2.5 transition-all">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-full shadow-[0_4px_25px_rgba(0,0,0,0.06)] border border-gray-100/90 px-5 sm:px-6 py-2.5 flex items-center justify-between gap-4">
+            
+            {/* Left: Mobile Menu + Logo */}
+            <div className="flex items-center gap-3">
               <button
-                onClick={() => navigate('/cart')}
-                className="relative p-2 rounded-lg hover:bg-accent transition-colors"
-                aria-label="Cart"
+                className="md:hidden p-1.5 rounded-full hover:bg-gray-100 text-gray-700 transition-colors"
+                onClick={() => setMobileOpen(!mobileOpen)}
+                aria-label="Toggle menu"
               >
-                <ShoppingCart size={20} />
-                {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4.5 h-4.5 min-w-[18px] min-h-[18px] bg-brand-pink text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none px-1">
-                    {cartCount}
-                  </span>
-                )}
+                {mobileOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
 
-              {/* User Menu */}
+              <Link to="/" className="flex items-center gap-2.5 group">
+                <img
+                  src="/logo.jpeg"
+                  alt="Pet Shop"
+                  className="w-10 h-10 rounded-full object-cover ring-2 ring-[#E050D0]/25 group-hover:ring-[#E050D0] group-hover:scale-105 transition-all duration-300 shadow-sm"
+                />
+                <span className="font-extrabold text-lg sm:text-xl text-gray-900 tracking-tight group-hover:text-[#E050D0] transition-colors">
+                  Pet Shop
+                </span>
+              </Link>
+            </div>
+
+            {/* Center: Desktop Nav Links */}
+            <nav className="hidden md:flex items-center gap-7 lg:gap-9">
+              {NAV_LINKS.map((link) => {
+                const isActive = location.pathname === link.to;
+                return (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    className={cn(
+                      "text-sm font-semibold transition-all relative py-1",
+                      isActive
+                        ? "text-[#E050D0] after:content-[''] after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-[2px] after:bg-[#E050D0] after:rounded-full"
+                        : "text-gray-800 hover:text-[#E050D0]"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Right: Search, Wishlist, Cart, Profile */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              
+              {/* Pill Search Input with Black Circle Button (Desktop) */}
+              <form onSubmit={handleSearchSubmit} className="hidden lg:flex items-center relative">
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bg-[#F4F5F7] text-xs sm:text-sm text-gray-900 rounded-full pl-4 pr-11 py-2 w-44 focus:w-56 transition-all duration-300 outline-none border border-transparent focus:border-[#E050D0]/40 placeholder:text-gray-400"
+                />
+                <button
+                  type="submit"
+                  className="absolute right-1 w-7 h-7 rounded-full bg-black text-white flex items-center justify-center hover:bg-neutral-800 active:scale-95 transition-all cursor-pointer shadow-sm"
+                  aria-label="Search"
+                >
+                  <Search size={13} strokeWidth={2.5} />
+                </button>
+              </form>
+
+              {/* Wishlist Heart Icon with Badge */}
+              <button
+                onClick={() => navigate('/products')}
+                className="relative p-2 rounded-full hover:bg-gray-100 text-gray-700 transition-colors"
+                aria-label="Wishlist"
+                title="Wishlist"
+              >
+                <Heart size={20} strokeWidth={2} />
+                <span className="absolute -top-1 -right-1 w-4.5 h-4.5 min-w-[18px] min-h-[18px] bg-[#E050D0] text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none px-1 shadow-sm">
+                  {wishlistCount}
+                </span>
+              </button>
+
+              {/* Shopping Cart Icon with Badge */}
+              <button
+                onClick={() => navigate('/cart')}
+                className="relative p-2 rounded-full hover:bg-gray-100 text-gray-700 transition-colors"
+                aria-label="Shopping Cart"
+                title="Cart"
+              >
+                <ShoppingCart size={20} strokeWidth={2} />
+                <span className="absolute -top-1 -right-1 w-4.5 h-4.5 min-w-[18px] min-h-[18px] bg-[#E050D0] text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none px-1 shadow-sm">
+                  {cartCount}
+                </span>
+              </button>
+
+              {/* User Account Menu */}
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="hidden sm:flex items-center gap-1.5 p-1.5 rounded-lg hover:bg-accent transition-colors">
-                      <div className="w-8 h-8 rounded-full bg-brand-pink flex items-center justify-center text-white text-sm font-bold">
+                    <button className="flex items-center gap-1 p-1 rounded-full hover:bg-gray-100 transition-colors">
+                      <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-xs font-bold">
                         {user.name ? user.name.charAt(0).toUpperCase() : <User size={14} />}
                       </div>
-                      <ChevronDown size={14} className="text-muted-foreground" />
+                      <ChevronDown size={13} className="text-gray-500 hidden sm:block" />
                     </button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuLabel>{user.name || 'My Account'}</DropdownMenuLabel>
+                  <DropdownMenuContent align="end" className="w-48 rounded-xl shadow-lg border-gray-100">
+                    <DropdownMenuLabel className="font-bold text-gray-900">{user.name || 'My Account'}</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => navigate('/profile')}>
                       <User size={14} className="mr-2" /> Profile
@@ -168,43 +194,52 @@ const Navbar = () => {
                       <Package size={14} className="mr-2" /> My Orders
                     </DropdownMenuItem>
                     {user.role === 'admin' && (
-                      <DropdownMenuItem onClick={() => navigate('/admin')} className="text-brand-pink font-semibold">
+                      <DropdownMenuItem onClick={() => navigate('/admin')} className="text-[#E050D0] font-semibold">
                         Admin Dashboard
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout} className="text-destructive font-semibold">
+                    <DropdownMenuItem onClick={handleLogout} className="text-red-600 font-semibold">
                       Logout
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button variant="secondary" size="sm" className="hidden sm:flex" asChild>
-                  <Link to="/login">Sign In</Link>
+                <Button
+                  size="sm"
+                  className="bg-black hover:bg-neutral-800 text-white rounded-full px-4 text-xs font-semibold hidden sm:inline-flex"
+                  onClick={() => navigate('/login')}
+                >
+                  Sign In
                 </Button>
               )}
             </div>
           </div>
         </div>
 
-        {/* Mobile Drawer */}
-        <div className={cn(
-          "md:hidden overflow-hidden transition-all duration-300 ease-in-out border-t border-border",
-          mobileOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
-        )}>
-          <div className="px-4 py-4 bg-white space-y-1">
-            {/* Mobile Search */}
-            <form onSubmit={handleSearchSubmit} className="mb-3">
-              <div className="flex items-center gap-2 bg-brand-pink/5 border border-brand-pink/15 rounded-xl px-3 py-2.5">
-                <Search size={16} className="text-brand-pink shrink-0" />
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="bg-transparent text-sm outline-none flex-1 placeholder:text-muted-foreground"
-                />
-              </div>
+        {/* Mobile Navigation Drawer */}
+        <div
+          className={cn(
+            "md:hidden overflow-hidden transition-all duration-300 ease-in-out px-4",
+            mobileOpen ? "max-h-96 opacity-100 mt-2" : "max-h-0 opacity-0"
+          )}
+        >
+          <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100 space-y-2">
+            {/* Search form in mobile drawer */}
+            <form onSubmit={handleSearchSubmit} className="relative mb-3">
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-[#F4F5F7] text-sm text-gray-900 rounded-full pl-4 pr-11 py-2.5 outline-none border border-transparent focus:border-[#E050D0]"
+              />
+              <button
+                type="submit"
+                className="absolute right-1.5 top-1.5 w-7 h-7 rounded-full bg-black text-white flex items-center justify-center"
+              >
+                <Search size={13} />
+              </button>
             </form>
 
             {NAV_LINKS.map((link) => (
@@ -212,31 +247,23 @@ const Navbar = () => {
                 key={link.to}
                 to={link.to}
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-3 px-3 py-3 text-sm font-semibold text-foreground rounded-xl hover:bg-brand-pink/6 hover:text-brand-pink transition-colors"
+                className={cn(
+                  "block px-3 py-2 rounded-xl text-sm font-semibold transition-colors",
+                  location.pathname === link.to ? "bg-[#E050D0]/10 text-[#E050D0]" : "text-gray-800 hover:bg-gray-100"
+                )}
               >
                 {link.label}
               </Link>
             ))}
 
-            <div className="pt-2 border-t border-border mt-2">
-              {user ? (
-                <>
-                  <Link to="/profile" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 px-3 py-3 text-sm font-semibold rounded-xl hover:bg-accent transition-colors">
-                    <User size={16} /> Profile
-                  </Link>
-                  <Link to="/orders" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 px-3 py-3 text-sm font-semibold rounded-xl hover:bg-accent transition-colors">
-                    <Package size={16} /> My Orders
-                  </Link>
-                  <button onClick={() => { handleLogout(); setMobileOpen(false); }} className="flex items-center gap-3 px-3 py-3 text-sm font-semibold text-destructive w-full rounded-xl hover:bg-destructive/5 transition-colors">
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <Button variant="secondary" className="w-full mt-2" asChild>
-                  <Link to="/login" onClick={() => setMobileOpen(false)}>Sign In</Link>
-                </Button>
-              )}
-            </div>
+            {!user && (
+              <Button
+                className="w-full bg-black hover:bg-neutral-800 text-white rounded-full mt-2"
+                onClick={() => { navigate('/login'); setMobileOpen(false); }}
+              >
+                Sign In
+              </Button>
+            )}
           </div>
         </div>
       </header>
