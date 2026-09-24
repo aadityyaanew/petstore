@@ -45,7 +45,7 @@ const FAQ = () => {
 
         {/* Still have questions */}
         <div className="mt-10 p-8 text-center rounded-2xl bg-gradient-to-br from-brand-pink/8 to-brand-pink/3 border border-brand-pink/15">
-          <p className="text-xl font-bold text-foreground mb-2">Still have questions? 🐾</p>
+          <p className="text-xl font-bold text-foreground mb-2">Still have questions? 🦜</p>
           <p className="text-muted-foreground mb-3 text-sm">Can't find what you're looking for? Reach out directly.</p>
           <p className="text-brand-pink font-semibold text-sm">
             📧 support@poonchpetstore.com &nbsp;|&nbsp; 📞 +1 (800) 123-4567

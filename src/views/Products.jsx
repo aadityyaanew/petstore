@@ -6,13 +6,13 @@ import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
 import { cn } from '@/lib/utils';
 
-const PET_TYPES = [
-  { id: 'cat', name: 'Cat', image: '/assets/categories/accessories.jpg' },
-  { id: 'hamster', name: 'Hamster', image: '/assets/asset-70343c4c.jpeg' },
-  { id: 'dog', name: 'Dog', image: '/assets/categories/food.jpg' },
-  { id: 'parrot', name: 'Parrot', image: '/assets/asset-6ebb9cd6.jpeg' },
-  { id: 'rabbit', name: 'Rabbit', image: '/assets/categories/bags.jpg' },
-  { id: 'turtle', name: 'Turtle', image: '/assets/categories/furniture.jpg' },
+const BIRD_TYPES = [
+  { id: 'parrot', name: 'Parrot', image: '/assets/birds/parrot.jpg' },
+  { id: 'cockatiel', name: 'Cockatiel', image: '/assets/birds/cockatiel.jpg' },
+  { id: 'budgie', name: 'Budgie', image: '/assets/birds/budgie.jpg' },
+  { id: 'conure', name: 'Sun Conure', image: '/assets/birds/conure.jpg' },
+  { id: 'lovebird', name: 'Lovebird', image: '/assets/birds/lovebird.jpg' },
+  { id: 'canary', name: 'Canary', image: '/assets/birds/canary.jpg' },
 ];
 
 const CATEGORIES_FILTER = [
@@ -209,7 +209,7 @@ export default function Products() {
 
   useEffect(() => {
     if (initialCategory) {
-      const matchPet = PET_TYPES.find((p) => p.name.toLowerCase() === initialCategory.toLowerCase());
+      const matchPet = BIRD_TYPES.find((p) => p.name.toLowerCase() === initialCategory.toLowerCase());
       if (matchPet) setSelectedPet(matchPet.id);
     }
   }, [initialCategory]);
@@ -282,7 +282,7 @@ export default function Products() {
       {/* Toast Notification */}
       {addedToast && (
         <div className="fixed bottom-6 right-6 z-50 bg-black text-white px-5 py-3 rounded-full shadow-2xl text-sm font-semibold flex items-center gap-2 animate-bounce">
-          <span>🐾</span>
+          <span>🦜</span>
           <span>{addedToast}</span>
         </div>
       )}
@@ -356,21 +356,21 @@ export default function Products() {
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
         <div className="flex items-center justify-between mb-8 sm:mb-10">
           <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900">
-            Shop by pet
+            Shop by bird
           </h2>
 
           <div className="flex items-center gap-2.5">
             <button
               onClick={() => scrollPet('left')}
               className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-neutral-800 active:scale-95 transition-all shadow-sm cursor-pointer"
-              aria-label="Previous pets"
+              aria-label="Previous birds"
             >
               <ChevronLeft size={18} strokeWidth={2.5} />
             </button>
             <button
               onClick={() => scrollPet('right')}
               className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-neutral-800 active:scale-95 transition-all shadow-sm cursor-pointer"
-              aria-label="Next pets"
+              aria-label="Next birds"
             >
               <ChevronRight size={18} strokeWidth={2.5} />
             </button>
@@ -382,7 +382,7 @@ export default function Products() {
           ref={petScrollRef}
           className="flex items-center justify-between gap-6 sm:gap-8 overflow-x-auto no-scrollbar scroll-smooth pb-4 px-2"
         >
-          {PET_TYPES.map((pet) => {
+          {BIRD_TYPES.map((pet) => {
             const isSelected = selectedPet === pet.id;
             return (
               <div
@@ -679,7 +679,7 @@ export default function Products() {
             {/* 3 Columns Grid using REAL Asset Photography */}
             {paginatedProducts.length === 0 ? (
               <div className="text-center py-20 bg-[#F9FAFB] rounded-3xl border border-gray-100">
-                <p className="text-4xl mb-2">🐾</p>
+                <p className="text-4xl mb-2">🦜</p>
                 <h3 className="font-extrabold text-base text-gray-900 mb-1">No products match your filters</h3>
                 <p className="text-xs text-gray-500 mb-4">Try clearing some filters to see more items.</p>
                 <button

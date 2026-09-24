@@ -15,7 +15,7 @@ const AboutUs = () => {
         <div className="max-w-4xl mx-auto px-6 relative z-10">
           <span className="pink-badge mb-4 inline-block">Who We Are</span>
           <h1 className="text-5xl md:text-6xl font-extrabold mb-4 leading-tight">
-            About Poonch Pet Store 🐾
+            About Poonch Pet Store 🦜
           </h1>
           <p className="text-xl text-white/75 max-w-2xl">
             "Safe Play, Happy Tails & Feathered Friends." — This isn't just our tagline. It's our promise.
@@ -28,7 +28,7 @@ const AboutUs = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-center mb-20">
           <div className="flex justify-center">
             <img
-              src="/assets/logowhite.jpeg"
+              src="/logo.jpeg"
               alt="Poonch Pet Store"
               className="w-72 h-72 md:w-80 md:h-80 rounded-full object-cover shadow-[0_20px_60px_rgba(233,30,140,0.2)] border-4 border-brand-pink/20"
             />

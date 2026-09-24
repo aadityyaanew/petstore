@@ -11,7 +11,7 @@ import {
 } from './ui/dropdown-menu';
 import {
   ShoppingCart, Search, Menu, X, User,
-  Package, Phone, Mail, MapPin, Heart, ChevronDown
+  Package, Phone, Mail, MapPin, Heart, ChevronDown, Bird
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -49,36 +49,36 @@ const Navbar = () => {
 
   return (
     <>
-      {/* ── TOP CONTACT INFO BAR (Image 2) ── */}
+      {/* ── TOP CONTACT INFO BAR ── */}
       <div className="bg-[#FAFBFD] border-b border-gray-100 text-xs md:text-sm text-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-col sm:flex-row items-center justify-between gap-2">
           {/* Left: Phone & Email */}
           <div className="flex items-center gap-6">
             <a
-              href="tel:+3798718371"
+              href="tel:+18001234567"
               className="flex items-center gap-1.5 hover:text-[#E050D0] transition-colors"
             >
               <Phone size={14} className="text-gray-900" />
-              <span className="font-medium">+379 871-8371</span>
+              <span className="font-medium">+1 (800) 123-4567</span>
             </a>
             <a
-              href="mailto:rgarton@outlook.com"
+              href="mailto:support@poonchpetstore.com"
               className="flex items-center gap-1.5 hover:text-[#E050D0] transition-colors"
             >
               <Mail size={14} className="text-gray-900" />
-              <span className="font-medium">rgarton@outlook.com</span>
+              <span className="font-medium">support@poonchpetstore.com</span>
             </a>
           </div>
 
           {/* Right: Address */}
           <div className="flex items-center gap-1.5 text-gray-700">
             <MapPin size={14} className="text-gray-900 shrink-0" />
-            <span className="font-medium truncate">8582 Fairground St. Tallahassee, FL 32303</span>
+            <span className="font-medium truncate">123 Pet Care Way, Suite A, City, State, ZIP</span>
           </div>
         </div>
       </div>
 
-      {/* ── MAIN FLOATING NAVBAR (Image 2) ── */}
+      {/* ── MAIN FLOATING NAVBAR ── */}
       <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md py-2.5 transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-full shadow-[0_4px_25px_rgba(0,0,0,0.06)] border border-gray-100/90 px-5 sm:px-6 py-2.5 flex items-center justify-between gap-4">
@@ -96,11 +96,11 @@ const Navbar = () => {
               <Link to="/" className="flex items-center gap-2.5 group">
                 <img
                   src="/logo.jpeg"
-                  alt="Pet Shop"
-                  className="w-10 h-10 rounded-full object-cover ring-2 ring-[#E050D0]/25 group-hover:ring-[#E050D0] group-hover:scale-105 transition-all duration-300 shadow-sm"
+                  alt="Poonch Pet Store"
+                  className="w-8 h-8 rounded-full object-cover ring-2 ring-[#E050D0]/30 group-hover:ring-[#E050D0] transition-all"
                 />
-                <span className="font-extrabold text-lg sm:text-xl text-gray-900 tracking-tight group-hover:text-[#E050D0] transition-colors">
-                  Pet Shop
+                <span className="font-extrabold text-base sm:text-lg text-black tracking-tight group-hover:text-[#E050D0] transition-colors">
+                  Poonch Pet Store
                 </span>
               </Link>
             </div>
@@ -205,13 +205,14 @@ const Navbar = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button
-                  size="sm"
-                  className="bg-black hover:bg-neutral-800 text-white rounded-full px-4 text-xs font-semibold hidden sm:inline-flex"
+                <button
                   onClick={() => navigate('/login')}
+                  className="p-2 rounded-full hover:bg-gray-100 text-gray-700 transition-colors"
+                  aria-label="Account Login"
+                  title="Sign In"
                 >
-                  Sign In
-                </Button>
+                  <User size={20} strokeWidth={2} />
+                </button>
               )}
             </div>
           </div>

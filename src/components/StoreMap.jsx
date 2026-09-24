@@ -4,7 +4,7 @@ import { MapPin, Navigation, ExternalLink, Copy, Check, Clock, Phone } from 'luc
 
 export default function StoreMap() {
   const [copied, setCopied] = useState(false);
-  const address = '8582 Fairground St. Tallahassee, FL 32303';
+  const address = '123 Pet Care Way, Suite A, City, State, ZIP';
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 
   const handleCopy = () => {
@@ -19,7 +19,7 @@ export default function StoreMap() {
       <div className="relative w-full h-[360px] sm:h-[420px] md:h-[480px]">
         {/* OpenStreetMap Interactive Iframe */}
         <iframe
-          title="Pet Shop Store Location"
+          title="Poonch Pet Store Location"
           src="https://www.openstreetmap.org/export/embed.html?bbox=-84.3200%2C30.4200%2C-84.2400%2C30.4700&amp;layer=mapnik"
           className="w-full h-full border-0 filter contrast-[1.02] brightness-[1.01]"
           loading="lazy"
@@ -69,10 +69,10 @@ export default function StoreMap() {
             <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-600">Open Now • Closes 10 PM</span>
           </div>
           <p className="font-extrabold text-sm sm:text-base text-gray-900 leading-tight">
-            🐾 Pet Shop Flagship Store
+            Poonch Pet Store Flagship Location
           </p>
           <p className="text-xs text-gray-500 mt-0.5 leading-snug">
-            8582 Fairground St. Tallahassee, FL 32303
+            123 Pet Care Way, Suite A, City, State, ZIP
           </p>
         </div>
 

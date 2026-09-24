@@ -1,7 +1,7 @@
 'use client';
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Heart, ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Heart, ArrowRight, Star, Quote } from 'lucide-react';
 import BrandPartners from '../components/BrandPartners';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
@@ -9,32 +9,32 @@ import { cn } from '@/lib/utils';
 
 const CATEGORIES_DATA = [
   {
-    id: 'accessories',
-    title: 'Accessories',
-    count: '84 products',
-    image: '/assets/categories/accessories.jpg',
-    link: '/products?category=Accessories',
+    id: 'gyms',
+    title: 'Play Gyms & Stands',
+    count: '42 products',
+    image: '/assets/asset-4cbbe7b6.jpeg',
+    link: '/products?category=Toys',
   },
   {
-    id: 'food',
-    title: 'Food',
-    count: '64 products',
-    image: '/assets/categories/food.jpg',
-    link: '/products?category=Food',
+    id: 'swings',
+    title: 'Swings & Ladders',
+    count: '38 products',
+    image: '/assets/asset-6ebb9cd6.jpeg',
+    link: '/products?category=Toys',
   },
   {
-    id: 'furniture',
-    title: 'Furniture',
-    count: '22 products',
-    image: '/assets/categories/furniture.jpg',
+    id: 'perches',
+    title: 'Perches & Branches',
+    count: '29 products',
+    image: '/assets/asset-675fd014.jpeg',
     link: '/products?category=Furniture',
   },
   {
-    id: 'bags',
-    title: 'Bags',
-    count: '16 products',
-    image: '/assets/categories/bags.jpg',
-    link: '/products?category=Bags',
+    id: 'foraging',
+    title: 'Foraging & Toys',
+    count: '54 products',
+    image: '/assets/asset-bff48261.jpeg',
+    link: '/products?category=Toys',
   },
 ];
 
@@ -121,13 +121,13 @@ const BEST_SELLING_PRODUCTS = [
   },
 ];
 
-const PET_TYPES = [
-  { id: 'cat', name: 'Cat', image: '/assets/categories/accessories.jpg' },
-  { id: 'hamster', name: 'Hamster', image: '/assets/asset-70343c4c.jpeg' },
-  { id: 'dog', name: 'Dog', image: '/assets/categories/food.jpg' },
-  { id: 'parrot', name: 'Parrot', image: '/assets/asset-6ebb9cd6.jpeg' },
-  { id: 'rabbit', name: 'Rabbit', image: '/assets/categories/bags.jpg' },
-  { id: 'turtle', name: 'Turtle', image: '/assets/categories/furniture.jpg' },
+const BIRD_TYPES = [
+  { id: 'parrot', name: 'Parrot', image: '/assets/birds/parrot.jpg' },
+  { id: 'cockatiel', name: 'Cockatiel', image: '/assets/birds/cockatiel.jpg' },
+  { id: 'budgie', name: 'Budgie', image: '/assets/birds/budgie.jpg' },
+  { id: 'conure', name: 'Sun Conure', image: '/assets/birds/conure.jpg' },
+  { id: 'lovebird', name: 'Lovebird', image: '/assets/birds/lovebird.jpg' },
+  { id: 'canary', name: 'Canary', image: '/assets/birds/canary.jpg' },
 ];
 
 const BLOG_POSTS = [
@@ -154,14 +154,35 @@ const BLOG_POSTS = [
   },
 ];
 
+const TESTIMONIALS_DATA = [
+  {
+    id: 1,
+    quote: "My cockatiel loves the three-perch play stand! It’s sturdy, easy to clean, and keeps him entertained for hours outside his cage.",
+    author: "Sarah M.",
+    role: "Verified Cockatiel Parent",
+    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=160&q=80",
+    rating: 5,
+    tag: "Multi-Perch Activity Stand",
+  },
+  {
+    id: 2,
+    quote: "The hand-knitted woolen collar is adorable! So soft on my cat’s neck and looks amazing in photos.",
+    author: "David L.",
+    role: "Verified Cat Parent",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80",
+    rating: 5,
+    tag: "Hand-Knitted Woolen Collar",
+  },
+];
+
 export default function Home() {
   const navigate = useNavigate();
   const categoryScrollRef = useRef(null);
-  const petScrollRef = useRef(null);
+  const birdScrollRef = useRef(null);
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
   const [addedToast, setAddedToast] = useState(null);
-  const [selectedPet, setSelectedPet] = useState('cat');
+  const [selectedBird, setSelectedBird] = useState('parrot');
 
   const scrollCategory = (direction) => {
     if (categoryScrollRef.current) {
@@ -170,10 +191,10 @@ export default function Home() {
     }
   };
 
-  const scrollPet = (direction) => {
-    if (petScrollRef.current) {
+  const scrollBird = (direction) => {
+    if (birdScrollRef.current) {
       const scrollAmount = direction === 'left' ? -220 : 220;
-      petScrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      birdScrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
 
@@ -193,51 +214,156 @@ export default function Home() {
       {/* Toast Notification */}
       {addedToast && (
         <div className="fixed bottom-6 right-6 z-50 bg-black text-white px-5 py-3 rounded-full shadow-2xl text-sm font-semibold flex items-center gap-2 animate-bounce">
-          <span>🐾</span>
+          <span>🦜</span>
           <span>{addedToast}</span>
         </div>
       )}
 
       {/* ─────────────────────────────────────────────────────────────
-          DECORATIVE ORGANIC PINK BLOBS (Matching Main Page Mockup)
+          1. HERO SECTION (Sage/Cream Background, Colorful Parrots, Small Pink Accents)
       ───────────────────────────────────────────────────────────── */}
-      {/* Far Right Edge Semi-Circle Blob */}
-      <div
-        className="pointer-events-none absolute top-[70px] -right-12 sm:-right-10 w-20 h-44 sm:w-24 sm:h-56 rounded-l-full bg-[#E050D0] opacity-90 blur-[0.5px] z-0"
-        aria-hidden="true"
-      />
+      <section className="relative z-10 pt-4 sm:pt-6 pb-0 overflow-hidden w-full min-h-[500px] sm:min-h-[560px] lg:min-h-[640px] flex items-center bg-[#FAF8F5] border-b border-[#E8ECE5]/60">
+        
+        {/* Right Full-Bleed Sage & Cream Organic Arch with Concentric Layers and Small Pink Accents Behind Parrots */}
+        <div className="absolute top-0 right-0 w-[56%] sm:w-[53%] lg:w-[51%] xl:w-[49%] h-full pointer-events-none z-0 overflow-hidden">
+          <svg
+            viewBox="0 0 700 640"
+            preserveAspectRatio="none"
+            className="w-full h-full"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              {/* Avian Feather Watermark */}
+              <g id="heroBirdFeather">
+                <path
+                  d="M18 2 C14 8, 7 18, 7 28 C7 35, 12 41, 18 45 C24 41, 29 35, 29 28 C29 18, 22 8, 18 2 Z"
+                  fill="white"
+                  fillOpacity="0.25"
+                />
+                <path
+                  d="M18 2 L18 47"
+                  stroke="white"
+                  strokeOpacity="0.35"
+                  strokeWidth="1.2"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M18 14 C13 17, 10 21, 9 26 M18 22 C13 25, 11 29, 10 34 M18 14 C23 17, 26 21, 27 26 M18 22 C23 25, 25 29, 26 34"
+                  stroke="white"
+                  strokeOpacity="0.22"
+                  strokeWidth="0.9"
+                  strokeLinecap="round"
+                />
+              </g>
 
-      {/* Top Center Floating Accent Blob */}
-      <div
-        className="pointer-events-none absolute top-10 left-[26%] w-16 h-12 sm:w-20 sm:h-14 rounded-[45%_55%_65%_35%] bg-[#E050D0] opacity-85 z-0"
-        aria-hidden="true"
-      />
+              {/* Avian Flying Silhouette Watermark */}
+              <g id="heroFlyingSilhouette">
+                <path
+                  d="M20 18 C14 10, 6 7, 0 8 C6 13, 10 18, 14 23 C10 24, 4 24, 1 23 C5 26, 11 29, 17 28 C18 31, 19 36, 20 40 C21 36, 22 31, 23 28 C29 29, 35 26, 39 23 C36 24, 30 24, 26 23 C30 18, 34 13, 40 8 C34 7, 26 10, 20 18 Z"
+                  fill="white"
+                  fillOpacity="0.25"
+                />
+              </g>
+            </defs>
 
-      {/* Bottom Floating Accent Blob below Hero CTA */}
-      <div
-        className="pointer-events-none absolute top-[430px] left-[32%] w-16 h-12 sm:w-20 sm:h-14 rounded-[50%_60%_40%_50%] bg-[#E050D0] opacity-85 z-0"
-        aria-hidden="true"
-      />
+            {/* Main Outer Sage Arch */}
+            <path
+              d="M70 640 C25 500 0 380 0 300 C0 180 50 80 180 30 C260 5 380 -5 520 0 L700 0 L700 640 Z"
+              fill="#8BA88E"
+            />
 
-      {/* ─────────────────────────────────────────────────────────────
-          1. HERO SECTION (Matching Main Page Mockup in Pink Theme)
-      ───────────────────────────────────────────────────────────── */}
-      <section className="relative z-10 pt-4 pb-12 sm:pb-16 lg:pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Inner Concentric Wave 1: Soft Pale Sage */}
+            <path
+              d="M180 640 C130 520 100 400 110 330 C120 230 160 140 260 85 C330 45 430 25 550 25 L700 25 L700 640 Z"
+              fill="#C2D6C4"
+              fillOpacity="0.9"
+            />
+
+            {/* Inner Concentric Wave 2: Warm Cream */}
+            <path
+              d="M290 640 C240 530 220 420 240 360 C260 280 290 200 370 145 C440 100 510 75 610 75 L700 75 L700 640 Z"
+              fill="#F6F3EB"
+              fillOpacity="0.95"
+            />
+
+            {/* Small Pink Accents nestled behind the parrots */}
+            <ellipse cx="480" cy="370" rx="160" ry="170" fill="#E050D0" fillOpacity="0.78" />
+            <circle cx="560" cy="270" r="85" fill="#F386E8" fillOpacity="0.68" />
+            <circle cx="360" cy="430" r="48" fill="#EB68DC" fillOpacity="0.58" />
+
+            {/* Scattered Avian Watermarks on Sage Layer */}
+            <use href="#heroBirdFeather" x="130" y="460" transform="rotate(-25 130 460) scale(1.4)" />
+            <use href="#heroFlyingSilhouette" x="90" y="270" transform="rotate(15 90 270) scale(1.1)" />
+            <use href="#heroBirdFeather" x="420" y="50" transform="rotate(30 420 50) scale(1.3)" />
+            <use href="#heroFlyingSilhouette" x="460" y="210" transform="rotate(-12 460 210) scale(1.2)" />
+            <use href="#heroBirdFeather" x="540" y="390" transform="rotate(20 540 390) scale(1.3)" />
+          </svg>
+        </div>
+
+        {/* Real Birds High-Definition Transparent Cutout anchored flush at bottom */}
+        <div className="absolute bottom-0 right-0 sm:right-[1%] lg:right-[3%] xl:right-[5%] z-10 w-[92%] sm:w-[76%] md:w-[64%] lg:w-[53%] xl:w-[48%] max-w-[640px] pointer-events-none select-none flex items-end justify-center">
+          <img
+            src="/assets/hero-birds-group.png"
+            alt="Handcrafted avian perches with Cockatiel, Budgie, Sun Conure, and Lovebird"
+            className="w-full h-auto object-contain block drop-shadow-sm transform hover:scale-[1.01] transition-transform duration-500"
+          />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative w-full h-full">
+          
+          {/* Top Center Floating Pink Pebble Blob (SVG) */}
+          <div
+            className="pointer-events-none absolute -top-4 sm:top-0 left-[22%] sm:left-[26%] w-20 h-24 sm:w-26 sm:h-30 z-0 select-none opacity-90"
+            aria-hidden="true"
+          >
+            <svg viewBox="0 0 110 130" fill="none" className="w-full h-full">
+              <path
+                d="M38 12C68 2 96 16 104 50C112 84 94 118 64 126C34 134 12 112 5 80C-2 48 8 22 38 12Z"
+                fill="#E050D0"
+              />
+            </svg>
+          </div>
+
+          {/* Bottom Center Floating Sage Pebble Blob (SVG) */}
+          <div
+            className="pointer-events-none absolute -bottom-6 left-[25%] sm:left-[28%] w-26 h-18 sm:w-32 sm:h-22 z-0 select-none opacity-90"
+            aria-hidden="true"
+          >
+            <svg viewBox="0 0 130 85" fill="none" className="w-full h-full">
+              <path
+                d="M28 60C10 46 14 18 50 8C86 -2 116 15 126 45C136 74 110 84 74 84C38 84 42 72 28 60Z"
+                fill="#8BA88E"
+              />
+            </svg>
+          </div>
+
+          {/* Flying Macaw / Parrot (Cutout PNG) */}
+          <div
+            className="pointer-events-none absolute top-8 sm:top-12 lg:top-14 left-[43%] sm:left-[45%] lg:left-[47%] w-24 h-24 sm:w-28 sm:h-28 lg:w-36 lg:h-36 z-20 select-none drop-shadow-sm transform -rotate-12 hover:scale-105 transition-transform duration-300"
+            aria-hidden="true"
+          >
+            <img
+              src="/assets/flying-parrot.png"
+              alt="Flying Macaw"
+              className="w-full h-full object-contain"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-4 items-center">
             
-            {/* Left Content */}
-            <div className="lg:col-span-6 flex flex-col items-start pt-4 sm:pt-8">
-              <span className="font-bold text-xs sm:text-sm uppercase tracking-wider text-[#E050D0] mb-3 inline-block">
-                Pet Shop
+            {/* Left Content Column */}
+            <div className="lg:col-span-6 flex flex-col items-start pt-4 sm:pt-8 pb-12 sm:pb-16 lg:pb-20 relative z-10">
+              <span className="font-bold text-xs sm:text-sm uppercase tracking-wider text-[#E050D0] bg-[#E050D0]/10 border border-[#E050D0]/20 px-3.5 py-1 rounded-full mb-3 inline-block">
+                Bird Shop &amp; Toys
               </span>
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold tracking-tight text-gray-900 leading-[1.12] mb-5">
-                A pet store with everything you need
+                A bird store with everything they need
               </h1>
 
-              <p className="text-sm sm:text-base md:text-lg text-gray-500 leading-relaxed max-w-xl mb-8">
-                Sociis blandit et pellentesque aliquet at quisque tortor lacinia nullam. Mattis aenean scelerisque dui libero.
+              <p className="text-sm sm:text-base md:text-lg text-gray-500 leading-relaxed max-w-lg mb-8">
+                Handcrafted natural pine stands, chewable play gyms, and safe perches designed for parrots, cockatiels, budgies, and feathered friends.
               </p>
 
               <div>
@@ -250,21 +376,8 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Graphic: Organic Pink Blob with Real Pet Store Photography */}
-            <div className="lg:col-span-6 flex items-center justify-center relative">
-              <div className="relative w-full max-w-[480px] aspect-[4/3] sm:aspect-square flex items-center justify-center">
-                {/* Soft Pink Organic Glow & Shape */}
-                <div className="absolute inset-0 bg-[#E050D0] rounded-[48%_52%_60%_40%/45%_55%_45%_55%] transform -rotate-2 transition-transform duration-700 hover:rotate-0" />
-                {/* Real Pet Store Hero Photo */}
-                <div className="relative z-10 w-[90%] h-[90%] rounded-[46%_54%_58%_42%/48%_52%_48%_52%] overflow-hidden shadow-2xl border-4 border-white bg-white">
-                  <img
-                    src="/assets/asset-058339ca.jpeg"
-                    alt="Poonch Pet Store - Everything for your pets"
-                    className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-              </div>
-            </div>
+            {/* Right Column: Spacer for Grid Balance */}
+            <div className="hidden lg:block lg:col-span-6 pointer-events-none" aria-hidden="true" />
 
           </div>
         </div>
@@ -410,21 +523,21 @@ export default function Home() {
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          4. THE SMARTER WAY TO SHOP (Pink Blob + Real Pet Photo)
+          4. THE SMARTER WAY TO CARE (Pink Blob + Child & Birds on Wooden Gym)
       ───────────────────────────────────────────────────────────── */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           
-          {/* Left Column: Organic Pink Blob with Real Pet Photography */}
+          {/* Left Column: Organic Pink Blob with Real Bird Toy Lifestyle Photography */}
           <div className="lg:col-span-6 flex items-center justify-center order-2 lg:order-1">
             <div className="relative w-full max-w-[460px] aspect-[4/3] sm:aspect-square flex items-center justify-center">
               {/* Soft Pink Organic Shape */}
               <div className="absolute inset-0 bg-[#E050D0] rounded-[55%_45%_38%_62%/48%_60%_40%_52%] transform rotate-3 transition-transform duration-700 hover:rotate-0" />
-              {/* Real Pet Photo */}
+              {/* Real Bird Lifestyle Photo */}
               <div className="relative z-10 w-[90%] h-[90%] rounded-[50%_50%_45%_55%/52%_48%_52%_48%] overflow-hidden shadow-2xl border-4 border-white bg-white">
                 <img
-                  src="/assets/asset-bafedd16.jpeg"
-                  alt="The smarter way to shop for your pet"
+                  src="/assets/asset-b8e1a86b.jpeg"
+                  alt="Pet birds playing on handcrafted wooden gym stand"
                   className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
                 />
               </div>
@@ -434,15 +547,15 @@ export default function Home() {
           {/* Right Column: Copy & CTA */}
           <div className="lg:col-span-6 flex flex-col items-start order-1 lg:order-2">
             <span className="font-bold text-xs sm:text-sm uppercase tracking-wider text-[#E050D0] mb-3 inline-block">
-              Pet Shop
+              Avian Enrichment
             </span>
 
             <h2 className="text-3xl sm:text-4xl lg:text-[46px] font-extrabold tracking-tight text-gray-900 leading-[1.15] mb-5">
-              The smarter way to shop for your pet
+              The smarter way to care for your bird
             </h2>
 
             <p className="text-sm sm:text-base md:text-lg text-gray-500 leading-relaxed max-w-xl mb-8">
-              Sociis blandit et pellentesque aliquet at quisque tortor lacinia nullam. Mattis aenean scelerisque dui libero ac cursus viverra libero.
+              Handmade non-toxic pine play gyms, swings, and foraging puzzles crafted to encourage natural climbing, foraging, and active exercise for birds of all sizes.
             </p>
 
             <div>
@@ -537,46 +650,46 @@ export default function Home() {
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          7. SHOP BY PET (Circular Real Photo Avatars)
+          7. SHOP BY BIRD (Circular Real Avian Photo Avatars)
       ───────────────────────────────────────────────────────────── */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
         {/* Header with Navigation Arrows */}
         <div className="flex items-center justify-between mb-8 sm:mb-12">
           <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold tracking-tight text-gray-900">
-            Shop by pet
+            Shop by bird
           </h2>
 
           <div className="flex items-center gap-2.5">
             <button
-              onClick={() => scrollPet('left')}
+              onClick={() => scrollBird('left')}
               className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-neutral-800 active:scale-95 transition-all shadow-sm cursor-pointer"
-              aria-label="Previous pets"
+              aria-label="Previous birds"
             >
               <ChevronLeft size={18} strokeWidth={2.5} />
             </button>
             <button
-              onClick={() => scrollPet('right')}
+              onClick={() => scrollBird('right')}
               className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-neutral-800 active:scale-95 transition-all shadow-sm cursor-pointer"
-              aria-label="Next pets"
+              aria-label="Next birds"
             >
               <ChevronRight size={18} strokeWidth={2.5} />
             </button>
           </div>
         </div>
 
-        {/* 6 Circular Pet Avatars Row */}
+        {/* 6 Circular Bird Avatars Row */}
         <div
-          ref={petScrollRef}
+          ref={birdScrollRef}
           className="flex items-center justify-between gap-6 sm:gap-8 overflow-x-auto no-scrollbar scroll-smooth pb-4 px-2"
         >
-          {PET_TYPES.map((pet) => {
-            const isSelected = selectedPet === pet.id;
+          {BIRD_TYPES.map((bird) => {
+            const isSelected = selectedBird === bird.id;
             return (
               <div
-                key={pet.id}
+                key={bird.id}
                 onClick={() => {
-                  setSelectedPet(pet.id);
-                  navigate(`/products?category=${pet.name}`);
+                  setSelectedBird(bird.id);
+                  navigate(`/products?category=${bird.name}`);
                 }}
                 className="flex flex-col items-center gap-3 cursor-pointer group shrink-0 min-w-[90px] sm:min-w-[110px]"
               >
@@ -590,24 +703,83 @@ export default function Home() {
                   )}
                 >
                   <img
-                    src={pet.image}
-                    alt={pet.name}
+                    src={bird.image}
+                    alt={bird.name}
                     className="w-full h-full object-cover rounded-full"
                   />
                 </div>
 
-                {/* Pet Name */}
+                {/* Bird Name */}
                 <span
                   className={cn(
                     "text-xs sm:text-sm font-bold transition-colors",
                     isSelected ? "text-gray-900" : "text-gray-500 group-hover:text-gray-900"
                   )}
                 >
-                  {pet.name}
+                  {bird.name}
                 </span>
               </div>
             );
           })}
+        </div>
+      </section>
+
+      {/* ─────────────────────────────────────────────────────────────
+          7.5. TESTIMONIALS (Customer Reviews)
+      ───────────────────────────────────────────────────────────── */}
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
+          <span className="inline-block px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#E050D0]/10 text-[#E050D0] mb-3">
+            Real Customer Stories
+          </span>
+          <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold tracking-tight text-gray-900">
+            Loved by Pets, Cherished by Humans
+          </h2>
+          <p className="mt-2 text-sm sm:text-base text-gray-600">
+            "Safe Play, Happy Tails &amp; Feathered Friends." — See how our non-toxic accessories bring joy every day.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
+          {TESTIMONIALS_DATA.map((item) => (
+            <div
+              key={item.id}
+              className="bg-white rounded-[28px] p-7 sm:p-9 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between relative group"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <div className="flex items-center gap-1 text-amber-400">
+                    {[...Array(item.rating)].map((_, i) => (
+                      <Star key={i} size={18} fill="currentColor" />
+                    ))}
+                  </div>
+                  <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-gray-100 text-gray-700">
+                    {item.tag}
+                  </span>
+                </div>
+
+                <p className="text-base sm:text-lg text-gray-800 font-medium leading-relaxed mb-6 italic">
+                  "{item.quote}"
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3.5 pt-5 border-t border-gray-100">
+                <img
+                  src={item.avatar}
+                  alt={item.author}
+                  className="w-12 h-12 rounded-full object-cover border-2 border-[#E050D0]/20"
+                />
+                <div>
+                  <h4 className="font-extrabold text-gray-900 text-sm sm:text-base">
+                    {item.author}
+                  </h4>
+                  <p className="text-xs text-gray-500 font-medium">
+                    {item.role}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 

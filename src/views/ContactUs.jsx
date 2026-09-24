@@ -71,7 +71,7 @@ export default function ContactUs() {
             {/* Left Column: Heading, Subtext, Shop Now Button */}
             <div className="lg:col-span-6 flex flex-col items-start pt-4 sm:pt-8">
               <span className="font-bold text-xs sm:text-sm uppercase tracking-wider text-[#E050D0] mb-3 inline-block">
-                Pet Shop
+                Poonch Pet Store
               </span>
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold tracking-tight text-gray-900 leading-[1.12] mb-5">
@@ -126,7 +126,7 @@ export default function ContactUs() {
                 {submitted && (
                   <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold flex items-center gap-3 animate-fade-in">
                     <CheckCircle2 size={20} className="text-emerald-600 shrink-0" />
-                    <span>🐾 Thank you! Your message has been sent. We'll be in touch within 24 hours.</span>
+                    <span>🦜 Thank you! Your message has been sent. We'll be in touch within 24 hours.</span>
                   </div>
                 )}
 
@@ -240,7 +240,7 @@ export default function ContactUs() {
                     <MapPin size={18} strokeWidth={2.2} />
                   </div>
                   <span className="font-bold text-sm sm:text-base text-gray-900">
-                    8582 Fairground St. Tallahassee, FL 32303
+                    123 Pet Care Way, Suite A, City, State, ZIP
                   </span>
                 </div>
 
@@ -250,10 +250,10 @@ export default function ContactUs() {
                     <Mail size={18} strokeWidth={2.2} />
                   </div>
                   <a
-                    href="mailto:rgarton@outlook.com"
+                    href="mailto:support@poonchpetstore.com"
                     className="font-bold text-sm sm:text-base text-gray-900 hover:text-[#E050D0] transition-colors"
                   >
-                    rgarton@outlook.com
+                    support@poonchpetstore.com
                   </a>
                 </div>
 
@@ -263,10 +263,10 @@ export default function ContactUs() {
                     <Phone size={18} strokeWidth={2.2} />
                   </div>
                   <a
-                    href="tel:+7763786348"
+                    href="tel:+18001234567"
                     className="font-bold text-sm sm:text-base text-gray-900 hover:text-[#E050D0] transition-colors"
                   >
-                    +776 378-6348
+                    +1 (800) 123-4567
                   </a>
                 </div>
 
@@ -276,8 +276,22 @@ export default function ContactUs() {
                     <Clock size={18} strokeWidth={2.2} />
                   </div>
                   <span className="font-bold text-sm sm:text-base text-gray-900">
-                    Mon - Fri: 10AM - 10PM
+                    Mon - Fri: 9AM - 8PM EST
                   </span>
+                </div>
+
+                {/* Wholesale Inquiries Card (Requirement 11) */}
+                <div className="mt-4 pt-4 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <h4 className="font-bold text-gray-900 text-xs uppercase tracking-wider text-[#E050D0]">Wholesale Inquiries</h4>
+                    <p className="text-xs text-gray-500 mt-0.5">Available for local pet shops and avian specialists upon request.</p>
+                  </div>
+                  <a
+                    href="mailto:support@poonchpetstore.com?subject=Wholesale%20Inquiry%20-%20Poonch%20Pet%20Store"
+                    className="self-start sm:self-auto px-3.5 py-1.5 rounded-full bg-gray-900 hover:bg-[#E050D0] text-white text-xs font-bold transition-colors shadow-sm"
+                  >
+                    Inquire
+                  </a>
                 </div>
 
               </div>
