@@ -57,6 +57,7 @@ const AdminUsers = () => {
                 <th className="px-6 py-4 font-semibold">ID</th>
                 <th className="px-6 py-4 font-semibold">Name</th>
                 <th className="px-6 py-4 font-semibold">Email</th>
+                <th className="px-6 py-4 font-semibold">Phone Number</th>
                 <th className="px-6 py-4 font-semibold">Role</th>
                 <th className="px-6 py-4 font-semibold text-right">Actions</th>
               </tr>
@@ -67,6 +68,7 @@ const AdminUsers = () => {
                   <td className="px-6 py-4 font-mono text-xs text-muted-foreground">{user._id}</td>
                   <td className="px-6 py-4 font-medium">{user.name}</td>
                   <td className="px-6 py-4">{user.email}</td>
+                  <td className="px-6 py-4">{user.phone || '-'}</td>
                   <td className="px-6 py-4">
                     <Badge variant={user.role === 'admin' ? 'pink' : 'outline'}>
                       {user.role}
@@ -85,7 +87,7 @@ const AdminUsers = () => {
               ))}
               {users.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">
+                  <td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">
                     No users found.
                   </td>
                 </tr>
