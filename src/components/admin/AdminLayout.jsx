@@ -1,10 +1,18 @@
 import { useState } from 'react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, Users, Tag, Image as ImageIcon, Store, Menu, X } from 'lucide-react';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, Package, ShoppingCart, Users, Tag, Image as ImageIcon, Store, Menu, X, LogOut, ShieldCheck } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 const AdminLayout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   const menuItems = [
     { text: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/admin' },
@@ -22,7 +30,7 @@ const AdminLayout = () => {
       <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-border sticky top-0 z-30">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-brand-pink text-white flex items-center justify-center shrink-0">
-            <Store size={18} />
+            <ShieldCheck size={18} />
           </div>
           <span className="font-extrabold text-brand-pink tracking-wider uppercase text-sm">Poonch Admin</span>
         </div>
@@ -72,6 +80,19 @@ const AdminLayout = () => {
                 );
               })}
             </nav>
+            {user && (
+              <div className="p-4 border-t border-border bg-slate-50">
+                <div className="text-xs font-semibold text-foreground truncate">{user.name || 'Admin'}</div>
+                <div className="text-[11px] text-muted-foreground truncate mb-3">{user.email}</div>
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
+                >
+                  <LogOut size={14} />
+                  Sign Out
+                </button>
+              </div>
+            )}
           </aside>
         </div>
       )}
@@ -80,7 +101,7 @@ const AdminLayout = () => {
       <aside className="hidden md:flex w-64 bg-white border-r border-border flex-col shrink-0 min-h-screen sticky top-0">
         <div className="p-6 flex items-center gap-3 border-b border-border">
           <div className="w-8 h-8 rounded-lg bg-brand-pink text-white flex items-center justify-center">
-            <Store size={18} />
+            <ShieldCheck size={18} />
           </div>
           <span className="font-extrabold text-brand-pink tracking-widest uppercase">Admin</span>
         </div>
@@ -103,6 +124,19 @@ const AdminLayout = () => {
             );
           })}
         </nav>
+        {user && (
+          <div className="p-4 border-t border-border bg-slate-50/70">
+            <div className="text-xs font-bold text-foreground truncate">{user.name || 'Administrator'}</div>
+            <div className="text-[11px] text-muted-foreground truncate mb-3">{user.email}</div>
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
+            >
+              <LogOut size={14} />
+              Sign Out
+            </button>
+          </div>
+        )}
       </aside>
       
       {/* Content Area */}

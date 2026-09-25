@@ -28,15 +28,14 @@ import AdminOrders from './views/admin/AdminOrders';
 import AdminUsers from './views/admin/AdminUsers';
 import AdminCoupons from './views/admin/AdminCoupons';
 import AdminBanners from './views/admin/AdminBanners';
+import AdminLogin from './views/admin/AdminLogin';
 
-// Add PrivateRoute logic optionally if needed, but the layout and backend will protect it anyway.
-import { Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 
 const AdminRoute = ({ children }) => {
   const { user } = useAuth();
   if (!user || user.role !== 'admin') {
-    return <Navigate to="/" replace />;
+    return <AdminLogin />;
   }
   return children;
 };
@@ -65,6 +64,9 @@ function App() {
         <Route path="privacy" element={<PrivacyPolicy />} />
         <Route path="terms" element={<TermsConditions />} />
       </Route>
+
+      {/* Admin Login Route */}
+      <Route path="/admin/login" element={<AdminLogin />} />
 
       {/* Admin Routes */}
       <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>

@@ -3,10 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
+import { Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
@@ -32,9 +34,9 @@ const Login = () => {
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
           <Link to="/" className="inline-flex items-center justify-center mb-4 sm:mb-6">
-            <img src="/assets/logowhite.jpeg" alt="Poonch Pet Store" className="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-brand-pink/30 shadow-md" />
+            <img src="/logo.jpeg" alt="Poonch Pet Store" className="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-brand-pink/30 shadow-md" />
           </Link>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground mb-1.5 sm:mb-2">Welcome back 🦜</h1>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground mb-1.5 sm:mb-2">Welcome back</h1>
           <p className="text-xs sm:text-sm text-muted-foreground">Sign in to your Poonch Pet Store account</p>
         </div>
 
@@ -70,14 +72,24 @@ const Login = () => {
                   Forgot Password?
                 </Link>
               </div>
-              <Input
-                id="login-password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div className="relative">
+                <Input
+                  id="login-password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
 
             <Button
