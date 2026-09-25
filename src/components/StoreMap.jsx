@@ -63,27 +63,27 @@ export default function StoreMap() {
         </div>
 
         {/* ── TOP-LEFT FLOATING STORE BADGE ── */}
-        <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-20 bg-white/95 backdrop-blur-md px-4 py-3 rounded-2xl shadow-lg border border-gray-100 max-w-[280px] sm:max-w-xs transition-all">
+        <div className="absolute top-3 left-3 sm:top-6 sm:left-6 z-20 bg-white/95 backdrop-blur-md px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl shadow-lg border border-gray-100 max-w-[calc(100%-1.5rem)] sm:max-w-xs transition-all">
           <div className="flex items-center gap-2 mb-1">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-600">Open Now • Closes 10 PM</span>
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-emerald-600">Open Now • Closes 10 PM</span>
           </div>
-          <p className="font-extrabold text-sm sm:text-base text-gray-900 leading-tight">
+          <p className="font-extrabold text-xs sm:text-base text-gray-900 leading-tight">
             Poonch Pet Store Flagship Location
           </p>
-          <p className="text-xs text-gray-500 mt-0.5 leading-snug">
+          <p className="text-[11px] sm:text-xs text-gray-500 mt-0.5 leading-snug line-clamp-1 sm:line-clamp-none">
             123 Pet Care Way, Suite A, City, State, ZIP
           </p>
         </div>
 
         {/* ── BOTTOM-RIGHT FLOATING ACTION BUTTONS ── */}
-        <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 z-20 flex flex-wrap items-center gap-2">
+        <div className="absolute bottom-3 right-3 sm:bottom-6 sm:right-6 z-20 flex flex-wrap items-center justify-end gap-2 max-w-[calc(100%-1.5rem)]">
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/95 backdrop-blur-md text-gray-800 text-xs font-semibold shadow-md border border-gray-100 hover:bg-[#E050D0] hover:text-white transition-all active:scale-95"
+            className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-white/95 backdrop-blur-md text-gray-800 text-[11px] sm:text-xs font-semibold shadow-md border border-gray-100 hover:bg-[#E050D0] hover:text-white transition-all active:scale-95 touch-manipulation"
             title="Copy address"
           >
-            {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
+            {copied ? <Check size={13} className="text-emerald-500" /> : <Copy size={13} />}
             <span>{copied ? 'Copied!' : 'Copy Address'}</span>
           </button>
 
@@ -91,11 +91,11 @@ export default function StoreMap() {
             href={googleMapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#E050D0] text-white text-xs font-bold shadow-md hover:bg-[#C030B0] transition-all active:scale-95"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-[#E050D0] text-white text-[11px] sm:text-xs font-bold shadow-md hover:bg-[#C030B0] transition-all active:scale-95 touch-manipulation"
           >
-            <Navigation size={14} />
+            <Navigation size={13} />
             <span>Get Directions</span>
-            <ExternalLink size={12} className="opacity-80" />
+            <ExternalLink size={11} className="opacity-80" />
           </a>
         </div>
       </div>

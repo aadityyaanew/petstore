@@ -34,17 +34,17 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 bg-background">
+    <div className="min-h-[75vh] flex items-center justify-center px-3.5 sm:px-4 py-8 sm:py-12 bg-background">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center justify-center mb-6">
-            <img src="/assets/logowhite.jpeg" alt="Poonch Pet Store" className="w-16 h-16 rounded-full object-cover border-2 border-brand-pink/30" />
+        <div className="text-center mb-6 sm:mb-8">
+          <Link to="/" className="inline-flex items-center justify-center mb-4 sm:mb-6">
+            <img src="/assets/logowhite.jpeg" alt="Poonch Pet Store" className="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-brand-pink/30 shadow-md" />
           </Link>
-          <h1 className="text-3xl font-extrabold text-foreground mb-2">Create an Account</h1>
-          <p className="text-muted-foreground">Join Poonch Pet Store to checkout securely.</p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground mb-1.5 sm:mb-2">Create an Account</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground">Join Poonch Pet Store to checkout securely.</p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-border p-8 shadow-sm">
+        <div className="bg-white rounded-2xl border border-border p-5 xs:p-6 sm:p-8 shadow-sm">
           {error && (
             <div className="mb-5 p-3.5 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-medium">
               {error}

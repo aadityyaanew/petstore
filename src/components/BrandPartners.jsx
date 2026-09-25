@@ -80,19 +80,19 @@ export const BRAND_ITEMS = [
 
 export default function BrandPartners() {
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 items-center justify-items-center">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+      <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 md:gap-14">
         {BRAND_ITEMS.map((item, idx) => {
           const Logo = item.Component;
           return (
             <div
               key={idx}
-              className="flex flex-col items-center justify-center gap-2.5 group cursor-pointer transition-transform hover:-translate-y-1"
+              className="flex flex-col items-center justify-center gap-2 group cursor-pointer transition-transform hover:-translate-y-1 w-[calc(33.333%-1rem)] sm:w-auto"
             >
-              <div className="w-16 h-16 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
-                <Logo className="w-14 h-14 text-[#E050D0] drop-shadow-sm group-hover:drop-shadow-md" />
+              <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+                <Logo className="w-10 h-10 sm:w-14 sm:h-14 text-[#E050D0] drop-shadow-sm group-hover:drop-shadow-md" />
               </div>
-              <span className="text-xs sm:text-sm font-semibold text-[#E050D0] tracking-wide transition-colors">
+              <span className="text-[11px] sm:text-xs md:text-sm font-semibold text-[#E050D0] tracking-wide transition-colors text-center">
                 {item.name}
               </span>
             </div>

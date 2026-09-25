@@ -121,7 +121,7 @@ export default function ContactUs() {
             
             {/* Left Column: Contact Form inside Soft Rounded Card */}
             <div className="lg:col-span-6 order-2 lg:order-1">
-              <div className="bg-[#F8F9FB] rounded-[28px] sm:rounded-[36px] p-6 sm:p-10 border border-gray-100/90 shadow-[0_4px_30px_rgba(0,0,0,0.03)]">
+              <div className="bg-[#F8F9FB] rounded-[24px] sm:rounded-[36px] p-5 xs:p-6 sm:p-10 border border-gray-100/90 shadow-[0_4px_30px_rgba(0,0,0,0.03)]">
                 
                 {submitted && (
                   <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold flex items-center gap-3 animate-fade-in">
@@ -130,7 +130,7 @@ export default function ContactUs() {
                   </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
                   {/* First Name & Last Name (2 Columns) */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -145,7 +145,7 @@ export default function ContactUs() {
                         value={formData.firstName}
                         onChange={handleChange}
                         placeholder="First Name"
-                        className="w-full bg-white rounded-xl border border-gray-200/90 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#E050D0] focus:ring-2 focus:ring-[#E050D0]/20 transition-all"
+                        className="w-full bg-white rounded-xl border border-gray-200/90 px-4 py-3 text-base sm:text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#E050D0] focus:ring-2 focus:ring-[#E050D0]/20 transition-all"
                       />
                     </div>
                     <div>
@@ -160,7 +160,7 @@ export default function ContactUs() {
                         value={formData.lastName}
                         onChange={handleChange}
                         placeholder="Last Name"
-                        className="w-full bg-white rounded-xl border border-gray-200/90 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#E050D0] focus:ring-2 focus:ring-[#E050D0]/20 transition-all"
+                        className="w-full bg-white rounded-xl border border-gray-200/90 px-4 py-3 text-base sm:text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#E050D0] focus:ring-2 focus:ring-[#E050D0]/20 transition-all"
                       />
                     </div>
                   </div>
@@ -178,7 +178,7 @@ export default function ContactUs() {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="E-mail address"
-                      className="w-full bg-white rounded-xl border border-gray-200/90 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#E050D0] focus:ring-2 focus:ring-[#E050D0]/20 transition-all"
+                      className="w-full bg-white rounded-xl border border-gray-200/90 px-4 py-3 text-base sm:text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#E050D0] focus:ring-2 focus:ring-[#E050D0]/20 transition-all"
                     />
                   </div>
 
@@ -190,12 +190,12 @@ export default function ContactUs() {
                     <textarea
                       id="message"
                       name="message"
-                      rows={5}
+                      rows={4}
                       required
                       value={formData.message}
                       onChange={handleChange}
                       placeholder="Your message..."
-                      className="w-full bg-white rounded-xl border border-gray-200/90 p-4 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#E050D0] focus:ring-2 focus:ring-[#E050D0]/20 transition-all resize-none"
+                      className="w-full bg-white rounded-xl border border-gray-200/90 p-4 text-base sm:text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#E050D0] focus:ring-2 focus:ring-[#E050D0]/20 transition-all resize-none"
                     />
                   </div>
 
@@ -204,7 +204,7 @@ export default function ContactUs() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="inline-flex items-center justify-center font-bold text-sm bg-[#E050D0] hover:bg-[#C030B0] text-white px-9 py-3.5 rounded-full shadow-[0_4px_16px_rgba(224,80,208,0.35)] hover:shadow-[0_6px_22px_rgba(224,80,208,0.45)] transition-all duration-200 active:scale-95 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+                      className="w-full sm:w-auto inline-flex items-center justify-center font-bold text-sm sm:text-base bg-[#E050D0] hover:bg-[#C030B0] text-white px-9 py-3.5 rounded-full shadow-[0_4px_16px_rgba(224,80,208,0.35)] hover:shadow-[0_6px_22px_rgba(224,80,208,0.45)] transition-all duration-200 active:scale-95 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                     >
                       {submitting ? (
                         <div className="flex items-center gap-2">

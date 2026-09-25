@@ -8,17 +8,17 @@ const Section = ({ title, children }) => (
 const PrivacyPolicy = () => {
   return (
     <div>
-      <div className="relative bg-brand-charcoal text-white py-14 overflow-hidden mb-12">
-        <div className="absolute -top-16 -right-16 w-60 h-60 rounded-full bg-brand-pink/20 blur-3xl" />
-        <div className="max-w-3xl mx-auto px-6 relative z-10">
-          <span className="pink-badge mb-3 inline-block">Legal</span>
-          <h1 className="text-4xl font-extrabold mb-2">Privacy Policy 🔒</h1>
-          <p className="text-white/60 text-sm">Last Updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+      <div className="relative bg-brand-charcoal text-white py-10 sm:py-14 overflow-hidden mb-8 sm:mb-12">
+        <div className="absolute -top-16 -right-16 w-60 h-60 rounded-full bg-brand-pink/20 blur-3xl pointer-events-none" />
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 relative z-10">
+          <span className="pink-badge mb-2.5 sm:mb-3 inline-block text-xs">Legal</span>
+          <h1 className="text-2xl xs:text-3xl sm:text-4xl font-extrabold mb-1.5 sm:mb-2">Privacy Policy 🔒</h1>
+          <p className="text-white/60 text-xs sm:text-sm">Last Updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-20">
-        <div className="bg-white rounded-2xl border border-border p-6 md:p-10 shadow-sm">
+      <div className="max-w-3xl mx-auto px-3.5 sm:px-6 pb-16 sm:pb-20">
+        <div className="bg-white rounded-2xl border border-border p-5 sm:p-6 md:p-10 shadow-sm">
           <p className="text-muted-foreground leading-relaxed mb-8 text-sm">
             At <strong className="text-foreground">Poonch Pet Store</strong>, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your personal information when you visit <strong className="text-brand-pink">www.poonchpetstore.com</strong>.
           </p>

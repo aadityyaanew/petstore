@@ -63,7 +63,7 @@ const SOCIAL_ICONS = [
 
 export default function Footer() {
   return (
-    <footer className="relative bg-[#FAFBFD] text-gray-800 pt-16 pb-12 border-t border-gray-100 overflow-hidden selection:bg-[#E050D0]/20 selection:text-[#E050D0]">
+    <footer className="relative bg-[#FAFBFD] text-gray-800 pt-12 sm:pt-16 pb-28 md:pb-14 border-t border-gray-100 overflow-hidden selection:bg-[#E050D0]/20 selection:text-[#E050D0]">
       {/* ── BACKGROUND SCATTERED FEATHER WATERMARKS (Avian Theme) ── */}
       <div className="absolute inset-0 pointer-events-none select-none overflow-hidden opacity-[0.06] z-0">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -99,10 +99,10 @@ export default function Footer() {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-10 lg:gap-8 mb-14">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 sm:gap-8 mb-12 sm:mb-14">
 
           {/* Column 1 & 2: Brand Info + Mission Statement + Round Socials */}
-          <div className="lg:col-span-2">
+          <div className="col-span-2 md:col-span-3 lg:col-span-2">
             <Link to="/" className="flex items-center gap-2.5 mb-3 group w-fit">
               <img
                 src="/logo.jpeg"

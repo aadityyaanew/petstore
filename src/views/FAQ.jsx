@@ -15,28 +15,28 @@ const FAQ = () => {
   return (
     <div>
       {/* Hero */}
-      <div className="relative bg-brand-charcoal text-white py-16 md:py-20 overflow-hidden mb-12">
-        <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-brand-pink/20 blur-3xl" />
-        <div className="max-w-3xl mx-auto px-6 relative z-10 text-center">
-          <span className="pink-badge mb-4 inline-block">Got Questions?</span>
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-3">Frequently Asked Questions ❓</h1>
-          <p className="text-lg text-white/75">
+      <div className="relative bg-brand-charcoal text-white py-12 sm:py-16 md:py-20 overflow-hidden mb-8 sm:mb-12">
+        <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-brand-pink/20 blur-3xl pointer-events-none" />
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 relative z-10 text-center">
+          <span className="pink-badge mb-3 sm:mb-4 inline-block text-xs">Got Questions?</span>
+          <h1 className="text-2xl xs:text-3xl md:text-5xl font-extrabold mb-2.5 sm:mb-3">Frequently Asked Questions ❓</h1>
+          <p className="text-sm sm:text-base md:text-lg text-white/75">
             Find answers to the most common questions about our products and policies.
           </p>
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-20">
+      <div className="max-w-3xl mx-auto px-3.5 sm:px-6 pb-16 sm:pb-20">
         <Accordion type="single" collapsible className="space-y-0">
           {FAQS.map((faq, i) => (
             <AccordionItem key={i} value={`faq-${i}`} className="border border-border rounded-xl mb-3">
-              <AccordionTrigger className="px-5 py-4 text-left font-semibold text-base">
-                <span className="flex items-center gap-3">
-                  <span className="text-xl">{faq.emoji}</span>
-                  {faq.q}
+              <AccordionTrigger className="px-4 sm:px-5 py-3.5 sm:py-4 text-left font-semibold text-sm sm:text-base">
+                <span className="flex items-center gap-2.5 sm:gap-3">
+                  <span className="text-lg sm:text-xl shrink-0">{faq.emoji}</span>
+                  <span className="leading-snug">{faq.q}</span>
                 </span>
               </AccordionTrigger>
-              <AccordionContent className="px-5 pb-4 text-muted-foreground leading-relaxed pl-14">
+              <AccordionContent className="px-4 sm:px-5 pb-4 text-muted-foreground leading-relaxed pl-4 sm:pl-12 text-xs sm:text-sm">
                 {faq.a}
               </AccordionContent>
             </AccordionItem>
@@ -44,12 +44,18 @@ const FAQ = () => {
         </Accordion>
 
         {/* Still have questions */}
-        <div className="mt-10 p-8 text-center rounded-2xl bg-gradient-to-br from-brand-pink/8 to-brand-pink/3 border border-brand-pink/15">
-          <p className="text-xl font-bold text-foreground mb-2">Still have questions? 🦜</p>
-          <p className="text-muted-foreground mb-3 text-sm">Can't find what you're looking for? Reach out directly.</p>
-          <p className="text-brand-pink font-semibold text-sm">
-            📧 support@poonchpetstore.com &nbsp;|&nbsp; 📞 +1 (800) 123-4567
-          </p>
+        <div className="mt-8 sm:mt-10 p-5 sm:p-8 text-center rounded-2xl bg-gradient-to-br from-brand-pink/8 to-brand-pink/3 border border-brand-pink/15">
+          <p className="text-lg sm:text-xl font-bold text-foreground mb-1.5 sm:mb-2">Still have questions? 🦜</p>
+          <p className="text-muted-foreground mb-3 text-xs sm:text-sm">Can't find what you're looking for? Reach out directly.</p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-brand-pink font-semibold text-xs sm:text-sm">
+            <a href="mailto:support@poonchpetstore.com" className="hover:underline">
+              📧 support@poonchpetstore.com
+            </a>
+            <span className="hidden sm:inline text-brand-pink/40">|</span>
+            <a href="tel:+18001234567" className="hover:underline">
+              📞 +1 (800) 123-4567
+            </a>
+          </div>
         </div>
       </div>
     </div>

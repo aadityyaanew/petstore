@@ -306,38 +306,38 @@ export default function Products() {
       {/* ─────────────────────────────────────────────────────────────
           1. HERO SECTION (Real Asset Photography in Organic Pink Frame)
       ───────────────────────────────────────────────────────────── */}
-      <section className="relative z-10 pt-4 pb-10 sm:pb-14">
+      <section className="relative z-10 pt-4 pb-8 sm:pb-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
             
             {/* Left Content */}
-            <div className="lg:col-span-6 flex flex-col items-start pt-4 sm:pt-6">
-              <span className="font-bold text-xs sm:text-sm uppercase tracking-wider text-[#E050D0] mb-3 inline-block">
+            <div className="lg:col-span-6 flex flex-col items-start pt-2 sm:pt-6">
+              <span className="font-bold text-[11px] xs:text-xs sm:text-sm uppercase tracking-wider text-[#E050D0] mb-2 sm:mb-3 inline-block">
                 Pet Shop
               </span>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-extrabold tracking-tight text-gray-900 leading-[1.12] mb-5">
+              <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-extrabold tracking-tight text-gray-900 leading-[1.15] mb-3.5 sm:mb-5">
                 The friendly and caring small pet store
               </h1>
 
-              <p className="text-sm sm:text-base md:text-lg text-gray-500 leading-relaxed max-w-xl">
+              <p className="text-xs xs:text-sm sm:text-base md:text-lg text-gray-500 leading-relaxed max-w-xl">
                 At et vehicula sodales est proin turpis pellentesque sinulla a aliquam amet rhoncus quisque eget sit.
               </p>
             </div>
 
             {/* Right Graphic: Real Asset Image framed in Organic Pink Backdrop */}
             <div className="lg:col-span-6 flex items-center justify-center relative">
-              <div className="relative w-full max-w-[500px] aspect-[4/3] rounded-[36px] overflow-hidden shadow-2xl ring-4 ring-[#E050D0]/25 group">
+              <div className="relative w-full max-w-[420px] sm:max-w-[500px] aspect-[4/3] rounded-[28px] sm:rounded-[36px] overflow-hidden shadow-xl ring-4 ring-[#E050D0]/25 group">
                 <img
                   src="/assets/asset-2e913e5e.jpeg"
                   alt="Happy pet with wooden stand"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-80" />
-                <div className="absolute bottom-4 left-6 right-6 flex items-center justify-between text-white">
+                <div className="absolute bottom-3 left-4 right-4 sm:bottom-4 sm:left-6 sm:right-6 flex items-center justify-between text-white">
                   <div>
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#FBA8FA]">100% Handcrafted</span>
-                    <p className="text-base font-extrabold leading-tight">Natural Pine Bird Stands</p>
+                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#FBA8FA]">100% Handcrafted</span>
+                    <p className="text-sm sm:text-base font-extrabold leading-tight">Natural Pine Bird Stands</p>
                   </div>
                   <span className="px-3 py-1 rounded-full bg-[#E050D0] text-xs font-bold shadow-md">
                     Shop Now
@@ -353,26 +353,26 @@ export default function Products() {
       {/* ─────────────────────────────────────────────────────────────
           2. SHOP BY PET (Real Asset Avatars with Cat Active in Pink)
       ───────────────────────────────────────────────────────────── */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-        <div className="flex items-center justify-between mb-8 sm:mb-10">
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900">
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-10">
+        <div className="flex items-center justify-between mb-5 sm:mb-10">
+          <h2 className="text-xl sm:text-3xl font-extrabold tracking-tight text-gray-900">
             Shop by bird
           </h2>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 sm:gap-2.5">
             <button
               onClick={() => scrollPet('left')}
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-neutral-800 active:scale-95 transition-all shadow-sm cursor-pointer"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-neutral-800 active:scale-95 transition-all shadow-sm cursor-pointer"
               aria-label="Previous birds"
             >
-              <ChevronLeft size={18} strokeWidth={2.5} />
+              <ChevronLeft size={16} strokeWidth={2.5} />
             </button>
             <button
               onClick={() => scrollPet('right')}
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-neutral-800 active:scale-95 transition-all shadow-sm cursor-pointer"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-neutral-800 active:scale-95 transition-all shadow-sm cursor-pointer"
               aria-label="Next birds"
             >
-              <ChevronRight size={18} strokeWidth={2.5} />
+              <ChevronRight size={16} strokeWidth={2.5} />
             </button>
           </div>
         </div>
@@ -380,7 +380,7 @@ export default function Products() {
         {/* 6 Circular Real Image Avatars */}
         <div
           ref={petScrollRef}
-          className="flex items-center justify-between gap-6 sm:gap-8 overflow-x-auto no-scrollbar scroll-smooth pb-4 px-2"
+          className="flex items-center gap-4 sm:gap-8 overflow-x-auto no-scrollbar scroll-smooth pb-3 px-1 snap-x touch-scroll"
         >
           {BIRD_TYPES.map((pet) => {
             const isSelected = selectedPet === pet.id;
@@ -390,12 +390,12 @@ export default function Products() {
                 onClick={() => {
                   setSelectedPet(isSelected ? '' : pet.id);
                 }}
-                className="flex flex-col items-center gap-3 cursor-pointer group shrink-0 min-w-[90px] sm:min-w-[110px]"
+                className="flex flex-col items-center gap-2 sm:gap-3 cursor-pointer group shrink-0 min-w-[80px] xs:min-w-[95px] sm:min-w-[110px] snap-center"
               >
                 {/* Circular Photo Avatar Container */}
                 <div
                   className={cn(
-                    "w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden transition-all duration-300 transform group-hover:scale-105 p-1",
+                    "w-20 h-20 xs:w-24 xs:h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden transition-all duration-300 transform group-hover:scale-105 p-1",
                     isSelected
                       ? "ring-4 ring-[#E050D0] shadow-[0_8px_25px_rgba(224,80,208,0.4)]"
                       : "ring-2 ring-gray-100 group-hover:ring-gray-300"
@@ -410,7 +410,7 @@ export default function Products() {
 
                 <span
                   className={cn(
-                    "text-xs sm:text-sm font-bold transition-colors",
+                    "text-xs sm:text-sm font-bold transition-colors text-center",
                     isSelected ? "text-[#E050D0]" : "text-gray-500 group-hover:text-gray-900"
                   )}
                 >
@@ -425,20 +425,37 @@ export default function Products() {
       {/* ─────────────────────────────────────────────────────────────
           3. MAIN CATALOG AREA: SIDEBAR FILTERS + REAL PRODUCTS GRID
       ───────────────────────────────────────────────────────────── */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
         
-        {/* Mobile Filter Toggle */}
-        <div className="flex md:hidden items-center justify-between mb-6 pb-4 border-b border-gray-100">
+        {/* Mobile Filter & Sort Control Bar */}
+        <div className="flex md:hidden flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-gray-100">
           <p className="text-xs font-semibold text-gray-500">
-            Showing {paginatedProducts.length} of {filteredProducts.length} results
+            {paginatedProducts.length} of {filteredProducts.length} items
           </p>
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-white text-xs font-bold shadow-sm"
-          >
-            <SlidersHorizontal size={14} className="text-[#E050D0]" />
-            <span>Filters</span>
-          </button>
+          
+          <div className="flex items-center gap-2">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="bg-white border border-gray-200 text-xs font-semibold rounded-full px-3 py-1.5 text-gray-700 outline-none focus:border-[#E050D0] cursor-pointer shadow-sm"
+            >
+              <option value="latest">Latest</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="name">A to Z</option>
+            </select>
+
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-gray-200 bg-white text-xs font-bold shadow-sm active:scale-95 transition-all cursor-pointer"
+            >
+              <SlidersHorizontal size={13} className="text-[#E050D0]" />
+              <span>Filters</span>
+              {(selectedCategories.length > 0 || selectedBrands.length > 0 || selectedTags.length > 0 || priceRange < 159) && (
+                <span className="w-2 h-2 rounded-full bg-[#E050D0]" />
+              )}
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
@@ -610,45 +627,136 @@ export default function Products() {
           {/* ── MOBILE SIDEBAR OVERLAY ── */}
           {sidebarOpen && (
             <div className="fixed inset-0 z-50 flex md:hidden">
-              <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
-              <div className="relative w-80 max-w-[85vw] bg-white h-full shadow-2xl p-6 overflow-y-auto space-y-6">
+              <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
+              <div className="relative w-80 max-w-[85vw] bg-white h-full shadow-2xl p-5 overflow-y-auto space-y-5 safe-bottom">
                 <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-                  <h3 className="font-extrabold text-lg text-gray-900">Filters</h3>
-                  <button onClick={() => setSidebarOpen(false)} className="p-1 text-gray-500">
+                  <div className="flex items-center gap-2">
+                    <SlidersHorizontal size={16} className="text-[#E050D0]" />
+                    <h3 className="font-extrabold text-base text-gray-900">Filters</h3>
+                  </div>
+                  <button onClick={() => setSidebarOpen(false)} className="p-1 text-gray-400 hover:text-gray-900 cursor-pointer">
                     <X size={20} />
                   </button>
                 </div>
 
+                {/* Categories */}
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#E050D0] mb-3">Categories</h4>
-                  <div className="space-y-2">
-                    {CATEGORIES_FILTER.map((c) => (
-                      <div key={c.id} onClick={() => handleCategoryToggle(c.id)} className="flex items-center justify-between text-xs py-1">
-                        <span>{c.label}</span>
-                        <span className="text-[#E050D0] font-bold">{c.count}</span>
-                      </div>
-                    ))}
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#E050D0] mb-2.5">Categories</h4>
+                  <div className="space-y-1.5">
+                    {CATEGORIES_FILTER.map((c) => {
+                      const checked = selectedCategories.includes(c.id);
+                      return (
+                        <div
+                          key={c.id}
+                          onClick={() => handleCategoryToggle(c.id)}
+                          className={cn(
+                            "flex items-center justify-between text-xs py-1.5 px-2.5 rounded-lg cursor-pointer transition-colors",
+                            checked ? "bg-[#E050D0]/10 text-[#E050D0] font-bold" : "text-gray-700 hover:bg-gray-50"
+                          )}
+                        >
+                          <span className="flex items-center gap-2">
+                            {checked && <Check size={12} strokeWidth={3} />}
+                            {c.label}
+                          </span>
+                          <span className="text-[11px] font-semibold opacity-75">{c.count}</span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
+                {/* Price Slider */}
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#E050D0] mb-2">Price Up to ${priceRange}</h4>
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#E050D0]">Price Range</h4>
+                    <span className="text-xs font-bold text-gray-800">${priceRange}</span>
+                  </div>
                   <input
                     type="range"
                     min={1}
                     max={159}
                     value={priceRange}
                     onChange={(e) => setPriceRange(Number(e.target.value))}
-                    className="w-full accent-[#E050D0]"
+                    className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#E050D0]"
                   />
+                  <div className="flex justify-between text-[10px] text-gray-400 mt-1">
+                    <span>$1</span>
+                    <span>$159</span>
+                  </div>
                 </div>
 
-                <button
-                  onClick={() => setSidebarOpen(false)}
-                  className="w-full py-3 bg-[#E050D0] text-white font-bold text-xs rounded-full shadow-md"
-                >
-                  Apply Filters
-                </button>
+                {/* Brands */}
+                <div>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#E050D0] mb-2.5">Brands</h4>
+                  <div className="space-y-1.5">
+                    {BRANDS_FILTER.map((b) => {
+                      const checked = selectedBrands.includes(b.id);
+                      return (
+                        <div
+                          key={b.id}
+                          onClick={() => handleBrandToggle(b.id)}
+                          className={cn(
+                            "flex items-center justify-between text-xs py-1.5 px-2.5 rounded-lg cursor-pointer transition-colors",
+                            checked ? "bg-[#E050D0]/10 text-[#E050D0] font-bold" : "text-gray-700 hover:bg-gray-50"
+                          )}
+                        >
+                          <span className="flex items-center gap-2">
+                            {checked && <Check size={12} strokeWidth={3} />}
+                            {b.label}
+                          </span>
+                          <span className="text-[11px] font-semibold opacity-75">{b.count}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Tags */}
+                <div>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#E050D0] mb-2">Tags</h4>
+                  <div className="flex flex-wrap gap-1.5">
+                    {FILTER_TAGS.map((tag) => {
+                      const active = selectedTags.includes(tag);
+                      return (
+                        <button
+                          key={tag}
+                          onClick={() => handleTagToggle(tag)}
+                          className={cn(
+                            "text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-all cursor-pointer",
+                            active
+                              ? "bg-[#E050D0] text-white border-[#E050D0]"
+                              : "bg-gray-50 text-gray-600 border-gray-200"
+                          )}
+                        >
+                          {tag}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Buttons */}
+                <div className="pt-2 space-y-2">
+                  <button
+                    onClick={() => setSidebarOpen(false)}
+                    className="w-full py-3 bg-[#E050D0] hover:bg-[#C035B0] text-white font-bold text-xs rounded-full shadow-md active:scale-95 transition-all cursor-pointer"
+                  >
+                    Apply Filters
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSelectedCategories([]);
+                      setSelectedBrands([]);
+                      setSelectedTags([]);
+                      setPriceRange(159);
+                      setSelectedPet('');
+                      setSidebarOpen(false);
+                    }}
+                    className="w-full py-2 text-center text-xs font-semibold text-gray-500 hover:text-gray-900 cursor-pointer"
+                  >
+                    Reset All Filters
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -656,7 +764,7 @@ export default function Products() {
           {/* ── RIGHT MAIN PRODUCT GRID (Real Asset Photography) ── */}
           <div className="md:col-span-8 lg:col-span-9">
             
-            {/* Header: Results Count + Sort dropdown */}
+            {/* Header: Results Count + Sort dropdown (Desktop/Tablet) */}
             <div className="hidden sm:flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
               <p className="text-xs font-semibold text-gray-500">
                 Showing {Math.min(paginatedProducts.length, itemsPerPage)} of {filteredProducts.length} results
@@ -676,9 +784,9 @@ export default function Products() {
               </div>
             </div>
 
-            {/* 3 Columns Grid using REAL Asset Photography */}
+            {/* 2-3 Columns Grid using REAL Asset Photography */}
             {paginatedProducts.length === 0 ? (
-              <div className="text-center py-20 bg-[#F9FAFB] rounded-3xl border border-gray-100">
+              <div className="text-center py-16 sm:py-20 bg-[#F9FAFB] rounded-3xl border border-gray-100">
                 <p className="text-4xl mb-2">🦜</p>
                 <h3 className="font-extrabold text-base text-gray-900 mb-1">No products match your filters</h3>
                 <p className="text-xs text-gray-500 mb-4">Try clearing some filters to see more items.</p>
@@ -696,17 +804,17 @@ export default function Products() {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8">
                 {paginatedProducts.map((prod) => {
                   const wishlisted = isInWishlist(prod.id);
                   return (
                     <div
                       key={prod.id}
                       onClick={() => navigate('/products')}
-                      className="bg-[#F8F9FA] rounded-[24px] sm:rounded-[28px] p-5 sm:p-6 border border-gray-100/90 relative group flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 cursor-pointer"
+                      className="bg-[#F8F9FA] rounded-[20px] sm:rounded-[28px] p-3 xs:p-4 sm:p-6 border border-gray-100/90 relative group flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 cursor-pointer"
                     >
                       {/* Product Real Photo Area */}
-                      <div className="py-4 flex items-center justify-center h-44 sm:h-52 bg-white rounded-2xl overflow-hidden p-2 mb-3">
+                      <div className="py-2 sm:py-4 flex items-center justify-center h-32 xs:h-40 sm:h-52 bg-white rounded-2xl overflow-hidden p-2 mb-2 sm:mb-3">
                         <img
                           src={prod.image}
                           alt={prod.name}
@@ -715,9 +823,9 @@ export default function Products() {
                       </div>
 
                       {/* Footer: Title + Price on left, Wishlist Heart on right */}
-                      <div className="pt-3 flex items-end justify-between border-t border-gray-200/50">
-                        <div>
-                          <h3 className="font-bold text-xs sm:text-sm text-gray-900 group-hover:text-[#E050D0] transition-colors leading-tight mb-1 line-clamp-1">
+                      <div className="pt-2 sm:pt-3 flex items-end justify-between border-t border-gray-200/50">
+                        <div className="pr-1">
+                          <h3 className="font-bold text-xs sm:text-sm text-gray-900 group-hover:text-[#E050D0] transition-colors leading-tight mb-0.5 sm:mb-1 line-clamp-1">
                             {prod.name}
                           </h3>
                           <p className="font-extrabold text-xs sm:text-sm text-gray-900">
@@ -731,7 +839,7 @@ export default function Products() {
                             toggleWishlist(prod);
                           }}
                           className={cn(
-                            "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer shadow-sm hover:scale-110 shrink-0",
+                            "w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer shadow-sm hover:scale-110 shrink-0",
                             wishlisted
                               ? "bg-[#E050D0] text-white"
                               : "text-[#E050D0] hover:bg-[#E050D0]/10"
@@ -739,15 +847,15 @@ export default function Products() {
                           aria-label="Save to wishlist"
                           title={wishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
                         >
-                          <Heart size={16} strokeWidth={2} fill={wishlisted ? "currentColor" : "none"} />
+                          <Heart size={15} strokeWidth={2} fill={wishlisted ? "currentColor" : "none"} />
                         </button>
                       </div>
 
-                      {/* Quick Add on Hover */}
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 mt-2">
+                      {/* Quick Add (Visible on Mobile Touch, Hover on Desktop) */}
+                      <div className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 mt-2">
                         <button
                           onClick={(e) => handleQuickAdd(prod, e)}
-                          className="w-full py-2 rounded-full bg-black hover:bg-neutral-800 text-white text-[11px] font-bold transition-all shadow-sm"
+                          className="w-full py-1.5 sm:py-2 rounded-full bg-black hover:bg-neutral-800 text-white text-[10px] sm:text-[11px] font-bold transition-all shadow-sm active:scale-95 cursor-pointer"
                         >
                           Add to Cart
                         </button>

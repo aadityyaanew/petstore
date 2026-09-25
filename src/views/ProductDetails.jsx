@@ -83,70 +83,70 @@ const ProductDetails = () => {
   if (!product) return <div className="text-center py-20 text-xl font-bold">Product not found</div>;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 mb-16">
-        <div className="bg-white rounded-3xl border border-border p-6 flex items-center justify-center shadow-sm">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 mb-12 sm:mb-16">
+        <div className="bg-white rounded-3xl border border-border p-4 sm:p-8 flex items-center justify-center shadow-sm">
           <img 
             src={product.images?.[0] || '/assets/asset-058339ca.jpeg'} 
             alt={product.name}
-            className="w-full h-auto max-h-[500px] object-contain"
+            className="w-full h-auto max-h-[340px] sm:max-h-[480px] object-contain"
           />
         </div>
 
         <div className="flex flex-col">
-          <Badge variant="pink" className="self-start mb-4 uppercase tracking-wider">{product.category}</Badge>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground mb-3 leading-tight">
+          <Badge variant="pink" className="self-start mb-3 sm:mb-4 uppercase tracking-wider text-xs">{product.category}</Badge>
+          <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground mb-2 sm:mb-3 leading-tight">
             {product.name}
           </h1>
           
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-3 sm:mb-4">
             <div className="flex text-amber-400">
               {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} size={18} fill={i < Math.round(product.rating || 0) ? "currentColor" : "transparent"} />
+                <Star key={i} size={16} fill={i < Math.round(product.rating || 0) ? "currentColor" : "transparent"} />
               ))}
             </div>
-            <span className="text-sm text-muted-foreground">({product.numReviews || 0} reviews)</span>
+            <span className="text-xs sm:text-sm text-muted-foreground">({product.numReviews || 0} reviews)</span>
           </div>
           
-          <p className="text-3xl font-extrabold text-brand-pink mb-6">₹{product.price.toFixed(2)}</p>
+          <p className="text-2xl sm:text-3xl font-extrabold text-brand-pink mb-4 sm:mb-6">${product.price.toFixed(2)}</p>
           
-          <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-6 sm:mb-8">
             {product.description}
           </p>
 
-          <div className="border-t border-border pt-6 mb-6">
+          <div className="border-t border-border pt-5 mb-5 sm:mb-6">
             {product.stock === 0 ? (
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-50 text-red-700 font-bold text-sm border border-red-200">
-                <AlertCircle size={18} /> Out of Stock
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-red-50 text-red-700 font-bold text-xs sm:text-sm border border-red-200">
+                <AlertCircle size={16} /> Out of Stock
               </div>
             ) : product.stock <= (product.lowStockThreshold ?? 5) ? (
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-50 text-amber-700 font-bold text-sm border border-amber-200">
-                <AlertCircle size={18} /> Only {product.stock} items left — order soon!
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-amber-50 text-amber-700 font-bold text-xs sm:text-sm border border-amber-200">
+                <AlertCircle size={16} /> Only {product.stock} left — order soon!
               </div>
             ) : (
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-50 text-emerald-700 font-bold text-sm border border-emerald-200">
-                <CheckCircle2 size={18} /> In Stock ({product.stock} available)
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 font-bold text-xs sm:text-sm border border-emerald-200">
+                <CheckCircle2 size={16} /> In Stock ({product.stock} available)
               </div>
             )}
           </div>
 
-          <div className="mb-8">
-            <p className="font-bold text-sm mb-3">Quantity</p>
-            <div className="inline-flex items-center border border-border rounded-xl overflow-hidden bg-white">
+          <div className="mb-6 sm:mb-8">
+            <p className="font-bold text-xs sm:text-sm mb-2.5">Quantity</p>
+            <div className="inline-flex items-center border border-border rounded-xl overflow-hidden bg-white shadow-sm">
               <button 
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 disabled={product.stock === 0}
-                className="px-4 py-3 hover:bg-accent disabled:opacity-50 transition-colors text-muted-foreground hover:text-foreground"
+                className="px-4 py-2.5 sm:py-3 hover:bg-accent disabled:opacity-50 transition-colors text-muted-foreground hover:text-foreground cursor-pointer"
               >
-                <Minus size={18} />
+                <Minus size={16} />
               </button>
-              <span className="px-4 font-bold min-w-[3rem] text-center">{quantity}</span>
+              <span className="px-4 font-bold min-w-[3rem] text-center text-sm">{quantity}</span>
               <button 
                 onClick={() => setQuantity(quantity + 1)}
                 disabled={quantity >= product.stock || product.stock === 0}
-                className="px-4 py-3 hover:bg-accent disabled:opacity-50 transition-colors text-muted-foreground hover:text-foreground"
+                className="px-4 py-2.5 sm:py-3 hover:bg-accent disabled:opacity-50 transition-colors text-muted-foreground hover:text-foreground cursor-pointer"
               >
-                <Plus size={18} />
+                <Plus size={16} />
               </button>
             </div>
           </div>
@@ -154,12 +154,12 @@ const ProductDetails = () => {
           <Button
             variant="secondary"
             size="lg"
-            className="w-full sm:w-auto min-w-[250px] py-6 text-lg gap-3"
+            className="w-full sm:w-auto min-w-[240px] py-3.5 sm:py-6 text-base sm:text-lg gap-3 rounded-full cursor-pointer shadow-md active:scale-95 transition-all"
             onClick={handleAddToCart}
             disabled={addingToCart || product.stock === 0}
           >
-            <ShoppingCart size={20} />
-            {product.stock === 0 ? 'Out of Stock' : addingToCart ? 'Adding...' : `Add to Cart — ₹${(product.price * quantity).toFixed(2)}`}
+            <ShoppingCart size={18} />
+            {product.stock === 0 ? 'Out of Stock' : addingToCart ? 'Adding...' : `Add to Cart — $${(product.price * quantity).toFixed(2)}`}
           </Button>
 
           <div className="grid grid-cols-2 gap-4 mt-auto pt-8">

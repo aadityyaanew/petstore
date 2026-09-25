@@ -155,50 +155,50 @@ const Checkout = () => {
     <div className="max-w-5xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-extrabold text-center mb-8">Checkout</h1>
       
-      <div className="flex justify-center mb-8">
-        <div className="flex items-center space-x-4">
+      <div className="flex justify-center mb-6 sm:mb-8">
+        <div className="flex items-center gap-1 xs:gap-2 sm:gap-4 max-w-full overflow-x-auto">
           {STEPS.map((label, index) => (
             <div key={label} className="flex items-center">
-              <div className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${activeStep >= index ? 'border-brand-pink bg-brand-pink text-white' : 'border-border text-muted-foreground'}`}>
+              <div className={`flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 text-xs sm:text-sm font-bold shrink-0 ${activeStep >= index ? 'border-[#E050D0] bg-[#E050D0] text-white' : 'border-border text-muted-foreground'}`}>
                 {index + 1}
               </div>
-              <span className={`ml-2 text-sm font-medium ${activeStep >= index ? 'text-foreground' : 'text-muted-foreground'}`}>{label}</span>
-              {index < STEPS.length - 1 && <div className="w-10 h-0.5 mx-4 bg-border" />}
+              <span className={`ml-1.5 sm:ml-2 text-xs sm:text-sm font-semibold whitespace-nowrap ${activeStep >= index ? 'text-foreground' : 'text-muted-foreground'}`}>{label}</span>
+              {index < STEPS.length - 1 && <div className="w-6 xs:w-8 sm:w-10 h-0.5 mx-1.5 xs:mx-2 sm:mx-4 bg-border shrink-0" />}
             </div>
           ))}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-2xl border border-border shadow-sm p-6 sm:p-8">
+          <div className="bg-white rounded-2xl border border-border shadow-sm p-4 xs:p-6 sm:p-8">
             {activeStep === 0 && (
               <div className="space-y-4">
-                <h2 className="text-xl font-bold mb-4">Shipping Address</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">Shipping Address</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-sm font-semibold">Full Name</label>
-                    <Input name="fullName" value={formData.fullName} onChange={handleChange} />
+                    <label className="text-xs sm:text-sm font-semibold">Full Name</label>
+                    <Input name="fullName" value={formData.fullName} onChange={handleChange} className="text-base sm:text-sm" />
                   </div>
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-sm font-semibold">Street Address</label>
-                    <Input name="street" value={formData.street} onChange={handleChange} />
+                    <label className="text-xs sm:text-sm font-semibold">Street Address</label>
+                    <Input name="street" value={formData.street} onChange={handleChange} className="text-base sm:text-sm" />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-sm font-semibold">City</label>
-                    <Input name="city" value={formData.city} onChange={handleChange} />
+                    <label className="text-xs sm:text-sm font-semibold">City</label>
+                    <Input name="city" value={formData.city} onChange={handleChange} className="text-base sm:text-sm" />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-sm font-semibold">State</label>
-                    <Input name="state" value={formData.state} onChange={handleChange} />
+                    <label className="text-xs sm:text-sm font-semibold">State</label>
+                    <Input name="state" value={formData.state} onChange={handleChange} className="text-base sm:text-sm" />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-sm font-semibold">ZIP Code</label>
-                    <Input name="zipCode" value={formData.zipCode} onChange={handleChange} />
+                    <label className="text-xs sm:text-sm font-semibold">ZIP Code</label>
+                    <Input name="zipCode" value={formData.zipCode} onChange={handleChange} className="text-base sm:text-sm" />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-sm font-semibold">Phone Number</label>
-                    <Input name="phone" value={formData.phone} onChange={handleChange} />
+                    <label className="text-xs sm:text-sm font-semibold">Phone Number</label>
+                    <Input name="phone" value={formData.phone} onChange={handleChange} className="text-base sm:text-sm" />
                   </div>
                 </div>
               </div>
@@ -206,19 +206,19 @@ const Checkout = () => {
 
             {activeStep === 1 && (
               <div className="space-y-4">
-                <h2 className="text-xl font-bold mb-4">Payment Method</h2>
+                <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">Payment Method</h2>
                 <div className="space-y-3">
                   {['Card', 'UPI', 'COD'].map((method) => (
-                    <label key={method} className="flex items-center gap-3 p-4 border border-border rounded-xl cursor-pointer hover:bg-accent/50 transition-colors">
+                    <label key={method} className="flex items-center gap-3 p-3.5 sm:p-4 border border-border rounded-xl cursor-pointer hover:bg-accent/50 transition-colors">
                       <input 
                         type="radio" 
                         name="paymentMethod" 
                         value={method} 
                         checked={formData.paymentMethod === method}
                         onChange={handleChange}
-                        className="w-4 h-4 text-brand-pink focus:ring-brand-pink"
+                        className="w-4 h-4 text-[#E050D0] focus:ring-[#E050D0]"
                       />
-                      <span className="font-medium">
+                      <span className="font-medium text-sm sm:text-base">
                         {method === 'Card' ? 'Credit / Debit Card' : method === 'UPI' ? 'UPI' : 'Cash on Delivery (COD)'}
                       </span>
                     </label>
@@ -227,16 +227,16 @@ const Checkout = () => {
               </div>
             )}
 
-            <div className="flex justify-between items-center mt-8 pt-6 border-t border-border">
-              <Button disabled={activeStep === 0} onClick={handleBack} variant="outline">
+            <div className="flex justify-between items-center mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-border">
+              <Button disabled={activeStep === 0} onClick={handleBack} variant="outline" className="px-5 py-2 rounded-full cursor-pointer">
                 Back
               </Button>
               {activeStep === STEPS.length - 1 ? (
-                <Button onClick={handlePlaceOrder} variant="secondary" size="lg">
+                <Button onClick={handlePlaceOrder} variant="secondary" size="lg" className="px-6 py-2 rounded-full font-bold cursor-pointer">
                   Place Order
                 </Button>
               ) : (
-                <Button onClick={handleNext} variant="secondary">
+                <Button onClick={handleNext} variant="secondary" className="px-6 py-2 rounded-full font-bold cursor-pointer">
                   Next
                 </Button>
               )}
@@ -245,59 +245,60 @@ const Checkout = () => {
         </div>
 
         <div className="lg:col-span-1">
-          <div className="bg-accent/20 rounded-2xl border border-border p-6 sticky top-24">
-            <h2 className="text-lg font-bold mb-4">Order Summary</h2>
+          <div className="bg-accent/20 rounded-2xl border border-border p-5 sm:p-6 sticky top-24 shadow-sm">
+            <h2 className="text-base sm:text-lg font-bold mb-4">Order Summary</h2>
             
-            <div className="space-y-3 mb-6 max-h-60 overflow-y-auto pr-2">
+            <div className="space-y-3 mb-5 sm:mb-6 max-h-56 overflow-y-auto pr-1">
               {cart.items.map((item) => (
-                <div key={item.product._id} className="flex justify-between items-center">
-                  <p className="text-sm text-muted-foreground truncate pr-2">
+                <div key={item.product._id} className="flex justify-between items-center text-xs sm:text-sm">
+                  <p className="text-muted-foreground truncate pr-2">
                     {item.product.name} (x{item.quantity})
                   </p>
-                  <p className="text-sm font-semibold shrink-0">
-                    ₹{(item.product.price * item.quantity).toFixed(2)}
+                  <p className="font-semibold shrink-0">
+                    ${(item.product.price * item.quantity).toFixed(2)}
                   </p>
                 </div>
               ))}
             </div>
             
-            <div className="space-y-2 text-sm border-t border-border pt-4 mb-4">
+            <div className="space-y-2 text-xs sm:text-sm border-t border-border pt-4 mb-4">
               <div className="flex justify-between">
                 <span>Subtotal:</span>
-                <span className="font-medium">₹{itemsPrice.toFixed(2)}</span>
+                <span className="font-medium">${itemsPrice.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Shipping:</span>
-                <span className="font-medium">₹{shippingPrice.toFixed(2)}</span>
+                <span className="font-medium">${shippingPrice.toFixed(2)}</span>
               </div>
               {appliedCoupon && (
                 <div className="flex justify-between text-emerald-600 font-medium">
                   <span>Discount ({appliedCoupon.code}):</span>
-                  <span>-₹{appliedCoupon.discountAmount.toFixed(2)}</span>
+                  <span>-${appliedCoupon.discountAmount.toFixed(2)}</span>
                 </div>
               )}
             </div>
             
-            <div className="flex justify-between items-center pt-4 border-t border-border mb-6">
-              <span className="text-lg font-bold">Total:</span>
-              <span className="text-2xl font-extrabold text-brand-pink">
-                ₹{(itemsPrice + shippingPrice - discountAmount).toFixed(2)}
+            <div className="flex justify-between items-center pt-3 sm:pt-4 border-t border-border mb-5 sm:mb-6">
+              <span className="text-base sm:text-lg font-bold">Total:</span>
+              <span className="text-xl sm:text-2xl font-extrabold text-brand-pink">
+                ${(itemsPrice + shippingPrice - discountAmount).toFixed(2)}
               </span>
             </div>
 
             <div className="pt-4 border-t border-dashed border-border">
-              <p className="text-sm font-bold mb-2">Have a Coupon?</p>
+              <p className="text-xs sm:text-sm font-bold mb-2">Have a Coupon?</p>
               <div className="flex gap-2">
                 <Input 
                   placeholder="Enter code" 
                   value={couponCode} 
                   onChange={(e) => setCouponCode(e.target.value)}
                   disabled={!!appliedCoupon}
-                  className="uppercase"
+                  className="uppercase text-xs sm:text-sm"
                 />
                 <Button 
                   variant={appliedCoupon ? "destructive" : "default"}
                   onClick={appliedCoupon ? () => { setAppliedCoupon(null); setCouponCode(''); } : handleApplyCoupon}
+                  className="text-xs cursor-pointer rounded-xl"
                 >
                   {appliedCoupon ? 'Remove' : 'Apply'}
                 </Button>

@@ -35,22 +35,31 @@ const Orders = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-extrabold mb-8">My Orders</h1>
+    <div className="max-w-5xl mx-auto px-3.5 sm:px-6 py-6 sm:py-10">
+      <h1 className="text-2xl sm:text-3xl font-extrabold mb-6 sm:mb-8">My Orders</h1>
 
       {orders.length === 0 ? (
-        <p className="text-muted-foreground text-lg">You have not placed any orders yet.</p>
+        <div className="text-center py-12 bg-white rounded-2xl border border-border p-6">
+          <p className="text-muted-foreground text-base sm:text-lg mb-4">You have not placed any orders yet.</p>
+          <a href="/products" className="inline-block bg-brand-pink text-white font-bold px-6 py-2.5 rounded-full text-sm hover:bg-brand-pink/90">
+            Start Shopping
+          </a>
+        </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {orders.map((order) => (
             <div key={order._id} className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
-              <div className="p-6">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+              <div className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
                   <div>
-                    <p className="text-sm font-semibold text-muted-foreground">Order #{order._id}</p>
-                    <p className="text-sm">Placed on: {new Date(order.createdAt).toLocaleDateString()}</p>
+                    <p className="text-xs sm:text-sm font-semibold text-muted-foreground">
+                      Order <span className="font-mono break-all text-foreground font-bold">#{order._id}</span>
+                    </p>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                      Placed on: {new Date(order.createdAt).toLocaleDateString()}
+                    </p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     <Badge variant={order.paymentStatus === 'paid' ? 'success' : 'warning'}>
                       {order.paymentStatus === 'paid' ? 'Paid' : 'Pending Payment'}
                     </Badge>
@@ -60,25 +69,27 @@ const Orders = () => {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
                   {order.items.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-4 p-3 border border-border rounded-xl bg-accent/20">
+                    <div key={idx} className="flex items-center gap-3 sm:gap-4 p-2.5 sm:p-3 border border-border rounded-xl bg-accent/20">
                       <img 
                         src={item.image || '/assets/asset-058339ca.jpeg'} 
                         alt={item.name}
-                        className="w-16 h-16 object-cover rounded-lg shrink-0" 
+                        className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-lg shrink-0" 
                       />
-                      <div>
-                        <p className="font-semibold text-sm line-clamp-1">{item.name}</p>
-                        <p className="text-sm text-muted-foreground">{item.quantity} x ₹{item.price.toFixed(2)}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-semibold text-xs sm:text-sm truncate">{item.name}</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground">{item.quantity} x ${item.price.toFixed(2)}</p>
                       </div>
                     </div>
                   ))}
                 </div>
                 
-                <div className="border-t border-border pt-4 text-right">
-                  <p className="text-lg font-bold">
-                    Total: <span className="text-brand-pink">₹{order.totalPrice.toFixed(2)}</span>
+                <div className="border-t border-border pt-3.5 sm:pt-4 flex items-center justify-between sm:justify-end gap-3">
+                  <span className="text-sm text-muted-foreground sm:hidden font-medium">Order Total:</span>
+                  <p className="text-base sm:text-lg font-bold">
+                    <span className="hidden sm:inline">Total: </span>
+                    <span className="text-brand-pink">${order.totalPrice.toFixed(2)}</span>
                   </p>
                 </div>
               </div>
