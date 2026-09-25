@@ -29,7 +29,30 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     required: [true, 'Category is required'],
-    enum: ['Electronics', 'Clothing', 'Footwear', 'Books', 'Home & Kitchen', 'Sports', 'Beauty', 'Toys'],
+    enum: [
+      'Toys',
+      'Furniture',
+      'Bowls',
+      'Food',
+      'Clothing',
+      'Accessories',
+      'Healthcare',
+      'Cages',
+      'Electronics',
+      'Footwear',
+      'Books',
+      'Home & Kitchen',
+      'Sports',
+      'Beauty'
+    ],
+  },
+  petType: {
+    type: String,
+    default: 'parrot',
+  },
+  tags: {
+    type: [String],
+    default: [],
   },
   brand: {
     type: String,

@@ -6,7 +6,7 @@ import { Textarea } from '../../components/ui/textarea';
 import { Badge } from '../../components/ui/badge';
 import api, { BASE_URL } from '../../services/api';
 
-const categories = ['Electronics', 'Clothing', 'Footwear', 'Books', 'Home & Kitchen', 'Sports', 'Beauty', 'Toys'];
+const categories = ['Toys', 'Furniture', 'Bowls', 'Food', 'Clothing', 'Accessories', 'Healthcare', 'Cages'];
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
@@ -16,7 +16,7 @@ const AdminProducts = () => {
   const [editingId, setEditingId] = useState(null);
   const [activeTab, setActiveTab] = useState(0); 
   const [formData, setFormData] = useState({
-    name: '', description: '', price: '', category: 'Electronics', stock: '', lowStockThreshold: 5, images: []
+    name: '', description: '', price: '', category: 'Toys', stock: '', lowStockThreshold: 5, images: []
   });
   const fileInputRef = useRef(null);
 
@@ -50,7 +50,7 @@ const AdminProducts = () => {
       });
     } else {
       setEditingId(null);
-      setFormData({ name: '', description: '', price: '', category: 'Electronics', stock: '', lowStockThreshold: 5, images: [] });
+      setFormData({ name: '', description: '', price: '', category: 'Toys', stock: '', lowStockThreshold: 5, images: [] });
     }
     setOpen(true);
   };

@@ -53,16 +53,21 @@ const Cart = () => {
           <div className="lg:col-span-2 space-y-4">
             {cartItems.map((item) => {
               const product = item.product || {};
+              const itemImage = product.images?.[0] || product.image || '/assets/asset-4cbbe7b6.jpeg';
               return (
                 <div key={item._id || product._id} className="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-white rounded-2xl border border-border shadow-sm">
                   <img 
-                    src={product.image || '/assets/asset-058339ca.jpeg'} 
+                    src={itemImage} 
                     alt={product.name || item.name}
-                    className="w-20 h-20 sm:w-28 sm:h-28 object-cover rounded-xl shrink-0"
+                    onClick={() => product._id && navigate(`/product/${product._id}`)}
+                    className="w-20 h-20 sm:w-28 sm:h-28 object-cover rounded-xl shrink-0 cursor-pointer hover:opacity-90 transition-opacity"
                   />
                   <div className="flex flex-col flex-1 py-0.5 min-w-0">
                     <div className="flex justify-between items-start gap-2 mb-1">
-                      <h3 className="font-bold text-xs xs:text-sm sm:text-base line-clamp-2 text-gray-900 leading-snug">
+                      <h3 
+                        onClick={() => product._id && navigate(`/product/${product._id}`)}
+                        className="font-bold text-xs xs:text-sm sm:text-base line-clamp-2 text-gray-900 leading-snug cursor-pointer hover:text-[#E050D0] transition-colors"
+                      >
                         {product.name || item.name || 'Product'}
                       </h3>
                       <p className="font-extrabold text-sm sm:text-base text-brand-pink whitespace-nowrap">

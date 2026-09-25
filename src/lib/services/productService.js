@@ -3,11 +3,14 @@ import Product from '../models/Product.js';
 /**
  * Get all products with optional filtering, sorting, and pagination
  */
-export const getProducts = async ({ search, category, minPrice, maxPrice, sort, page = 1, limit = 12, featured }) => {
+export const getProducts = async ({ search, category, minPrice, maxPrice, sort, page = 1, limit = 12, featured, pet, brand, tag }) => {
   const query = {};
 
   if (search) query.name = { $regex: search, $options: 'i' };
   if (category && category !== 'All') query.category = category;
+  if (pet && pet !== 'all') query.petType = pet;
+  if (brand && brand !== 'all') query.brand = brand;
+  if (tag) query.tags = tag;
   if (minPrice || maxPrice) {
     query.price = {};
     if (minPrice) query.price.$gte = Number(minPrice);

@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { TrendingUp, Package, ShoppingCart, Users, DollarSign, AlertTriangle } from 'lucide-react';
 import { Badge } from '../../components/ui/badge';
 import api from '../../services/api';
-
-const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 
 const AdminDashboard = () => {
   const [data, setData] = useState({
@@ -131,105 +128,7 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* Charts Section 1: Revenue & Order Status */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <div className="lg:col-span-2 bg-white rounded-3xl p-6 sm:p-8 border border-border shadow-sm">
-          <h3 className="text-xl font-bold mb-6">Revenue Trends (Last 30 Days)</h3>
-          <div className="h-[300px] w-full">
-            {data.salesData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={data.salesData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10B981" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <XAxis dataKey="date" axisLine={false} tickLine={false} tickMargin={10} tick={{fontSize: 12, fill: '#64748b'}} tickFormatter={(val) => new Date(val).toLocaleDateString(undefined, {month:'short', day:'numeric'})} />
-                  <YAxis axisLine={false} tickLine={false} tickMargin={10} tick={{fontSize: 12, fill: '#64748b'}} tickFormatter={(val) => `₹${val}`} />
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                  <Tooltip 
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
-                    formatter={(value) => [`₹${value.toFixed(2)}`, 'Revenue']}
-                    labelFormatter={(label) => new Date(label).toLocaleDateString()}
-                  />
-                  <Area type="monotone" dataKey="amount" stroke="#10B981" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
-                </AreaChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="h-full flex items-center justify-center text-muted-foreground">No revenue data available.</div>
-            )}
-          </div>
-        </div>
 
-        <div className="lg:col-span-1 bg-white rounded-3xl p-6 sm:p-8 border border-border shadow-sm flex flex-col">
-          <h3 className="text-xl font-bold mb-2">Order Status</h3>
-          <div className="flex-1 min-h-[250px]">
-            {data.statusData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={data.statusData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius="60%"
-                    outerRadius="80%"
-                    paddingAngle={5}
-                    dataKey="value"
-                    stroke="none"
-                  >
-                    {data.statusData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} />
-                </PieChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="h-full flex items-center justify-center text-muted-foreground">No orders yet.</div>
-            )}
-          </div>
-          
-          <div className="flex flex-wrap gap-x-4 gap-y-2 justify-center mt-4">
-            {data.statusData.map((entry, index) => (
-              <div key={entry.name} className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                <span className="text-sm font-semibold capitalize">{entry.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Analytics Section 2: User Growth */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-border shadow-sm mb-8">
-        <h3 className="text-xl font-bold mb-6">User Registrations (Last 30 Days)</h3>
-        <div className="h-[250px] w-full">
-          {data.newUsersData.length > 0 ? (
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data.newUsersData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.4}/>
-                    <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="date" axisLine={false} tickLine={false} tickMargin={10} tick={{fontSize: 12, fill: '#64748b'}} tickFormatter={(val) => new Date(val).toLocaleDateString(undefined, {month:'short', day:'numeric'})} />
-                <YAxis axisLine={false} tickLine={false} tickMargin={10} tick={{fontSize: 12, fill: '#64748b'}} />
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <Tooltip 
-                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
-                  formatter={(value) => [value, 'New Users']}
-                  labelFormatter={(label) => new Date(label).toLocaleDateString()}
-                />
-                <Area type="monotone" dataKey="users" stroke="#8B5CF6" strokeWidth={3} fillOpacity={1} fill="url(#colorUsers)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="h-full flex items-center justify-center text-muted-foreground">No user data available.</div>
-          )}
-        </div>
-      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Products */}

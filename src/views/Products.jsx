@@ -4,6 +4,8 @@ import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Heart, SlidersHorizontal, X, ArrowRight, Check, ShoppingCart } from 'lucide-react';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
 import { cn } from '@/lib/utils';
 
 const BIRD_TYPES = [
@@ -195,6 +197,11 @@ export default function Products() {
 
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
+  const { user } = useAuth();
+
+  // Database Products
+  const [dbProducts, setDbProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Filters State
   const [selectedPet, setSelectedPet] = useState(initialCategory.toLowerCase() || 'parrot');
@@ -206,6 +213,24 @@ export default function Products() {
   const [currentPage, setCurrentPage] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [addedToast, setAddedToast] = useState(null);
+
+  useEffect(() => {
+    const fetchProductsData = async () => {
+      try {
+        setLoading(true);
+        const res = await api.getProducts({ limit: 100 });
+        const list = res.data?.products || [];
+        if (list.length > 0) {
+          setDbProducts(list);
+        }
+      } catch (err) {
+        console.error('Failed to load products from database:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProductsData();
+  }, []);
 
   useEffect(() => {
     if (initialCategory) {
@@ -244,31 +269,54 @@ export default function Products() {
 
   const handleQuickAdd = async (product, e) => {
     e.stopPropagation();
+    const pid = product._id || product.id;
+    if (!user) {
+      setAddedToast('Please log in to add items to your cart');
+      navigate('/login');
+      setTimeout(() => setAddedToast(null), 3000);
+      return;
+    }
     try {
-      await addToCart(product.id, 1);
-      setAddedToast(`Added "${product.name}" to cart!`);
-    } catch {
-      setAddedToast(`Added "${product.name}" to cart!`);
+      await addToCart(pid, 1);
+      setAddedToast(`Added "${product.name || product.title}" to cart!`);
+    } catch (err) {
+      console.error('Failed to add to cart:', err);
+      setAddedToast(err.response?.data?.message || 'Failed to add item to cart');
     }
     setTimeout(() => setAddedToast(null), 2500);
   };
 
-  // Filtered & Sorted Products
+  // Filtered & Sorted Products from Database or Fallback
   const filteredProducts = useMemo(() => {
-    return SHOP_CATALOG.filter((p) => {
-      if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
-      if (selectedCategories.length > 0 && !selectedCategories.includes(p.category)) return false;
-      if (selectedBrands.length > 0 && !selectedBrands.includes(p.brand)) return false;
-      if (selectedTags.length > 0 && !p.tags.some((t) => selectedTags.includes(t))) return false;
-      if (p.price > priceRange) return false;
+    const source = dbProducts.length > 0 ? dbProducts : SHOP_CATALOG;
+    return source.filter((p) => {
+      const pName = p.name || p.title || '';
+      const pCat = p.category || '';
+      const pBrand = p.brand || '';
+      const pPet = (p.petType || p.pet || '').toLowerCase();
+      const pTags = Array.isArray(p.tags) ? p.tags : [];
+      const pPrice = Number(p.price) || 0;
+
+      if (search && !pName.toLowerCase().includes(search.toLowerCase())) return false;
+      if (selectedPet && pPet && pPet !== selectedPet && !pTags.map(t => t.toLowerCase()).includes(selectedPet.toLowerCase())) {
+        return false;
+      }
+      if (selectedCategories.length > 0 && !selectedCategories.includes(pCat)) return false;
+      if (selectedBrands.length > 0 && !selectedBrands.includes(pBrand)) return false;
+      if (selectedTags.length > 0 && !pTags.some((t) => selectedTags.includes(t))) return false;
+      if (pPrice > priceRange) return false;
       return true;
     }).sort((a, b) => {
-      if (sortBy === 'price-low') return a.price - b.price;
-      if (sortBy === 'price-high') return b.price - a.price;
-      if (sortBy === 'name') return a.name.localeCompare(b.name);
+      const priceA = Number(a.price) || 0;
+      const priceB = Number(b.price) || 0;
+      const nameA = a.name || a.title || '';
+      const nameB = b.name || b.title || '';
+      if (sortBy === 'price-low') return priceA - priceB;
+      if (sortBy === 'price-high') return priceB - priceA;
+      if (sortBy === 'name') return nameA.localeCompare(nameB);
       return 0;
     });
-  }, [search, selectedCategories, selectedBrands, selectedTags, priceRange, sortBy]);
+  }, [dbProducts, search, selectedPet, selectedCategories, selectedBrands, selectedTags, priceRange, sortBy]);
 
   const itemsPerPage = 12;
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage) || 1;
@@ -282,157 +330,23 @@ export default function Products() {
       {/* Toast Notification */}
       {addedToast && (
         <div className="fixed bottom-6 right-6 z-50 bg-black text-white px-5 py-3 rounded-full shadow-2xl text-sm font-semibold flex items-center gap-2 animate-bounce">
-          <span>🦜</span>
+          <span></span>
           <span>{addedToast}</span>
         </div>
       )}
 
-      {/* ─────────────────────────────────────────────────────────────
-          DECORATIVE ORGANIC PINK BLOBS
-      ───────────────────────────────────────────────────────────── */}
-      <div
-        className="pointer-events-none absolute top-[90px] -left-12 sm:-left-10 w-20 h-44 sm:w-24 sm:h-56 rounded-r-full bg-[#E050D0] opacity-90 blur-[0.5px] z-0"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute top-10 left-[28%] w-16 h-12 sm:w-20 sm:h-14 rounded-[45%_55%_65%_35%] bg-[#E050D0] opacity-85 z-0"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute top-[430px] left-[39%] w-16 h-12 sm:w-20 sm:h-14 rounded-[50%_60%_40%_50%] bg-[#E050D0] opacity-85 z-0"
-        aria-hidden="true"
-      />
-
-      {/* ─────────────────────────────────────────────────────────────
-          1. HERO SECTION (Real Asset Photography in Organic Pink Frame)
-      ───────────────────────────────────────────────────────────── */}
-      <section className="relative z-10 pt-4 pb-8 sm:pb-14">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
-            
-            {/* Left Content */}
-            <div className="lg:col-span-6 flex flex-col items-start pt-2 sm:pt-6">
-              <span className="font-bold text-[11px] xs:text-xs sm:text-sm uppercase tracking-wider text-[#E050D0] mb-2 sm:mb-3 inline-block">
-                Pet Shop
-              </span>
-
-              <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-extrabold tracking-tight text-gray-900 leading-[1.15] mb-3.5 sm:mb-5">
-                The friendly and caring small pet store
-              </h1>
-
-              <p className="text-xs xs:text-sm sm:text-base md:text-lg text-gray-500 leading-relaxed max-w-xl">
-                At et vehicula sodales est proin turpis pellentesque sinulla a aliquam amet rhoncus quisque eget sit.
-              </p>
-            </div>
-
-            {/* Right Graphic: Real Asset Image framed in Organic Pink Backdrop */}
-            <div className="lg:col-span-6 flex items-center justify-center relative">
-              <div className="relative w-full max-w-[420px] sm:max-w-[500px] aspect-[4/3] rounded-[28px] sm:rounded-[36px] overflow-hidden shadow-xl ring-4 ring-[#E050D0]/25 group">
-                <img
-                  src="/assets/asset-2e913e5e.jpeg"
-                  alt="Happy pet with wooden stand"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-80" />
-                <div className="absolute bottom-3 left-4 right-4 sm:bottom-4 sm:left-6 sm:right-6 flex items-center justify-between text-white">
-                  <div>
-                    <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#FBA8FA]">100% Handcrafted</span>
-                    <p className="text-sm sm:text-base font-extrabold leading-tight">Natural Pine Bird Stands</p>
-                  </div>
-                  <span className="px-3 py-1 rounded-full bg-[#E050D0] text-xs font-bold shadow-md">
-                    Shop Now
-                  </span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ─────────────────────────────────────────────────────────────
-          2. SHOP BY PET (Real Asset Avatars with Cat Active in Pink)
-      ───────────────────────────────────────────────────────────── */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-10">
-        <div className="flex items-center justify-between mb-5 sm:mb-10">
-          <h2 className="text-xl sm:text-3xl font-extrabold tracking-tight text-gray-900">
-            Shop by bird
-          </h2>
-
-          <div className="flex items-center gap-2 sm:gap-2.5">
-            <button
-              onClick={() => scrollPet('left')}
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-neutral-800 active:scale-95 transition-all shadow-sm cursor-pointer"
-              aria-label="Previous birds"
-            >
-              <ChevronLeft size={16} strokeWidth={2.5} />
-            </button>
-            <button
-              onClick={() => scrollPet('right')}
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-neutral-800 active:scale-95 transition-all shadow-sm cursor-pointer"
-              aria-label="Next birds"
-            >
-              <ChevronRight size={16} strokeWidth={2.5} />
-            </button>
-          </div>
-        </div>
-
-        {/* 6 Circular Real Image Avatars */}
-        <div
-          ref={petScrollRef}
-          className="flex items-center gap-4 sm:gap-8 overflow-x-auto no-scrollbar scroll-smooth pb-3 px-1 snap-x touch-scroll"
-        >
-          {BIRD_TYPES.map((pet) => {
-            const isSelected = selectedPet === pet.id;
-            return (
-              <div
-                key={pet.id}
-                onClick={() => {
-                  setSelectedPet(isSelected ? '' : pet.id);
-                }}
-                className="flex flex-col items-center gap-2 sm:gap-3 cursor-pointer group shrink-0 min-w-[80px] xs:min-w-[95px] sm:min-w-[110px] snap-center"
-              >
-                {/* Circular Photo Avatar Container */}
-                <div
-                  className={cn(
-                    "w-20 h-20 xs:w-24 xs:h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden transition-all duration-300 transform group-hover:scale-105 p-1",
-                    isSelected
-                      ? "ring-4 ring-[#E050D0] shadow-[0_8px_25px_rgba(224,80,208,0.4)]"
-                      : "ring-2 ring-gray-100 group-hover:ring-gray-300"
-                  )}
-                >
-                  <img
-                    src={pet.image}
-                    alt={pet.name}
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                </div>
-
-                <span
-                  className={cn(
-                    "text-xs sm:text-sm font-bold transition-colors text-center",
-                    isSelected ? "text-[#E050D0]" : "text-gray-500 group-hover:text-gray-900"
-                  )}
-                >
-                  {pet.name}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </section>
 
       {/* ─────────────────────────────────────────────────────────────
           3. MAIN CATALOG AREA: SIDEBAR FILTERS + REAL PRODUCTS GRID
       ───────────────────────────────────────────────────────────── */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
-        
+
         {/* Mobile Filter & Sort Control Bar */}
         <div className="flex md:hidden flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-gray-100">
           <p className="text-xs font-semibold text-gray-500">
             {paginatedProducts.length} of {filteredProducts.length} items
           </p>
-          
+
           <div className="flex items-center gap-2">
             <select
               value={sortBy}
@@ -459,10 +373,10 @@ export default function Products() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
-          
+
           {/* ── LEFT SIDEBAR FILTERS (Desktop) ── */}
           <aside className="hidden md:block md:col-span-4 lg:col-span-3 space-y-8 pr-2">
-            
+
             {/* 1. Filter by categories */}
             <div>
               <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-4">
@@ -596,29 +510,33 @@ export default function Products() {
                 Popular products
               </h3>
               <div className="space-y-3.5">
-                {POPULAR_SIDEBAR_PRODUCTS.map((prod) => (
-                  <div
-                    key={prod.id}
-                    onClick={() => navigate('/products')}
-                    className="flex items-center gap-3 group cursor-pointer"
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-white border border-gray-100 overflow-hidden shrink-0 group-hover:border-[#E050D0]/30 transition-colors p-1">
-                      <img
-                        src={prod.image}
-                        alt={prod.name}
-                        className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform"
-                      />
+                {(dbProducts.length > 0 ? dbProducts.slice(0, 5) : POPULAR_SIDEBAR_PRODUCTS).map((prod) => {
+                  const pid = prod._id || prod.id;
+                  const imageSrc = prod.images?.[0] || prod.image || '/assets/asset-bff48261.jpeg';
+                  return (
+                    <div
+                      key={pid}
+                      onClick={() => navigate(`/product/${pid}`)}
+                      className="flex items-center gap-3 group cursor-pointer"
+                    >
+                      <div className="w-12 h-12 rounded-xl bg-white border border-gray-100 overflow-hidden shrink-0 group-hover:border-[#E050D0]/30 transition-colors p-1">
+                        <img
+                          src={imageSrc}
+                          alt={prod.name}
+                          className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform"
+                        />
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-gray-900 group-hover:text-[#E050D0] transition-colors leading-tight line-clamp-1">
+                          {prod.name}
+                        </h4>
+                        <p className="text-xs font-extrabold text-gray-900 mt-0.5">
+                          ${(prod.price || 0).toFixed(2)}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-gray-900 group-hover:text-[#E050D0] transition-colors leading-tight line-clamp-1">
-                        {prod.name}
-                      </h4>
-                      <p className="text-xs font-extrabold text-gray-900 mt-0.5">
-                        ${prod.price.toFixed(2)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
@@ -763,7 +681,7 @@ export default function Products() {
 
           {/* ── RIGHT MAIN PRODUCT GRID (Real Asset Photography) ── */}
           <div className="md:col-span-8 lg:col-span-9">
-            
+
             {/* Header: Results Count + Sort dropdown (Desktop/Tablet) */}
             <div className="hidden sm:flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
               <p className="text-xs font-semibold text-gray-500">
@@ -806,17 +724,19 @@ export default function Products() {
             ) : (
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8">
                 {paginatedProducts.map((prod) => {
-                  const wishlisted = isInWishlist(prod.id);
+                  const pid = prod._id || prod.id;
+                  const wishlisted = isInWishlist(pid);
+                  const imageSrc = prod.images?.[0] || prod.image || '/assets/asset-4cbbe7b6.jpeg';
                   return (
                     <div
-                      key={prod.id}
-                      onClick={() => navigate('/products')}
+                      key={pid}
+                      onClick={() => navigate(`/product/${pid}`)}
                       className="bg-[#F8F9FA] rounded-[20px] sm:rounded-[28px] p-3 xs:p-4 sm:p-6 border border-gray-100/90 relative group flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 cursor-pointer"
                     >
                       {/* Product Real Photo Area */}
                       <div className="py-2 sm:py-4 flex items-center justify-center h-32 xs:h-40 sm:h-52 bg-white rounded-2xl overflow-hidden p-2 mb-2 sm:mb-3">
                         <img
-                          src={prod.image}
+                          src={imageSrc}
                           alt={prod.name}
                           className="w-full h-full object-contain transform group-hover:scale-108 transition-transform duration-500"
                         />
@@ -829,7 +749,7 @@ export default function Products() {
                             {prod.name}
                           </h3>
                           <p className="font-extrabold text-xs sm:text-sm text-gray-900">
-                            ${prod.price.toFixed(2)}
+                            ${(prod.price || 0).toFixed(2)}
                           </p>
                         </div>
 
@@ -866,76 +786,10 @@ export default function Products() {
               </div>
             )}
 
-            {/* ── PAGINATION ── */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-2 mt-12 sm:mt-16">
-                {[...Array(totalPages)].map((_, i) => {
-                  const pageNum = i + 1;
-                  const isActive = currentPage === pageNum;
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => setCurrentPage(pageNum)}
-                      className={cn(
-                        "w-8 h-8 rounded-lg text-xs font-bold transition-all shadow-sm cursor-pointer",
-                        isActive
-                          ? "bg-[#E050D0] text-white"
-                          : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-100"
-                      )}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                })}
-
-                {currentPage < totalPages && (
-                  <button
-                    onClick={() => setCurrentPage((p) => p + 1)}
-                    className="px-3.5 py-1.5 rounded-lg bg-white border border-gray-200 text-xs font-semibold text-gray-700 hover:bg-gray-100 transition-all shadow-sm cursor-pointer"
-                  >
-                    Next &gt;
-                  </button>
-                )}
-              </div>
-            )}
-
           </div>
 
         </div>
 
-      </section>
-
-      {/* ─────────────────────────────────────────────────────────────
-          4. TWO WIDE REAL ASSET BANNERS (Poonch Pet Store Photography)
-      ───────────────────────────────────────────────────────────── */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 sm:pb-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-          
-          {/* Banner 1: Real Wide Photography Banner */}
-          <div
-            onClick={() => navigate('/products')}
-            className="group relative rounded-[28px] sm:rounded-[36px] overflow-hidden aspect-[16/9] shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer"
-          >
-            <img
-              src="/assets/asset-7a6e49e8.jpeg"
-              alt="Premium Wooden Bird Toys & Accessories"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            />
-          </div>
-
-          {/* Banner 2: Real Wide Photography Banner */}
-          <div
-            onClick={() => navigate('/products')}
-            className="group relative rounded-[28px] sm:rounded-[36px] overflow-hidden aspect-[16/9] shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer"
-          >
-            <img
-              src="/assets/asset-8daaef0d.jpeg"
-              alt="Handmade with Natural Pine Wood"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            />
-          </div>
-
-        </div>
       </section>
 
     </div>

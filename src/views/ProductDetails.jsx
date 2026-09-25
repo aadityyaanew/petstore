@@ -15,6 +15,7 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [addingToCart, setAddingToCart] = useState(false);
+  const [cartMessage, setCartMessage] = useState('');
   
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
@@ -44,10 +45,15 @@ const ProductDetails = () => {
       return;
     }
     setAddingToCart(true);
+    setCartMessage('');
     try {
       await addToCart(product._id, quantity);
+      setCartMessage(`Added ${quantity} item(s) to cart!`);
+      setTimeout(() => setCartMessage(''), 3500);
     } catch (error) {
       console.error('Failed to add to cart', error);
+      setCartMessage(error.response?.data?.message || 'Failed to add to cart');
+      setTimeout(() => setCartMessage(''), 3500);
     } finally {
       setAddingToCart(false);
     }
@@ -161,6 +167,13 @@ const ProductDetails = () => {
             <ShoppingCart size={18} />
             {product.stock === 0 ? 'Out of Stock' : addingToCart ? 'Adding...' : `Add to Cart — $${(product.price * quantity).toFixed(2)}`}
           </Button>
+
+          {cartMessage && (
+            <div className="mt-3 inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-green-700 bg-green-50 px-3.5 py-1.5 rounded-full border border-green-200">
+              <CheckCircle2 size={16} />
+              <span>{cartMessage}</span>
+            </div>
+          )}
 
           <div className="grid grid-cols-2 gap-4 mt-auto pt-8">
             <div className="flex items-center gap-3">

@@ -1,39 +1,51 @@
-'use client';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../services/api';
 import { Heart, ShoppingCart } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 
 const LOW_STOCK_THRESHOLD = 5;
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, onToast }) => {
   const navigate = useNavigate();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
+  const { user } = useAuth();
   const [adding, setAdding] = useState(false);
 
-  const isOutOfStock = product.stock === 0;
-  const isLowStock = product.stock > 0 && product.stock <= (product.lowStockThreshold ?? LOW_STOCK_THRESHOLD);
-  const wishlisted = isInWishlist(product.id || product._id);
+  const productId = product?._id || product?.id;
+  const isOutOfStock = product?.stock === 0;
+  const isLowStock = product?.stock > 0 && product?.stock <= (product?.lowStockThreshold ?? LOW_STOCK_THRESHOLD);
+  const wishlisted = isInWishlist(productId);
 
-  const imageUrl = product.image
-    ? product.image.startsWith('http')
-      ? product.image
-      : `${BASE_URL}${product.image}`
-    : '/assets/categories/accessories.jpg';
+  const rawImage = product?.images?.[0] || product?.image || '/assets/asset-4cbbe7b6.jpeg';
+  const imageUrl = rawImage.startsWith('http') || rawImage.startsWith('/')
+    ? rawImage
+    : `${BASE_URL}${rawImage}`;
 
   const handleAddToCart = async (e) => {
     e.stopPropagation();
     if (isOutOfStock) return;
+    if (!user) {
+      if (onToast) onToast('Please log in to add items to your cart');
+      navigate('/login');
+      return;
+    }
     try {
       setAdding(true);
-      await addToCart(product.id || product._id, 1);
-    } catch {
-      // Handled
+      await addToCart(productId, 1);
+      if (onToast) {
+        onToast(`Added "${product.name || product.title}" to cart!`);
+      }
+    } catch (err) {
+      console.error('Failed to add to cart:', err);
+      if (onToast) {
+        onToast(err.response?.data?.message || err.message || 'Failed to add item to cart');
+      }
     } finally {
       setTimeout(() => setAdding(false), 600);
     }
@@ -41,7 +53,7 @@ const ProductCard = ({ product }) => {
 
   return (
     <div
-      onClick={() => navigate(`/product/${product.id || product._id}`)}
+      onClick={() => navigate(`/product/${productId}`)}
       className={cn(
         "group relative flex flex-col bg-[#F8F9FA] rounded-3xl border border-gray-100 p-4 sm:p-5 transition-all duration-300 cursor-pointer",
         "hover:-translate-y-1.5 hover:shadow-xl hover:border-gray-200",

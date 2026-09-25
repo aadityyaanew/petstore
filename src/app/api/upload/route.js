@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
+import cloudinary from '@/lib/cloudinary';
 
 export async function POST(request) {
   try {
@@ -18,30 +16,30 @@ export async function POST(request) {
     const bytes = await image.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Create unique filename
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    // get extension
-    const ext = image.name.split('.').pop();
-    const filename = `image-${uniqueSuffix}.${ext}`;
+    // Upload to Cloudinary using upload_stream
+    const uploadResult = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: 'petstore',
+          resource_type: 'auto',
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      uploadStream.end(buffer);
+    });
 
-    const uploadDir = join(process.cwd(), 'public/uploads');
-    
-    // Ensure dir exists
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
-    }
-
-    const path = join(uploadDir, filename);
-    await writeFile(path, buffer);
-
-    // Return URL relative to public/
     return NextResponse.json({ 
-      message: 'Image uploaded',
-      imageUrl: `/uploads/${filename}` 
+      message: 'Image uploaded successfully',
+      imageUrl: uploadResult.secure_url,
+      publicId: uploadResult.public_id,
     });
 
   } catch (err) {
     if (err instanceof Response) return err;
-    return NextResponse.json({ message: 'Error uploading image', error: err.message }, { status: 500 });
+    console.error('Cloudinary upload error:', err);
+    return NextResponse.json({ message: 'Error uploading image to Cloudinary', error: err.message }, { status: 500 });
   }
 }
