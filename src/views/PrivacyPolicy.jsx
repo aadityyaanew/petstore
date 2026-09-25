@@ -12,7 +12,7 @@ const PrivacyPolicy = () => {
         <div className="absolute -top-16 -right-16 w-60 h-60 rounded-full bg-brand-pink/20 blur-3xl pointer-events-none" />
         <div className="max-w-3xl mx-auto px-4 sm:px-6 relative z-10">
           <span className="pink-badge mb-2.5 sm:mb-3 inline-block text-xs">Legal</span>
-          <h1 className="text-2xl xs:text-3xl sm:text-4xl font-extrabold mb-1.5 sm:mb-2">Privacy Policy 🔒</h1>
+          <h1 className="text-2xl xs:text-3xl sm:text-4xl font-extrabold mb-1.5 sm:mb-2">Privacy Policy</h1>
           <p className="text-white/60 text-xs sm:text-sm">Last Updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
         </div>
       </div>
@@ -50,7 +50,7 @@ const PrivacyPolicy = () => {
           </Section>
 
           <Section title="6. Contact Us">
-            <p>📧 support@poonchpetstore.com<br />📞 +1 (800) 123-4567<br />📍 123 Pet Care Way, Suite A, City, State, ZIP</p>
+            <p>support@poonchpetstore.com<br />+1 (800) 123-4567<br />123 Pet Care Way, Suite A, City, State, ZIP</p>
           </Section>
         </div>
       </div>

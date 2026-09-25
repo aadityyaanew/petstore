@@ -3,7 +3,7 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Heart, ArrowRight, Star, Quote } from 'lucide-react';
 import BrandPartners from '../components/BrandPartners';
-import { useWishlist } from '../context/WishlistContext';
+
 import { useCart } from '../context/CartContext';
 import { cn } from '@/lib/utils';
 
@@ -179,7 +179,7 @@ export default function Home() {
   const navigate = useNavigate();
   const categoryScrollRef = useRef(null);
   const birdScrollRef = useRef(null);
-  const { isInWishlist, toggleWishlist } = useWishlist();
+
   const { addToCart } = useCart();
   const [addedToast, setAddedToast] = useState(null);
   const [selectedBird, setSelectedBird] = useState('parrot');
@@ -214,7 +214,7 @@ export default function Home() {
       {/* Toast Notification */}
       {addedToast && (
         <div className="fixed bottom-6 right-6 z-50 bg-black text-white px-5 py-3 rounded-full shadow-2xl text-sm font-semibold flex items-center gap-2 animate-bounce">
-          <span>🦜</span>
+
           <span>{addedToast}</span>
         </div>
       )}
@@ -483,7 +483,7 @@ export default function Home() {
         {/* 3 Product Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-8">
           {FEATURED_PRODUCTS.map((prod) => {
-            const wishlisted = isInWishlist(prod.id);
+
             return (
               <div
                 key={prod.id}
@@ -510,22 +510,6 @@ export default function Home() {
                     </p>
                   </div>
 
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleWishlist(prod);
-                    }}
-                    className={cn(
-                      "w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer shadow-sm hover:scale-110 shrink-0",
-                      wishlisted
-                        ? "bg-[#E050D0] text-white"
-                        : "text-[#E050D0] hover:bg-[#E050D0]/10"
-                    )}
-                    aria-label="Save to wishlist"
-                    title={wishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
-                  >
-                    <Heart size={18} strokeWidth={2} fill={wishlisted ? "currentColor" : "none"} />
-                  </button>
                 </div>
 
                 {/* Quick Add (Visible on Mobile Touch, Hover on Desktop) */}
@@ -610,7 +594,7 @@ export default function Home() {
         {/* 8 Product Cards Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
           {BEST_SELLING_PRODUCTS.map((prod) => {
-            const wishlisted = isInWishlist(prod.id);
+
             return (
               <div
                 key={prod.id}
@@ -637,22 +621,6 @@ export default function Home() {
                     </p>
                   </div>
 
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleWishlist(prod);
-                    }}
-                    className={cn(
-                      "w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer shadow-sm hover:scale-110 shrink-0",
-                      wishlisted
-                        ? "bg-[#E050D0] text-white"
-                        : "text-[#E050D0] hover:bg-[#E050D0]/10"
-                    )}
-                    aria-label="Save to wishlist"
-                    title={wishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
-                  >
-                    <Heart size={15} strokeWidth={2} fill={wishlisted ? "currentColor" : "none"} />
-                  </button>
                 </div>
 
                 {/* Quick Add (Visible on Mobile Touch, Hover on Desktop) */}

@@ -106,22 +106,34 @@ const AdminProducts = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const uploadData = new FormData();
-    uploadData.append('image', file);
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = async () => {
+      URL.revokeObjectURL(objectUrl);
+      if (img.width !== img.height) {
+        alert('Product images must be in square form (e.g., 400x400, 800x800, 1200x1200). Please use a 1:1 aspect ratio.');
+        if (fileInputRef.current) fileInputRef.current.value = '';
+        return;
+      }
 
-    setUploading(true);
-    try {
-      const { data } = await api.uploadImage(uploadData);
-      setFormData((prev) => ({
-        ...prev,
-        images: [...prev.images, data.image]
-      }));
-    } catch (error) {
-      console.error('File upload failed:', error);
-      alert('Failed to upload image');
-    } finally {
-      setUploading(false);
-    }
+      const uploadData = new FormData();
+      uploadData.append('image', file);
+
+      setUploading(true);
+      try {
+        const { data } = await api.uploadImage(uploadData);
+        setFormData((prev) => ({
+          ...prev,
+          images: [...prev.images, data.image]
+        }));
+      } catch (error) {
+        console.error('File upload failed:', error);
+        alert('Failed to upload image');
+      } finally {
+        setUploading(false);
+      }
+    };
+    img.src = objectUrl;
   };
 
   const removeImage = (index) => {

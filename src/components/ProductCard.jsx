@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../services/api';
 import { Heart, ShoppingCart } from 'lucide-react';
 import { Badge } from './ui/badge';
-import { useWishlist } from '../context/WishlistContext';
+
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { cn } from '@/lib/utils';
@@ -12,7 +12,7 @@ const LOW_STOCK_THRESHOLD = 5;
 
 const ProductCard = ({ product, onToast }) => {
   const navigate = useNavigate();
-  const { isInWishlist, toggleWishlist } = useWishlist();
+
   const { addToCart } = useCart();
   const { user } = useAuth();
   const [adding, setAdding] = useState(false);
@@ -20,7 +20,6 @@ const ProductCard = ({ product, onToast }) => {
   const productId = product?._id || product?.id;
   const isOutOfStock = product?.stock === 0;
   const isLowStock = product?.stock > 0 && product?.stock <= (product?.lowStockThreshold ?? LOW_STOCK_THRESHOLD);
-  const wishlisted = isInWishlist(productId);
 
   const rawImage = product?.images?.[0] || product?.image || '/assets/asset-4cbbe7b6.jpeg';
   const imageUrl = rawImage.startsWith('http') || rawImage.startsWith('/')
@@ -77,22 +76,6 @@ const ProductCard = ({ product, onToast }) => {
         ) : null}
       </div>
 
-      {/* Wishlist Heart Button */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          toggleWishlist(product);
-        }}
-        className={cn(
-          "absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 shadow-sm cursor-pointer",
-          wishlisted
-            ? "bg-[#E050D0] text-white scale-105"
-            : "bg-white text-[#E050D0] hover:bg-[#E050D0] hover:text-white"
-        )}
-        aria-label="Wishlist"
-      >
-        <Heart size={14} strokeWidth={2.5} fill={wishlisted ? "currentColor" : "none"} />
-      </button>
 
       {/* Image Area */}
       <div className="relative overflow-hidden rounded-2xl bg-white aspect-square flex items-center justify-center mb-3">

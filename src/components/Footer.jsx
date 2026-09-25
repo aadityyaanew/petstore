@@ -214,34 +214,9 @@ export default function Footer() {
         {/* ── BOTTOM ROW: Copyright & Payment Badges ── */}
         <div className="border-t border-gray-200/80 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-gray-400">
           <p>
-            © copyright Poonch Pet Store. 2026. Design by Figma.guru
+            © copyright Poonch Pet Store. 2026.
           </p>
-
-          {/* Payment Icons (VISA, AMEX, MASTERCARD, PAYPAL) */}
-          <div className="flex items-center gap-4 filter grayscale opacity-75 hover:grayscale-0 hover:opacity-100 transition-all">
-            {/* VISA */}
-            <span className="font-extrabold tracking-wider text-gray-800 text-[13px] font-sans">
-              VISA
-            </span>
-
-            {/* AMERICAN EXPRESS */}
-            <span className="font-bold tracking-tight text-gray-800 text-[10px] uppercase font-sans border border-gray-400 px-1 py-0.5 rounded">
-              AMEX
-            </span>
-
-            {/* MASTERCARD */}
-            <div className="flex items-center -space-x-1.5" title="Mastercard">
-              <div className="w-4 h-4 rounded-full bg-[#EB001B] opacity-80" />
-              <div className="w-4 h-4 rounded-full bg-[#F79E1B] opacity-80" />
-            </div>
-
-            {/* PAYPAL */}
-            <span className="font-extrabold italic text-[#003087] text-[13px]">
-              Pay<span className="text-[#0079C1]">Pal</span>
-            </span>
-          </div>
         </div>
-
       </div>
     </footer>
   );

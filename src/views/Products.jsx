@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Heart, SlidersHorizontal, X, ArrowRight, Check, ShoppingCart } from 'lucide-react';
-import { useWishlist } from '../context/WishlistContext';
+
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
@@ -26,13 +26,7 @@ const CATEGORIES_FILTER = [
   { id: 'Sale', label: 'Sale', count: 12 },
 ];
 
-const BRANDS_FILTER = [
-  { id: 'Poonch', label: 'Poonch Original', count: 20 },
-  { id: 'Natural Pine', label: 'Natural Pine', count: 16 },
-  { id: 'Pet Spot', label: 'Pet Spot', count: 12 },
-  { id: 'EcoWood', label: 'EcoWood', count: 11 },
-  { id: 'Green Line', label: 'Green Line', count: 12 },
-];
+
 
 const FILTER_TAGS = ['Bird stands', 'Wooden toys', 'Natural wood', 'Parrot', 'Small pets', 'Chew toys'];
 
@@ -195,7 +189,7 @@ export default function Products() {
   const initialCategory = searchParams.get('category') || '';
   const petScrollRef = useRef(null);
 
-  const { isInWishlist, toggleWishlist } = useWishlist();
+
   const { addToCart } = useCart();
   const { user } = useAuth();
 
@@ -206,7 +200,7 @@ export default function Products() {
   // Filters State
   const [selectedPet, setSelectedPet] = useState(initialCategory.toLowerCase() || 'parrot');
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedBrands, setSelectedBrands] = useState([]);
+
   const [selectedTags, setSelectedTags] = useState([]);
   const [priceRange, setPriceRange] = useState(159);
   const [sortBy, setSortBy] = useState('latest');
@@ -253,12 +247,7 @@ export default function Products() {
     setCurrentPage(1);
   };
 
-  const handleBrandToggle = (brandId) => {
-    setSelectedBrands((prev) =>
-      prev.includes(brandId) ? prev.filter((b) => b !== brandId) : [...prev, brandId]
-    );
-    setCurrentPage(1);
-  };
+
 
   const handleTagToggle = (tag) => {
     setSelectedTags((prev) =>
@@ -302,7 +291,6 @@ export default function Products() {
         return false;
       }
       if (selectedCategories.length > 0 && !selectedCategories.includes(pCat)) return false;
-      if (selectedBrands.length > 0 && !selectedBrands.includes(pBrand)) return false;
       if (selectedTags.length > 0 && !pTags.some((t) => selectedTags.includes(t))) return false;
       if (pPrice > priceRange) return false;
       return true;
@@ -316,7 +304,7 @@ export default function Products() {
       if (sortBy === 'name') return nameA.localeCompare(nameB);
       return 0;
     });
-  }, [dbProducts, search, selectedPet, selectedCategories, selectedBrands, selectedTags, priceRange, sortBy]);
+  }, [dbProducts, search, selectedPet, selectedCategories, selectedTags, priceRange, sortBy]);
 
   const itemsPerPage = 12;
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage) || 1;
@@ -365,7 +353,7 @@ export default function Products() {
             >
               <SlidersHorizontal size={13} className="text-[#E050D0]" />
               <span>Filters</span>
-              {(selectedCategories.length > 0 || selectedBrands.length > 0 || selectedTags.length > 0 || priceRange < 159) && (
+              {(selectedCategories.length > 0 || selectedTags.length > 0 || priceRange < 159) && (
                 <span className="w-2 h-2 rounded-full bg-[#E050D0]" />
               )}
             </button>
@@ -442,41 +430,6 @@ export default function Products() {
               </div>
             </div>
 
-            {/* 3. Filter by brands */}
-            <div>
-              <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-4">
-                Filter by brands
-              </h3>
-              <div className="space-y-2.5">
-                {BRANDS_FILTER.map((b) => {
-                  const checked = selectedBrands.includes(b.id);
-                  return (
-                    <label
-                      key={b.id}
-                      onClick={() => handleBrandToggle(b.id)}
-                      className="flex items-center justify-between text-xs sm:text-sm text-gray-600 hover:text-gray-900 cursor-pointer select-none group"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <div
-                          className={cn(
-                            "w-4 h-4 rounded border flex items-center justify-center transition-colors",
-                            checked
-                              ? "bg-[#E050D0] border-[#E050D0] text-white"
-                              : "border-gray-300 group-hover:border-[#E050D0]"
-                          )}
-                        >
-                          {checked && <Check size={11} strokeWidth={3} />}
-                        </div>
-                        <span className="truncate max-w-[130px]">{b.label}</span>
-                      </div>
-                      <span className="text-[#E050D0] font-semibold text-xs">
-                        {b.count}
-                      </span>
-                    </label>
-                  );
-                })}
-              </div>
-            </div>
 
             {/* 4. Filter by tags */}
             <div>
@@ -603,31 +556,6 @@ export default function Products() {
                   </div>
                 </div>
 
-                {/* Brands */}
-                <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#E050D0] mb-2.5">Brands</h4>
-                  <div className="space-y-1.5">
-                    {BRANDS_FILTER.map((b) => {
-                      const checked = selectedBrands.includes(b.id);
-                      return (
-                        <div
-                          key={b.id}
-                          onClick={() => handleBrandToggle(b.id)}
-                          className={cn(
-                            "flex items-center justify-between text-xs py-1.5 px-2.5 rounded-lg cursor-pointer transition-colors",
-                            checked ? "bg-[#E050D0]/10 text-[#E050D0] font-bold" : "text-gray-700 hover:bg-gray-50"
-                          )}
-                        >
-                          <span className="flex items-center gap-2">
-                            {checked && <Check size={12} strokeWidth={3} />}
-                            {b.label}
-                          </span>
-                          <span className="text-[11px] font-semibold opacity-75">{b.count}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
 
                 {/* Tags */}
                 <div>
@@ -664,7 +592,6 @@ export default function Products() {
                   <button
                     onClick={() => {
                       setSelectedCategories([]);
-                      setSelectedBrands([]);
                       setSelectedTags([]);
                       setPriceRange(159);
                       setSelectedPet('');
@@ -705,13 +632,12 @@ export default function Products() {
             {/* 2-3 Columns Grid using REAL Asset Photography */}
             {paginatedProducts.length === 0 ? (
               <div className="text-center py-16 sm:py-20 bg-[#F9FAFB] rounded-3xl border border-gray-100">
-                <p className="text-4xl mb-2">🦜</p>
+
                 <h3 className="font-extrabold text-base text-gray-900 mb-1">No products match your filters</h3>
                 <p className="text-xs text-gray-500 mb-4">Try clearing some filters to see more items.</p>
                 <button
                   onClick={() => {
                     setSelectedCategories([]);
-                    setSelectedBrands([]);
                     setSelectedTags([]);
                     setPriceRange(159);
                     setSelectedPet('');
@@ -725,7 +651,7 @@ export default function Products() {
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8">
                 {paginatedProducts.map((prod) => {
                   const pid = prod._id || prod.id;
-                  const wishlisted = isInWishlist(pid);
+
                   const imageSrc = prod.images?.[0] || prod.image || '/assets/asset-4cbbe7b6.jpeg';
                   return (
                     <div
@@ -734,11 +660,11 @@ export default function Products() {
                       className="bg-[#F8F9FA] rounded-[20px] sm:rounded-[28px] p-3 xs:p-4 sm:p-6 border border-gray-100/90 relative group flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 cursor-pointer"
                     >
                       {/* Product Real Photo Area */}
-                      <div className="py-2 sm:py-4 flex items-center justify-center h-32 xs:h-40 sm:h-52 bg-white rounded-2xl overflow-hidden p-2 mb-2 sm:mb-3">
+                      <div className="py-2 sm:py-4 flex items-center justify-center aspect-square bg-white rounded-2xl overflow-hidden p-2 mb-2 sm:mb-3">
                         <img
                           src={imageSrc}
                           alt={prod.name}
-                          className="w-full h-full object-contain transform group-hover:scale-108 transition-transform duration-500"
+                          className="w-full h-full object-cover transform group-hover:scale-108 transition-transform duration-500"
                         />
                       </div>
 
@@ -753,22 +679,6 @@ export default function Products() {
                           </p>
                         </div>
 
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleWishlist(prod);
-                          }}
-                          className={cn(
-                            "w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer shadow-sm hover:scale-110 shrink-0",
-                            wishlisted
-                              ? "bg-[#E050D0] text-white"
-                              : "text-[#E050D0] hover:bg-[#E050D0]/10"
-                          )}
-                          aria-label="Save to wishlist"
-                          title={wishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
-                        >
-                          <Heart size={15} strokeWidth={2} fill={wishlisted ? "currentColor" : "none"} />
-                        </button>
                       </div>
 
                       {/* Quick Add (Visible on Mobile Touch, Hover on Desktop) */}

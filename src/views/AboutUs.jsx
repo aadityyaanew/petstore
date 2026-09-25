@@ -15,7 +15,7 @@ const AboutUs = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
           <span className="pink-badge mb-3 sm:mb-4 inline-block text-xs">Who We Are</span>
           <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-extrabold mb-3 sm:mb-4 leading-tight">
-            About Poonch Pet Store 🦜
+            About Poonch Pet Store
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-white/75 max-w-2xl leading-relaxed">
             "Safe Play, Happy Tails & Feathered Friends." — This isn't just our tagline. It's our promise.
@@ -72,17 +72,17 @@ const AboutUs = () => {
         <div className="relative bg-brand-charcoal rounded-2xl sm:rounded-3xl p-6 sm:p-10 text-center overflow-hidden">
           <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-brand-pink/15 blur-2xl pointer-events-none" />
           <div className="relative z-10">
-            <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">Wholesale Inquiries Welcome 🐦</h3>
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">Wholesale Inquiries Welcome</h3>
             <p className="text-white/70 mb-4 max-w-md mx-auto text-xs sm:text-sm leading-relaxed">
               Available for local pet shops and avian specialists upon request. Every package includes a Care Instructions Card.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-brand-pink font-semibold text-xs sm:text-sm">
               <a href="mailto:support@poonchpetstore.com" className="hover:underline flex items-center gap-1.5">
-                📧 support@poonchpetstore.com
+                support@poonchpetstore.com
               </a>
               <span className="hidden sm:inline text-white/30">|</span>
               <a href="tel:+18001234567" className="hover:underline flex items-center gap-1.5">
-                📞 +1 (800) 123-4567
+                +1 (800) 123-4567
               </a>
             </div>
           </div>

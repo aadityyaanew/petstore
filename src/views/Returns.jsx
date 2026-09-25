@@ -1,10 +1,10 @@
 import { CheckCircle } from 'lucide-react';
 
 const STEPS = [
-  { emoji: '📋', n: 1, title: 'Initiate Return', desc: 'Log into your account, go to "My Orders", and select the item(s) to return. Generate a return label within 30 days of delivery.' },
-  { emoji: '📦', n: 2, title: 'Pack Your Item', desc: 'Ensure the item is unused and in its original packaging. For woolen products, fold gently. For wooden items, use the original wrap.' },
-  { emoji: '🚚', n: 3, title: 'Ship It Back', desc: 'Attach the provided return label to the outside of the box and drop it at your nearest carrier location.' },
-  { emoji: '💰', n: 4, title: 'Receive Refund', desc: 'Once received and inspected, a full refund or replacement will be processed within 3–5 business days.' },
+  { n: 1, title: 'Initiate Return', desc: 'Log into your account, go to "My Orders", and select the item(s) to return. Generate a return label within 30 days of delivery.' },
+  { n: 2, title: 'Pack Your Item', desc: 'Ensure the item is unused and in its original packaging. For woolen products, fold gently. For wooden items, use the original wrap.' },
+  { n: 3, title: 'Ship It Back', desc: 'Attach the provided return label to the outside of the box and drop it at your nearest carrier location.' },
+  { n: 4, title: 'Receive Refund', desc: 'Once received and inspected, a full refund or replacement will be processed within 3–5 business days.' },
 ];
 
 const POLICY_POINTS = [
@@ -23,7 +23,7 @@ const Returns = () => {
         <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-brand-pink/20 blur-3xl pointer-events-none" />
         <div className="max-w-3xl mx-auto px-4 sm:px-6 relative z-10 text-center">
           <span className="pink-badge mb-3 sm:mb-4 inline-block text-xs">Hassle-Free</span>
-          <h1 className="text-2xl xs:text-3xl md:text-5xl font-extrabold mb-2.5 sm:mb-3">Returns & Refunds ↩️</h1>
+          <h1 className="text-2xl xs:text-3xl md:text-5xl font-extrabold mb-2.5 sm:mb-3">Returns & Refunds</h1>
           <p className="text-sm sm:text-base md:text-lg text-white/75 max-w-md mx-auto">
             We want you to love every purchase. Simple, 30-day returns.
           </p>
@@ -41,7 +41,7 @@ const Returns = () => {
                   {s.n}
                 </div>
                 <div>
-                  <p className="font-bold text-xs sm:text-sm text-foreground mb-0.5">{s.emoji} {s.title}</p>
+                  <p className="font-bold text-xs sm:text-sm text-foreground mb-0.5">{s.title}</p>
                   <p className="text-[11px] sm:text-xs text-muted-foreground leading-relaxed">{s.desc}</p>
                 </div>
               </div>
@@ -68,11 +68,11 @@ const Returns = () => {
           <p className="text-white/65 text-xs sm:text-sm mb-3">Our team makes the process seamless for you.</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-brand-pink font-semibold text-xs sm:text-sm">
             <a href="mailto:support@poonchpetstore.com" className="hover:underline">
-              📧 support@poonchpetstore.com
+              support@poonchpetstore.com
             </a>
             <span className="hidden sm:inline text-brand-pink/40">|</span>
             <a href="tel:+18001234567" className="hover:underline">
-              📞 +1 (800) 123-4567
+              +1 (800) 123-4567
             </a>
           </div>
         </div>

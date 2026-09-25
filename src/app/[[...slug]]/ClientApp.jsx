@@ -3,7 +3,7 @@
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '../../context/AuthContext';
 import { CartProvider } from '../../context/CartContext';
-import { WishlistProvider } from '../../context/WishlistContext';
+
 import App from '../../App.jsx';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
@@ -15,9 +15,7 @@ export default function ClientApp() {
       <BrowserRouter>
         <AuthProvider>
           <CartProvider>
-            <WishlistProvider>
-              <App />
-            </WishlistProvider>
+            <App />
           </CartProvider>
         </AuthProvider>
       </BrowserRouter>

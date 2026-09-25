@@ -5,9 +5,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
-import { Minus, Plus, ShoppingCart, Truck, ShieldCheck, AlertCircle, CheckCircle2, Star } from 'lucide-react';
-import { Textarea } from '../components/ui/textarea';
-
+import { Minus, Plus, ShoppingCart, Truck, ShieldCheck, AlertCircle, CheckCircle2 } from 'lucide-react';
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -16,12 +14,7 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const [addingToCart, setAddingToCart] = useState(false);
   const [cartMessage, setCartMessage] = useState('');
-  
-  const [rating, setRating] = useState(5);
-  const [comment, setComment] = useState('');
-  const [reviewLoading, setReviewLoading] = useState(false);
-  const [reviewMessage, setReviewMessage] = useState('');
-  
+
   const { addToCart } = useCart();
   const { user } = useAuth();
 
@@ -59,27 +52,6 @@ const ProductDetails = () => {
     }
   };
 
-  const handleReviewSubmit = async (e) => {
-    e.preventDefault();
-    if (!user) {
-      navigate('/login');
-      return;
-    }
-    setReviewLoading(true);
-    setReviewMessage('');
-    try {
-      await api.addReview(id, { rating, comment });
-      setReviewMessage('Review added successfully!');
-      setRating(5);
-      setComment('');
-      const res = await api.getProductById(id);
-      setProduct(res.data);
-    } catch (error) {
-      setReviewMessage(error.response?.data?.message || 'Error adding review');
-    } finally {
-      setReviewLoading(false);
-    }
-  };
 
   if (loading) return (
     <div className="flex justify-center py-20">
@@ -91,11 +63,11 @@ const ProductDetails = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 mb-12 sm:mb-16">
-        <div className="bg-white rounded-3xl border border-border p-4 sm:p-8 flex items-center justify-center shadow-sm">
+        <div className="bg-white rounded-3xl border border-border p-4 sm:p-8 flex items-center justify-center shadow-sm aspect-square overflow-hidden">
           <img 
             src={product.images?.[0] || '/assets/asset-058339ca.jpeg'} 
             alt={product.name}
-            className="w-full h-auto max-h-[340px] sm:max-h-[480px] object-contain"
+            className="w-full h-full object-cover"
           />
         </div>
 
@@ -105,14 +77,6 @@ const ProductDetails = () => {
             {product.name}
           </h1>
           
-          <div className="flex items-center gap-2 mb-3 sm:mb-4">
-            <div className="flex text-amber-400">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} size={16} fill={i < Math.round(product.rating || 0) ? "currentColor" : "transparent"} />
-              ))}
-            </div>
-            <span className="text-xs sm:text-sm text-muted-foreground">({product.numReviews || 0} reviews)</span>
-          </div>
           
           <p className="text-2xl sm:text-3xl font-extrabold text-brand-pink mb-4 sm:mb-6">${product.price.toFixed(2)}</p>
           
@@ -192,80 +156,7 @@ const ProductDetails = () => {
         </div>
       </div>
 
-      <div className="mt-16 pt-16 border-t border-border">
-        <h2 className="text-3xl font-extrabold mb-8">Customer Reviews</h2>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div className="space-y-8">
-            {product.reviews && product.reviews.length > 0 ? (
-              product.reviews.map((review, idx) => (
-                <div key={idx} className="pb-8 border-b border-border last:border-0 last:pb-0">
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="font-bold">{review.name || review.user?.name || 'Anonymous User'}</p>
-                    <p className="text-sm text-muted-foreground">{new Date(review.createdAt).toLocaleDateString()}</p>
-                  </div>
-                  <div className="flex text-amber-400 mb-3">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} size={14} fill={i < review.rating ? "currentColor" : "transparent"} />
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground leading-relaxed text-sm">{review.comment}</p>
-                </div>
-              ))
-            ) : (
-              <p className="text-muted-foreground">No reviews yet. Be the first to review this product!</p>
-            )}
-          </div>
 
-          <div className="bg-accent/30 p-6 sm:p-8 rounded-3xl border border-border">
-            <h3 className="text-xl font-bold mb-6">Write a Review</h3>
-            {user ? (
-              <form onSubmit={handleReviewSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold">Rating</label>
-                  <div className="flex gap-2">
-                    {[1,2,3,4,5].map((star) => (
-                      <button 
-                        key={star} 
-                        type="button"
-                        onClick={() => setRating(star)}
-                        className={`p-1 transition-colors ${rating >= star ? 'text-amber-400' : 'text-border'}`}
-                      >
-                        <Star size={24} fill="currentColor" />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold">Comment</label>
-                  <Textarea 
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    required
-                    rows={4}
-                    placeholder="Share your thoughts about this product..."
-                  />
-                </div>
-                
-                {reviewMessage && (
-                  <div className={`p-3 rounded-xl text-sm font-medium ${reviewMessage.includes('success') ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
-                    {reviewMessage}
-                  </div>
-                )}
-                
-                <Button type="submit" variant="secondary" disabled={reviewLoading} className="w-full sm:w-auto">
-                  {reviewLoading ? 'Submitting...' : 'Submit Review'}
-                </Button>
-              </form>
-            ) : (
-              <p className="text-sm">
-                Please <button onClick={() => navigate('/login')} className="font-bold text-brand-pink hover:underline">sign in</button> to write a review.
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

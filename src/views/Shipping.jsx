@@ -1,4 +1,4 @@
-import { Truck, Zap, Globe, Package } from 'lucide-react';
+import { Truck, Zap, Globe, Package, Clock, Mail, FileText } from 'lucide-react';
 
 const PLANS = [
   { icon: Truck, iconColor: 'text-blue-500 bg-blue-50', title: 'Standard Shipping', desc: 'Processing: 1–3 business days. Delivery: 3–7 business days depending on your destination.', price: 'Calculated at Checkout', note: 'Free on orders over $50', featured: false },
@@ -7,9 +7,9 @@ const PLANS = [
 ];
 
 const POLICIES = [
-  { emoji: '⏱️', title: 'Processing Time', desc: 'All orders are processed within 1–3 business days after payment confirmation.' },
-  { emoji: '📬', title: 'Tracking Updates', desc: 'Tracking links are provided via email upon dispatch. Allow 24 hours for updates.' },
-  { emoji: '📋', title: 'Care Instructions', desc: 'Every shipped package includes a Care Instructions Card for wood and knitted products.' },
+  { icon: Clock, title: 'Processing Time', desc: 'All orders are processed within 1–3 business days after payment confirmation.' },
+  { icon: Mail, title: 'Tracking Updates', desc: 'Tracking links are provided via email upon dispatch. Allow 24 hours for updates.' },
+  { icon: FileText, title: 'Care Instructions', desc: 'Every shipped package includes a Care Instructions Card for wood and knitted products.' },
 ];
 
 const Shipping = () => {
@@ -19,7 +19,7 @@ const Shipping = () => {
         <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-brand-pink/20 blur-3xl pointer-events-none" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 text-center">
           <span className="pink-badge mb-3 sm:mb-4 inline-block text-xs">Fast & Reliable</span>
-          <h1 className="text-2xl xs:text-3xl md:text-5xl font-extrabold mb-2.5 sm:mb-3">Shipping Information 📦</h1>
+          <h1 className="text-2xl xs:text-3xl md:text-5xl font-extrabold mb-2.5 sm:mb-3">Shipping Information</h1>
           <p className="text-sm sm:text-base md:text-lg text-white/75 max-w-xl mx-auto">Everything you need to know about shipping, processing, and delivery times.</p>
         </div>
       </div>
@@ -53,13 +53,18 @@ const Shipping = () => {
 
         {/* Policy Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-          {POLICIES.map((p, i) => (
-            <div key={i} className="p-5 bg-white rounded-2xl border border-border text-center hover:border-brand-pink/25 hover:shadow-[0_4px_20px_rgba(233,30,140,0.08)] transition-all">
-              <div className="text-4xl mb-3">{p.emoji}</div>
-              <p className="font-bold text-foreground mb-1">{p.title}</p>
-              <p className="text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
-            </div>
-          ))}
+          {POLICIES.map((p, i) => {
+            const Icon = p.icon;
+            return (
+              <div key={i} className="p-5 bg-white rounded-2xl border border-border text-center hover:border-brand-pink/25 hover:shadow-[0_4px_20px_rgba(233,30,140,0.08)] transition-all flex flex-col items-center">
+                <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-brand-pink/10 text-brand-pink mb-3">
+                  <Icon size={24} />
+                </div>
+                <p className="font-bold text-foreground mb-1">{p.title}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
+              </div>
+            );
+          })}
         </div>
 
         {/* Tracking Info */}

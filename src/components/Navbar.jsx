@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { useWishlist } from '../context/WishlistContext';
+
 import { Button } from './ui/button';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
@@ -27,7 +27,7 @@ const Navbar = () => {
   const location = useLocation();
   const { user, logout } = useAuth();
   const { cart } = useCart();
-  const { count: wishlistCount } = useWishlist();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -150,18 +150,6 @@ const Navbar = () => {
                 </button>
               </form>
 
-              {/* Wishlist Heart Icon with Badge */}
-              <button
-                onClick={() => navigate('/products')}
-                className="relative p-1.5 xs:p-2 rounded-full hover:bg-gray-100 text-gray-700 transition-colors cursor-pointer touch-manipulation"
-                aria-label="Wishlist"
-                title="Wishlist"
-              >
-                <Heart size={19} strokeWidth={2} />
-                <span className="absolute -top-1 -right-1 min-w-[17px] h-[17px] bg-[#E050D0] text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none px-1 shadow-sm">
-                  {wishlistCount}
-                </span>
-              </button>
 
               {/* Shopping Cart Icon with Badge */}
               <button
@@ -260,19 +248,6 @@ const Navbar = () => {
               </Link>
             ))}
 
-            <Link
-              to="/products"
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-between px-3.5 py-2 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
-            >
-              <span className="flex items-center gap-2">
-                <Heart size={16} className="text-[#E050D0]" />
-                Wishlist
-              </span>
-              <span className="px-2 py-0.5 rounded-full bg-[#E050D0]/10 text-[#E050D0] text-xs font-bold">
-                {wishlistCount}
-              </span>
-            </Link>
 
             {user ? (
               <div className="pt-2 border-t border-gray-100 space-y-1">

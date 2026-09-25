@@ -126,7 +126,7 @@ export default function ContactUs() {
                 {submitted && (
                   <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold flex items-center gap-3 animate-fade-in">
                     <CheckCircle2 size={20} className="text-emerald-600 shrink-0" />
-                    <span>🦜 Thank you! Your message has been sent. We'll be in touch within 24 hours.</span>
+                    <span>Thank you! Your message has been sent. We'll be in touch within 24 hours.</span>
                   </div>
                 )}
 
