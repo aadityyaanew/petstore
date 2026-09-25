@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   serverExternalPackages: ['mongoose', 'cloudinary'],
   // Allow images from external sources used in seed data
   images: {

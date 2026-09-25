@@ -9,8 +9,7 @@ const Profile = () => {
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
-    currentPassword: '',
-    newPassword: '',
+    phone: user?.phone || '',
     street: user?.address?.street || '',
     city: user?.address?.city || '',
     state: user?.address?.state || '',
@@ -46,7 +45,6 @@ const Profile = () => {
       
       setMessage('Profile updated successfully!');
       localStorage.setItem('user', JSON.stringify(data.user));
-      setFormData(prev => ({ ...prev, currentPassword: '', newPassword: '' }));
     } catch (error) {
       console.error(error);
       setMessage(error.message || 'Error updating profile');
@@ -73,28 +71,22 @@ const Profile = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            <div className="space-y-6">
               <div className="space-y-4">
                 <h3 className="font-semibold text-base sm:text-lg border-b border-border pb-2">Personal Info</h3>
-                <div className="space-y-1.5">
-                  <label className="text-xs sm:text-sm font-semibold">Full Name</label>
-                  <Input name="name" value={formData.name} onChange={handleChange} />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-xs sm:text-sm font-semibold">Email</label>
-                  <Input name="email" value={formData.email} disabled className="bg-muted" />
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="font-semibold text-base sm:text-lg border-b border-border pb-2">Change Password</h3>
-                <div className="space-y-1.5">
-                  <label className="text-xs sm:text-sm font-semibold">Current Password</label>
-                  <Input type="password" name="currentPassword" value={formData.currentPassword} onChange={handleChange} placeholder="Current password" />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-xs sm:text-sm font-semibold">New Password</label>
-                  <Input type="password" name="newPassword" value={formData.newPassword} onChange={handleChange} placeholder="New password" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs sm:text-sm font-semibold">Full Name</label>
+                    <Input name="name" value={formData.name} onChange={handleChange} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs sm:text-sm font-semibold">Email</label>
+                    <Input name="email" value={formData.email} disabled className="bg-muted" />
+                  </div>
+                  <div className="space-y-1.5 md:col-span-2">
+                    <label className="text-xs sm:text-sm font-semibold">Phone Number</label>
+                    <Input name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="e.g. +91 9876543210" />
+                  </div>
                 </div>
               </div>
             </div>

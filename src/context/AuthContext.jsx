@@ -36,8 +36,23 @@ export const AuthProvider = ({ children }) => {
     return res.data;
   };
 
-  const register = async (name, email, password) => {
-    const res = await api.register({ name, email, password });
+  const googleLogin = async (token) => {
+    const res = await api.googleLogin(token);
+    
+    // If it requires phone, we just return the response to component
+    if (res.data.requiresPhone) {
+      return res.data;
+    }
+
+    // Otherwise they are fully logged in
+    localStorage.setItem('token', res.data.token);
+    const userRes = await api.getMe();
+    setUser(userRes.data);
+    return res.data;
+  };
+
+  const completeGoogleSignup = async (data) => {
+    const res = await api.completeGoogleSignup(data);
     localStorage.setItem('token', res.data.token);
     const userRes = await api.getMe();
     setUser(userRes.data);
@@ -49,7 +64,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  const value = { user, loading, login, register, logout };
+  const value = { user, loading, login, googleLogin, completeGoogleSignup, logout };
 
   return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
 };

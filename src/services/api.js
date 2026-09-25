@@ -20,11 +20,10 @@ axiosInstance.interceptors.request.use(
 
 export const api = {
   // Auth
-  register: (userData) => axiosInstance.post('/auth/register', userData),
   login: (userData) => axiosInstance.post('/auth/login', userData),
+  googleLogin: (token) => axiosInstance.post('/auth/google', { token }),
+  completeGoogleSignup: (data) => axiosInstance.post('/auth/google/complete', data),
   getMe: () => axiosInstance.get('/auth/me'),
-  forgotPassword: (email) => axiosInstance.post('/auth/forgot-password', { email }),
-  resetPassword: (token, password) => axiosInstance.put(`/auth/reset-password/${token}`, { password }),
 
   // Products
   getProducts: (params) => axiosInstance.get('/products', { params }),

@@ -223,7 +223,7 @@ export default function Home() {
           1. HERO SECTION (Sage/Cream Background, Colorful Parrots, Small Pink Accents)
       ───────────────────────────────────────────────────────────── */}
       <section className="relative z-10 pt-4 sm:pt-6 pb-0 overflow-hidden w-full min-h-[460px] sm:min-h-[560px] lg:min-h-[640px] flex items-center bg-[#FAF8F5] border-b border-[#E8ECE5]/60">
-        
+
         {/* Right Full-Bleed Sage & Cream Organic Arch (Desktop/Large Screens) */}
         <div className="hidden lg:block absolute top-0 right-0 w-[51%] xl:w-[49%] h-full pointer-events-none z-0 overflow-hidden">
           <svg
@@ -311,7 +311,7 @@ export default function Home() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative w-full h-full">
-          
+
           {/* Top Center Floating Pink Pebble Blob (Desktop only) */}
           <div
             className="hidden lg:block pointer-events-none absolute -top-4 sm:top-0 left-[22%] sm:left-[26%] w-20 h-24 sm:w-26 sm:h-30 z-0 select-none opacity-90"
@@ -351,7 +351,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-4 items-center">
-            
+
             {/* Left Content Column */}
             <div className="lg:col-span-6 flex flex-col items-start pt-6 sm:pt-10 pb-4 lg:pb-20 relative z-10">
               <span className="font-bold text-[11px] xs:text-xs sm:text-sm uppercase tracking-wider text-[#E050D0] bg-[#E050D0]/10 border border-[#E050D0]/20 px-3 xs:px-3.5 py-1 rounded-full mb-3 inline-block">
@@ -382,12 +382,12 @@ export default function Home() {
                 {/* Organic soft sage & pink background shapes */}
                 <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-[#8BA88E]/30 blur-xl pointer-events-none" />
                 <div className="absolute bottom-4 left-4 w-32 h-32 rounded-full bg-[#E050D0]/20 blur-xl pointer-events-none" />
-                
+
                 {/* Flying parrot accent */}
                 <div className="absolute top-3 left-4 w-14 h-14 -rotate-12 z-20 pointer-events-none drop-shadow-sm">
                   <img src="/assets/flying-parrot.png" alt="Flying bird" className="w-full h-full object-contain" />
                 </div>
-                
+
                 {/* Real Birds Cutout on Branch */}
                 <img
                   src="/assets/hero-birds-group.png"
@@ -548,7 +548,7 @@ export default function Home() {
       ───────────────────────────────────────────────────────────── */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-20 overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
-          
+
           {/* Left Column: Organic Pink Blob with Real Bird Toy Lifestyle Photography */}
           <div className="lg:col-span-6 flex items-center justify-center order-2 lg:order-1">
             <div className="relative w-full max-w-[360px] sm:max-w-[460px] aspect-[4/3] sm:aspect-square flex items-center justify-center">
@@ -670,80 +670,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─────────────────────────────────────────────────────────────
-          7. SHOP BY BIRD (Circular Real Avian Photo Avatars)
-      ───────────────────────────────────────────────────────────── */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
-        {/* Header with Navigation Arrows */}
-        <div className="flex items-center justify-between mb-6 sm:mb-12">
-          <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold tracking-tight text-gray-900">
-            Shop by bird
-          </h2>
 
-          <div className="flex items-center gap-2 sm:gap-2.5">
-            <button
-              onClick={() => scrollBird('left')}
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-neutral-800 active:scale-95 transition-all shadow-sm cursor-pointer"
-              aria-label="Previous birds"
-            >
-              <ChevronLeft size={16} strokeWidth={2.5} />
-            </button>
-            <button
-              onClick={() => scrollBird('right')}
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-neutral-800 active:scale-95 transition-all shadow-sm cursor-pointer"
-              aria-label="Next birds"
-            >
-              <ChevronRight size={16} strokeWidth={2.5} />
-            </button>
-          </div>
-        </div>
-
-        {/* 6 Circular Bird Avatars Row */}
-        <div
-          ref={birdScrollRef}
-          className="flex items-center gap-4 sm:gap-8 overflow-x-auto no-scrollbar scroll-smooth pb-3 px-1 snap-x touch-scroll"
-        >
-          {BIRD_TYPES.map((bird) => {
-            const isSelected = selectedBird === bird.id;
-            return (
-              <div
-                key={bird.id}
-                onClick={() => {
-                  setSelectedBird(bird.id);
-                  navigate(`/products?category=${bird.name}`);
-                }}
-                className="flex flex-col items-center gap-2 sm:gap-3 cursor-pointer group shrink-0 min-w-[80px] xs:min-w-[95px] sm:min-w-[110px] snap-center"
-              >
-                {/* Circular Real Photo Avatar Container */}
-                <div
-                  className={cn(
-                    "w-20 h-20 xs:w-24 xs:h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden p-1 transition-all duration-300 transform group-hover:scale-105 border-2",
-                    isSelected
-                      ? "border-[#E050D0] shadow-[0_8px_25px_rgba(224,80,208,0.35)] ring-4 ring-[#E050D0]/20"
-                      : "border-transparent bg-gray-100 group-hover:border-gray-300"
-                  )}
-                >
-                  <img
-                    src={bird.image}
-                    alt={bird.name}
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                </div>
-
-                {/* Bird Name */}
-                <span
-                  className={cn(
-                    "text-xs sm:text-sm font-bold transition-colors",
-                    isSelected ? "text-gray-900" : "text-gray-500 group-hover:text-gray-900"
-                  )}
-                >
-                  {bird.name}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </section>
 
       {/* ─────────────────────────────────────────────────────────────
           7.5. TESTIMONIALS (Customer Reviews)
