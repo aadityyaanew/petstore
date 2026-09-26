@@ -220,186 +220,42 @@ export default function Home() {
       )}
 
       {/* ─────────────────────────────────────────────────────────────
-          1. HERO SECTION (Sage/Cream Background, Colorful Parrots, Small Pink Accents)
+          1. HERO SECTION (Full Background Image)
       ───────────────────────────────────────────────────────────── */}
-      <section className="relative z-10 pt-4 sm:pt-6 pb-0 overflow-hidden w-full min-h-[460px] sm:min-h-[560px] lg:min-h-[640px] flex items-center bg-[#FAF8F5] border-b border-[#E8ECE5]/60">
-
-        {/* Right Full-Bleed Sage & Cream Organic Arch (Desktop/Large Screens) */}
-        <div className="hidden lg:block absolute top-0 right-0 w-[51%] xl:w-[49%] h-full pointer-events-none z-0 overflow-hidden">
-          <svg
-            viewBox="0 0 700 640"
-            preserveAspectRatio="none"
-            className="w-full h-full"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              {/* Avian Feather Watermark */}
-              <g id="heroBirdFeather">
-                <path
-                  d="M18 2 C14 8, 7 18, 7 28 C7 35, 12 41, 18 45 C24 41, 29 35, 29 28 C29 18, 22 8, 18 2 Z"
-                  fill="white"
-                  fillOpacity="0.25"
-                />
-                <path
-                  d="M18 2 L18 47"
-                  stroke="white"
-                  strokeOpacity="0.35"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M18 14 C13 17, 10 21, 9 26 M18 22 C13 25, 11 29, 10 34 M18 14 C23 17, 26 21, 27 26 M18 22 C23 25, 25 29, 26 34"
-                  stroke="white"
-                  strokeOpacity="0.22"
-                  strokeWidth="0.9"
-                  strokeLinecap="round"
-                />
-              </g>
-
-              {/* Avian Flying Silhouette Watermark */}
-              <g id="heroFlyingSilhouette">
-                <path
-                  d="M20 18 C14 10, 6 7, 0 8 C6 13, 10 18, 14 23 C10 24, 4 24, 1 23 C5 26, 11 29, 17 28 C18 31, 19 36, 20 40 C21 36, 22 31, 23 28 C29 29, 35 26, 39 23 C36 24, 30 24, 26 23 C30 18, 34 13, 40 8 C34 7, 26 10, 20 18 Z"
-                  fill="white"
-                  fillOpacity="0.25"
-                />
-              </g>
-            </defs>
-
-            {/* Main Outer Sage Arch */}
-            <path
-              d="M70 640 C25 500 0 380 0 300 C0 180 50 80 180 30 C260 5 380 -5 520 0 L700 0 L700 640 Z"
-              fill="#8BA88E"
-            />
-
-            {/* Inner Concentric Wave 1: Soft Pale Sage */}
-            <path
-              d="M180 640 C130 520 100 400 110 330 C120 230 160 140 260 85 C330 45 430 25 550 25 L700 25 L700 640 Z"
-              fill="#C2D6C4"
-              fillOpacity="0.9"
-            />
-
-            {/* Inner Concentric Wave 2: Warm Cream */}
-            <path
-              d="M290 640 C240 530 220 420 240 360 C260 280 290 200 370 145 C440 100 510 75 610 75 L700 75 L700 640 Z"
-              fill="#F6F3EB"
-              fillOpacity="0.95"
-            />
-
-            {/* Small Pink Accents nestled behind the parrots */}
-            <ellipse cx="480" cy="370" rx="160" ry="170" fill="#E050D0" fillOpacity="0.78" />
-            <circle cx="560" cy="270" r="85" fill="#F386E8" fillOpacity="0.68" />
-            <circle cx="360" cy="430" r="48" fill="#EB68DC" fillOpacity="0.58" />
-
-            {/* Scattered Avian Watermarks on Sage Layer */}
-            <use href="#heroBirdFeather" x="130" y="460" transform="rotate(-25 130 460) scale(1.4)" />
-            <use href="#heroFlyingSilhouette" x="90" y="270" transform="rotate(15 90 270) scale(1.1)" />
-            <use href="#heroBirdFeather" x="420" y="50" transform="rotate(30 420 50) scale(1.3)" />
-            <use href="#heroFlyingSilhouette" x="460" y="210" transform="rotate(-12 460 210) scale(1.2)" />
-            <use href="#heroBirdFeather" x="540" y="390" transform="rotate(20 540 390) scale(1.3)" />
-          </svg>
-        </div>
-
-        {/* Real Birds High-Definition Cutout anchored flush at bottom (Desktop/Large Screens) */}
-        <div className="hidden lg:flex absolute bottom-0 right-0 sm:right-[1%] lg:right-[3%] xl:right-[5%] z-10 w-[53%] xl:w-[48%] max-w-[640px] pointer-events-none select-none items-end justify-center">
+      <section className="relative w-full min-h-[500px] sm:min-h-[600px] lg:min-h-[700px] flex items-center bg-gray-900">
+        {/* Full Background Image */}
+        <div className="absolute inset-0 z-0">
           <img
-            src="/assets/hero-birds-group.png"
-            alt="Handcrafted avian perches with Cockatiel, Budgie, Sun Conure, and Lovebird"
-            className="w-full h-auto object-contain block drop-shadow-sm transform hover:scale-[1.01] transition-transform duration-500"
+            src="/assets/herobackground.png"
+            alt="Hero Background"
+            className="w-full h-full object-cover object-right sm:object-center"
           />
+          {/* Gradient overlay: dark on left for text readability, clear on right */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 lg:via-black/20 to-transparent"></div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative w-full h-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full h-full flex items-center">
+          <div className="max-w-2xl text-white">
+            <span className="font-bold text-[11px] xs:text-xs sm:text-sm uppercase tracking-wider text-white bg-white/20 border border-white/30 px-3 xs:px-3.5 py-1 rounded-full mb-3 sm:mb-4 inline-block backdrop-blur-sm">
+              Bird Shop &amp; Toys
+            </span>
 
-          {/* Top Center Floating Pink Pebble Blob (Desktop only) */}
-          <div
-            className="hidden lg:block pointer-events-none absolute -top-4 sm:top-0 left-[22%] sm:left-[26%] w-20 h-24 sm:w-26 sm:h-30 z-0 select-none opacity-90"
-            aria-hidden="true"
-          >
-            <svg viewBox="0 0 110 130" fill="none" className="w-full h-full">
-              <path
-                d="M38 12C68 2 96 16 104 50C112 84 94 118 64 126C34 134 12 112 5 80C-2 48 8 22 38 12Z"
-                fill="#E050D0"
-              />
-            </svg>
-          </div>
+            <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-extrabold tracking-tight leading-[1.1] mb-4 sm:mb-6">
+              A bird store with everything they need
+            </h1>
 
-          {/* Bottom Center Floating Sage Pebble Blob (Desktop only) */}
-          <div
-            className="hidden lg:block pointer-events-none absolute -bottom-6 left-[25%] sm:left-[28%] w-26 h-18 sm:w-32 sm:h-22 z-0 select-none opacity-90"
-            aria-hidden="true"
-          >
-            <svg viewBox="0 0 130 85" fill="none" className="w-full h-full">
-              <path
-                d="M28 60C10 46 14 18 50 8C86 -2 116 15 126 45C136 74 110 84 74 84C38 84 42 72 28 60Z"
-                fill="#8BA88E"
-              />
-            </svg>
-          </div>
+            <p className="text-sm xs:text-base sm:text-lg text-white/90 leading-relaxed max-w-xl mb-6 sm:mb-8 font-medium drop-shadow-md">
+              Handcrafted natural pine stands, chewable play gyms, and safe perches designed for parrots, cockatiels, budgies, and feathered friends.
+            </p>
 
-          {/* Flying Macaw / Parrot (Cutout PNG - Desktop) */}
-          <div
-            className="hidden lg:block pointer-events-none absolute top-8 sm:top-12 lg:top-14 left-[43%] sm:left-[45%] lg:left-[47%] w-24 h-24 sm:w-28 sm:h-28 lg:w-36 lg:h-36 z-20 select-none drop-shadow-sm transform -rotate-12 hover:scale-105 transition-transform duration-300"
-            aria-hidden="true"
-          >
-            <img
-              src="/assets/flying-parrot.png"
-              alt="Flying Macaw"
-              className="w-full h-full object-contain"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-4 items-center">
-
-            {/* Left Content Column */}
-            <div className="lg:col-span-6 flex flex-col items-start pt-6 sm:pt-10 pb-4 lg:pb-20 relative z-10">
-              <span className="font-bold text-[11px] xs:text-xs sm:text-sm uppercase tracking-wider text-[#E050D0] bg-[#E050D0]/10 border border-[#E050D0]/20 px-3 xs:px-3.5 py-1 rounded-full mb-3 inline-block">
-                Bird Shop &amp; Toys
-              </span>
-
-              <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold tracking-tight text-gray-900 leading-[1.15] mb-3.5 sm:mb-5">
-                A bird store with everything they need
-              </h1>
-
-              <p className="text-xs xs:text-sm sm:text-base md:text-lg text-gray-500 leading-relaxed max-w-lg mb-6 sm:mb-8">
-                Handcrafted natural pine stands, chewable play gyms, and safe perches designed for parrots, cockatiels, budgies, and feathered friends.
-              </p>
-
-              <div>
-                <button
-                  onClick={() => navigate('/products')}
-                  className="inline-flex items-center justify-center font-bold text-xs xs:text-sm sm:text-base bg-black hover:bg-neutral-800 text-white px-7 xs:px-9 py-3 sm:py-3.5 rounded-full transition-all duration-200 active:scale-95 shadow-md hover:shadow-lg cursor-pointer"
-                >
-                  Shop Now
-                </button>
-              </div>
+            <div>
+              <button
+                onClick={() => navigate('/products')}
+                className="inline-flex items-center justify-center font-bold text-xs xs:text-sm sm:text-base bg-[#E050D0] hover:bg-[#c945ba] text-white px-8 xs:px-10 py-3.5 sm:py-4 rounded-full transition-all duration-200 active:scale-95 shadow-lg hover:shadow-xl cursor-pointer"
+              >
+                Shop Now
+              </button>
             </div>
-
-            {/* Mobile Hero Visual Showcase (< lg) */}
-            <div className="block lg:hidden w-full pb-8 pt-2 relative z-10">
-              <div className="relative w-full aspect-[16/11] max-w-[460px] mx-auto rounded-3xl overflow-hidden bg-gradient-to-br from-[#E2ECE3] via-[#FAF8F5] to-[#F5ECE8] border border-[#8BA88E]/25 shadow-md flex items-end justify-center">
-                {/* Organic soft sage & pink background shapes */}
-                <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-[#8BA88E]/30 blur-xl pointer-events-none" />
-                <div className="absolute bottom-4 left-4 w-32 h-32 rounded-full bg-[#E050D0]/20 blur-xl pointer-events-none" />
-
-                {/* Flying parrot accent */}
-                <div className="absolute top-3 left-4 w-14 h-14 -rotate-12 z-20 pointer-events-none drop-shadow-sm">
-                  <img src="/assets/flying-parrot.png" alt="Flying bird" className="w-full h-full object-contain" />
-                </div>
-
-                {/* Real Birds Cutout on Branch */}
-                <img
-                  src="/assets/hero-birds-group.png"
-                  alt="Handcrafted avian perches with Cockatiel, Budgie, Sun Conure, and Lovebird"
-                  className="w-[96%] h-auto object-contain relative z-10 drop-shadow-md"
-                />
-              </div>
-            </div>
-
-            {/* Right Column: Spacer for Desktop Grid Balance */}
-            <div className="hidden lg:block lg:col-span-6 pointer-events-none" aria-hidden="true" />
-
           </div>
         </div>
       </section>
