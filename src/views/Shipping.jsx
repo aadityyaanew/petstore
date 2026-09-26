@@ -1,8 +1,8 @@
 import { Truck, Zap, Globe, Package, Clock, Mail, FileText } from 'lucide-react';
 
 const PLANS = [
-  { icon: Truck, iconColor: 'text-blue-500 bg-blue-50', title: 'Standard Shipping', desc: 'Processing: 1–3 business days. Delivery: 3–7 business days depending on your destination.', price: 'Calculated at Checkout', note: 'Free on orders over $50', featured: false },
-  { icon: Zap, iconColor: 'text-brand-pink bg-brand-pink/10', title: 'Express Shipping', desc: 'Priority processing within 1 business day. Delivery in 2–3 business days. Order by 2 PM for same-day dispatch.', price: '$9.99', note: 'Flat rate, nationwide', featured: true },
+  { icon: Truck, iconColor: 'text-blue-500 bg-blue-50', title: 'Standard Shipping', desc: 'Processing: 1–3 business days. Delivery: 3–7 business days depending on your destination.', price: 'Calculated at Checkout', note: 'Free on orders over ₹50', featured: false },
+  { icon: Zap, iconColor: 'text-brand-pink bg-brand-pink/10', title: 'Express Shipping', desc: 'Priority processing within 1 business day. Delivery in 2–3 business days. Order by 2 PM for same-day dispatch.', price: '₹9.99', note: 'Flat rate, nationwide', featured: true },
   { icon: Globe, iconColor: 'text-emerald-500 bg-emerald-50', title: 'International', desc: 'Delivery times vary by destination (typically 7–14 business days). Customs fees may apply.', price: 'Calculated at Checkout', note: 'Based on destination', featured: false },
 ];
 

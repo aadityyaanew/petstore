@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, Users, Tag, Image as ImageIcon, Store, Menu, X, LogOut, ShieldCheck } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, Users, Tag, Image as ImageIcon, Store, Menu, X, LogOut, ShieldCheck, Layers, FileText } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const AdminLayout = () => {
@@ -17,10 +17,12 @@ const AdminLayout = () => {
   const menuItems = [
     { text: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/admin' },
     { text: 'Products', icon: <Package size={20} />, path: '/admin/products' },
+    { text: 'Categories', icon: <Layers size={20} />, path: '/admin/categories' },
     { text: 'Orders', icon: <ShoppingCart size={20} />, path: '/admin/orders' },
     { text: 'Users', icon: <Users size={20} />, path: '/admin/users' },
     { text: 'Coupons', icon: <Tag size={20} />, path: '/admin/coupons' },
     { text: 'Banners', icon: <ImageIcon size={20} />, path: '/admin/banners' },
+    { text: 'Blogs', icon: <FileText size={20} />, path: '/admin/blogs' },
     { text: 'Back to Store', icon: <Store size={20} />, path: '/' },
   ];
 

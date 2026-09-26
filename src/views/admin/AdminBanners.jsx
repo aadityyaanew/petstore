@@ -130,7 +130,7 @@ const AdminBanners = () => {
     setUploading(true);
     try {
       const { data } = await api.uploadImage(formData);
-      setFormData((prev) => ({ ...prev, image: data.image }));
+      setFormData((prev) => ({ ...prev, image: data.imageUrl }));
     } catch (error) {
       console.error('File upload failed:', error);
       alert('Failed to upload image. Please try again.');

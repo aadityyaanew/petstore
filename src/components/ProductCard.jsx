@@ -111,7 +111,7 @@ const ProductCard = ({ product, onToast }) => {
       <div className="pt-2 flex items-center justify-between border-t border-gray-200/60 mt-auto">
         <div>
           <span className="text-base sm:text-lg font-extrabold text-gray-900">
-            ${(product.price || 0).toFixed(2)}
+            ₹{(product.price || 0).toFixed(2)}
           </span>
         </div>
 

@@ -255,7 +255,7 @@ const Checkout = () => {
                     {item.product.name} (x{item.quantity})
                   </p>
                   <p className="font-semibold shrink-0">
-                    ${(item.product.price * item.quantity).toFixed(2)}
+                    ₹{(item.product.price * item.quantity).toFixed(2)}
                   </p>
                 </div>
               ))}
@@ -264,16 +264,16 @@ const Checkout = () => {
             <div className="space-y-2 text-xs sm:text-sm border-t border-border pt-4 mb-4">
               <div className="flex justify-between">
                 <span>Subtotal:</span>
-                <span className="font-medium">${itemsPrice.toFixed(2)}</span>
+                <span className="font-medium">₹{itemsPrice.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Shipping:</span>
-                <span className="font-medium">${shippingPrice.toFixed(2)}</span>
+                <span className="font-medium">₹{shippingPrice.toFixed(2)}</span>
               </div>
               {appliedCoupon && (
                 <div className="flex justify-between text-emerald-600 font-medium">
                   <span>Discount ({appliedCoupon.code}):</span>
-                  <span>-${appliedCoupon.discountAmount.toFixed(2)}</span>
+                  <span>-₹{appliedCoupon.discountAmount.toFixed(2)}</span>
                 </div>
               )}
             </div>
@@ -281,7 +281,7 @@ const Checkout = () => {
             <div className="flex justify-between items-center pt-3 sm:pt-4 border-t border-border mb-5 sm:mb-6">
               <span className="text-base sm:text-lg font-bold">Total:</span>
               <span className="text-xl sm:text-2xl font-extrabold text-brand-pink">
-                ${(itemsPrice + shippingPrice - discountAmount).toFixed(2)}
+                ₹{(itemsPrice + shippingPrice - discountAmount).toFixed(2)}
               </span>
             </div>
 

@@ -30,6 +30,8 @@ import AdminOrders from './views/admin/AdminOrders';
 import AdminUsers from './views/admin/AdminUsers';
 import AdminCoupons from './views/admin/AdminCoupons';
 import AdminBanners from './views/admin/AdminBanners';
+import AdminCategories from './views/admin/AdminCategories';
+import AdminBlogs from './views/admin/AdminBlogs';
 import AdminLogin from './views/admin/AdminLogin';
 
 import { useAuth } from './context/AuthContext';
@@ -76,10 +78,12 @@ function App() {
       <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
         <Route index element={<AdminDashboard />} />
         <Route path="products" element={<AdminProducts />} />
+        <Route path="categories" element={<AdminCategories />} />
         <Route path="orders" element={<AdminOrders />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="coupons" element={<AdminCoupons />} />
         <Route path="banners" element={<AdminBanners />} />
+        <Route path="blogs" element={<AdminBlogs />} />
       </Route>
     </Routes>
   );

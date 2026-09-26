@@ -78,7 +78,7 @@ const ProductDetails = () => {
           </h1>
           
           
-          <p className="text-2xl sm:text-3xl font-extrabold text-brand-pink mb-4 sm:mb-6">${product.price.toFixed(2)}</p>
+          <p className="text-2xl sm:text-3xl font-extrabold text-brand-pink mb-4 sm:mb-6">₹{product.price.toFixed(2)}</p>
           
           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-6 sm:mb-8">
             {product.description}
@@ -129,7 +129,7 @@ const ProductDetails = () => {
             disabled={addingToCart || product.stock === 0}
           >
             <ShoppingCart size={18} />
-            {product.stock === 0 ? 'Out of Stock' : addingToCart ? 'Adding...' : `Add to Cart — $${(product.price * quantity).toFixed(2)}`}
+            {product.stock === 0 ? 'Out of Stock' : addingToCart ? 'Adding...' : `Add to Cart — ₹${(product.price * quantity).toFixed(2)}`}
           </Button>
 
           {cartMessage && (

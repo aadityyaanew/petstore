@@ -29,22 +29,6 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     required: [true, 'Category is required'],
-    enum: [
-      'Toys',
-      'Furniture',
-      'Bowls',
-      'Food',
-      'Clothing',
-      'Accessories',
-      'Healthcare',
-      'Cages',
-      'Electronics',
-      'Footwear',
-      'Books',
-      'Home & Kitchen',
-      'Sports',
-      'Beauty'
-    ],
   },
   petType: {
     type: String,

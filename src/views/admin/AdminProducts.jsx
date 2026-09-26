@@ -6,7 +6,6 @@ import { Textarea } from '../../components/ui/textarea';
 import { Badge } from '../../components/ui/badge';
 import api, { BASE_URL } from '../../services/api';
 
-const categories = ['Toys', 'Furniture', 'Bowls', 'Food', 'Clothing', 'Accessories', 'Healthcare', 'Cages'];
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
@@ -15,14 +14,28 @@ const AdminProducts = () => {
   const [open, setOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [activeTab, setActiveTab] = useState(0); 
+  const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
-    name: '', description: '', price: '', category: 'Toys', stock: '', lowStockThreshold: 5, images: []
+    name: '', description: '', price: '', category: '', stock: '', lowStockThreshold: 5, images: []
   });
   const fileInputRef = useRef(null);
 
   useEffect(() => {
     fetchProducts();
+    fetchCategories();
   }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await api.getCategories();
+      setCategories(res.data.categories || []);
+      if (res.data.categories?.length > 0 && !formData.category) {
+        setFormData(prev => ({ ...prev, category: res.data.categories[0].name }));
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -50,7 +63,7 @@ const AdminProducts = () => {
       });
     } else {
       setEditingId(null);
-      setFormData({ name: '', description: '', price: '', category: 'Toys', stock: '', lowStockThreshold: 5, images: [] });
+      setFormData({ name: '', description: '', price: '', category: categories.length > 0 ? categories[0].name : '', stock: '', lowStockThreshold: 5, images: [] });
     }
     setOpen(true);
   };
@@ -124,7 +137,7 @@ const AdminProducts = () => {
         const { data } = await api.uploadImage(uploadData);
         setFormData((prev) => ({
           ...prev,
-          images: [...prev.images, data.image]
+          images: [...prev.images, data.imageUrl]
         }));
       } catch (error) {
         console.error('File upload failed:', error);
@@ -281,7 +294,7 @@ const AdminProducts = () => {
                 <div className="space-y-1.5">
                   <label className="text-sm font-semibold">Category</label>
                   <select name="category" value={formData.category} onChange={handleChange} required className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                    {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                    {categories.map(cat => <option key={cat._id} value={cat.name}>{cat.name}</option>)}
                   </select>
                 </div>
                 <div className="space-y-1.5">

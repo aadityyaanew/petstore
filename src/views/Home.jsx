@@ -1,9 +1,9 @@
 'use client';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Heart, ArrowRight, Star, Quote } from 'lucide-react';
 import BrandPartners from '../components/BrandPartners';
-
+import api, { BASE_URL } from '../services/api';
 import { useCart } from '../context/CartContext';
 import { cn } from '@/lib/utils';
 
@@ -130,29 +130,6 @@ const BIRD_TYPES = [
   { id: 'canary', name: 'Canary', image: '/assets/birds/canary.jpg' },
 ];
 
-const BLOG_POSTS = [
-  {
-    id: 1,
-    tag: 'News',
-    date: '24 May 2024',
-    title: 'Top 5 Fun Foraging Toys to Keep Your Bird Entertained',
-    image: '/assets/asset-bafedd16.jpeg',
-  },
-  {
-    id: 2,
-    tag: 'News',
-    date: '24 May 2024',
-    title: 'The Ultimate Guide to Choosing the Right Perch for Your Parrot',
-    image: '/assets/asset-b7038046.jpeg',
-  },
-  {
-    id: 3,
-    tag: 'News',
-    date: '24 May 2024',
-    title: "Why Wood Toys Are Essential for Your Feathered Friend's Health",
-    image: '/assets/asset-f3942b3d.jpeg',
-  },
-];
 
 const TESTIMONIALS_DATA = [
   {
@@ -183,6 +160,42 @@ export default function Home() {
   const { addToCart } = useCart();
   const [addedToast, setAddedToast] = useState(null);
   const [selectedBird, setSelectedBird] = useState('parrot');
+  const [banners, setBanners] = useState([]);
+  const [currentBanner, setCurrentBanner] = useState(0);
+  const [blogs, setBlogs] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [bannersRes, blogsRes, categoriesRes] = await Promise.all([
+          api.getBanners(),
+          api.getBlogs(),
+          api.getCategories()
+        ]);
+        if (bannersRes.data && bannersRes.data.banners) {
+          setBanners(bannersRes.data.banners);
+        }
+        if (blogsRes.data && blogsRes.data.blogs) {
+          setBlogs(blogsRes.data.blogs.filter(b => b.isPublished).slice(0, 3));
+        }
+        if (categoriesRes.data && categoriesRes.data.categories) {
+          setCategories(categoriesRes.data.categories.filter(c => c.isActive));
+        }
+      } catch (error) {
+        console.error('Failed to fetch data', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentBanner(prev => (prev + 1) % banners.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [banners.length]);
 
   const scrollCategory = (direction) => {
     if (categoryScrollRef.current) {
@@ -222,111 +235,105 @@ export default function Home() {
       {/* ─────────────────────────────────────────────────────────────
           1. HERO SECTION (Full Background Image)
       ───────────────────────────────────────────────────────────── */}
-      <section className="relative w-full min-h-[500px] sm:min-h-[600px] lg:min-h-[700px] flex items-center bg-gray-900">
-        {/* Full Background Image */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/assets/herobackground.png"
-            alt="Hero Background"
-            className="w-full h-full object-cover object-right sm:object-center"
-          />
-          {/* Gradient overlay: dark on left for text readability, clear on right */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 lg:via-black/20 to-transparent"></div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full h-full flex items-center">
-          <div className="max-w-2xl text-white">
-            <span className="font-bold text-[11px] xs:text-xs sm:text-sm uppercase tracking-wider text-white bg-white/20 border border-white/30 px-3 xs:px-3.5 py-1 rounded-full mb-3 sm:mb-4 inline-block backdrop-blur-sm">
-              Bird Shop &amp; Toys
-            </span>
-
-            <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-extrabold tracking-tight leading-[1.1] mb-4 sm:mb-6">
-              A bird store with everything they need
-            </h1>
-
-            <p className="text-sm xs:text-base sm:text-lg text-white/90 leading-relaxed max-w-xl mb-6 sm:mb-8 font-medium drop-shadow-md">
-              Handcrafted natural pine stands, chewable play gyms, and safe perches designed for parrots, cockatiels, budgies, and feathered friends.
-            </p>
-
-            <div>
-              <button
-                onClick={() => navigate('/products')}
-                className="inline-flex items-center justify-center font-bold text-xs xs:text-sm sm:text-base bg-[#E050D0] hover:bg-[#c945ba] text-white px-8 xs:px-10 py-3.5 sm:py-4 rounded-full transition-all duration-200 active:scale-95 shadow-lg hover:shadow-xl cursor-pointer"
+      <section className="relative w-full min-h-[500px] sm:min-h-[600px] lg:min-h-[700px] flex items-center bg-gray-900 overflow-hidden">
+        {banners.length > 0 ? (
+          banners.map((banner, index) => (
+            <div 
+              key={banner._id || index}
+              className={`absolute inset-0 transition-opacity duration-1000 ${index === currentBanner ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+            >
+              <div 
+                className="absolute inset-0 z-0"
+                style={{ 
+                  background: banner.image 
+                    ? `url(${banner.image.startsWith('http') ? banner.image : `${BASE_URL}${banner.image}`})`
+                    : banner.gradient || 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
               >
-                Shop Now
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─────────────────────────────────────────────────────────────
-          2. BROWSE BY CATEGORY (Matching Mockup with Black Arrows)
-      ───────────────────────────────────────────────────────────── */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-        {/* Section Header with Carousel Arrows */}
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold tracking-tight text-gray-900">
-            Browse by category
-          </h2>
-
-          <div className="flex items-center gap-2.5">
-            <button
-              onClick={() => scrollCategory('left')}
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-neutral-800 active:scale-95 transition-all shadow-sm cursor-pointer"
-              aria-label="Previous categories"
-            >
-              <ChevronLeft size={18} strokeWidth={2.5} />
-            </button>
-            <button
-              onClick={() => scrollCategory('right')}
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-neutral-800 active:scale-95 transition-all shadow-sm cursor-pointer"
-              aria-label="Next categories"
-            >
-              <ChevronRight size={18} strokeWidth={2.5} />
-            </button>
-          </div>
-        </div>
-
-        {/* Categories Grid */}
-        <div
-          ref={categoryScrollRef}
-          className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6"
-        >
-          {CATEGORIES_DATA.map((cat) => (
-            <div
-              key={cat.id}
-              onClick={() => navigate(cat.link)}
-              className="bg-white rounded-2xl sm:rounded-3xl p-2.5 sm:p-3 border border-gray-100 shadow-[0_2px_15px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_rgba(224,80,208,0.15)] hover:-translate-y-1.5 transition-all duration-300 group cursor-pointer flex flex-col"
-            >
-              {/* Category Image */}
-              <div className="rounded-xl sm:rounded-2xl overflow-hidden aspect-[4/3] bg-gray-100 relative mb-2.5 sm:mb-3.5">
-                <img
-                  src={cat.image}
-                  alt={cat.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
+                {/* Gradient overlay for text readability */}
+                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 lg:via-black/20 to-transparent"></div>
               </div>
 
-              {/* Title & Count */}
-              <div className="flex items-center justify-between px-1.5 sm:px-2 pt-0.5 pb-1">
-                <div>
-                  <h3 className="font-bold text-xs xs:text-sm sm:text-base text-gray-900 group-hover:text-[#E050D0] transition-colors leading-snug line-clamp-1 sm:line-clamp-none">
-                    {cat.title}
-                  </h3>
-                  <p className="text-[10px] sm:text-xs text-gray-500 font-medium mt-0.5">
-                    {cat.count}
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full h-full flex items-center">
+                <div className="max-w-2xl text-white">
+                  {banner.subtitle && (
+                    <span className="font-bold text-[11px] xs:text-xs sm:text-sm uppercase tracking-wider text-white bg-white/20 border border-white/30 px-3 xs:px-3.5 py-1 rounded-full mb-3 sm:mb-4 inline-block backdrop-blur-sm">
+                      {banner.subtitle}
+                    </span>
+                  )}
+                  <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-extrabold tracking-tight leading-[1.1] mb-4 sm:mb-6">
+                    {banner.title}
+                  </h1>
+                  <p className="text-sm xs:text-base sm:text-lg text-white/90 leading-relaxed max-w-xl mb-6 sm:mb-8 font-medium drop-shadow-md">
+                    Handcrafted natural pine stands, chewable play gyms, and safe perches designed for parrots, cockatiels, budgies, and feathered friends.
                   </p>
-                </div>
-
-                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border border-gray-200 text-gray-400 flex items-center justify-center group-hover:border-[#E050D0] group-hover:bg-[#E050D0] group-hover:text-white transition-all shadow-sm shrink-0">
-                  <ArrowRight size={12} strokeWidth={2.5} className="group-hover:translate-x-0.5 transition-transform" />
+                  <div>
+                    <button
+                      onClick={() => navigate(banner.buttonLink || '/products')}
+                      className="inline-flex items-center justify-center font-bold text-xs xs:text-sm sm:text-base bg-[#E050D0] hover:bg-[#c945ba] text-white px-8 xs:px-10 py-3.5 sm:py-4 rounded-full transition-all duration-200 active:scale-95 shadow-lg hover:shadow-xl cursor-pointer"
+                    >
+                      {banner.buttonText || 'Shop Now'}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+          ))
+        ) : (
+          /* Fallback Original Hero */
+          <div className="absolute inset-0 z-10">
+            <div className="absolute inset-0 z-0">
+              <img
+                src="/assets/herobackground.png"
+                alt="Hero Background"
+                className="w-full h-full object-cover object-right sm:object-center"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 lg:via-black/20 to-transparent"></div>
+            </div>
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full h-full flex items-center">
+              <div className="max-w-2xl text-white">
+                <span className="font-bold text-[11px] xs:text-xs sm:text-sm uppercase tracking-wider text-white bg-white/20 border border-white/30 px-3 xs:px-3.5 py-1 rounded-full mb-3 sm:mb-4 inline-block backdrop-blur-sm">
+                  Bird Shop &amp; Toys
+                </span>
+
+                <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-extrabold tracking-tight leading-[1.1] mb-4 sm:mb-6">
+                  A bird store with everything they need
+                </h1>
+
+                <p className="text-sm xs:text-base sm:text-lg text-white/90 leading-relaxed max-w-xl mb-6 sm:mb-8 font-medium drop-shadow-md">
+                  Handcrafted natural pine stands, chewable play gyms, and safe perches designed for parrots, cockatiels, budgies, and feathered friends.
+                </p>
+
+                <div>
+                  <button
+                    onClick={() => navigate('/products')}
+                    className="inline-flex items-center justify-center font-bold text-xs xs:text-sm sm:text-base bg-[#E050D0] hover:bg-[#c945ba] text-white px-8 xs:px-10 py-3.5 sm:py-4 rounded-full transition-all duration-200 active:scale-95 shadow-lg hover:shadow-xl cursor-pointer"
+                  >
+                    Shop Now
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Navigation Dots if multiple banners */}
+        {banners.length > 1 && (
+          <div className="absolute bottom-6 left-0 right-0 z-20 flex justify-center gap-2">
+            {banners.map((_, idx) => (
+              <button 
+                key={idx}
+                onClick={() => setCurrentBanner(idx)}
+                className={`w-3 h-3 rounded-full transition-all ${idx === currentBanner ? 'bg-[#E050D0] scale-110' : 'bg-white/50 hover:bg-white/80'}`}
+              />
+            ))}
+          </div>
+        )}
       </section>
+
 
       {/* ─────────────────────────────────────────────────────────────
           3. FEATURED PRODUCTS (Matching Mockup with Real Product Photos)
@@ -362,7 +369,7 @@ export default function Home() {
                       {prod.name}
                     </h3>
                     <p className="font-extrabold text-sm sm:text-base text-gray-900">
-                      ${prod.price.toFixed(2)}
+                      ₹{prod.price.toFixed(2)}
                     </p>
                   </div>
 
@@ -473,7 +480,7 @@ export default function Home() {
                       {prod.name}
                     </h3>
                     <p className="font-extrabold text-xs sm:text-sm text-gray-900">
-                      ${prod.price.toFixed(2)}
+                      ₹{prod.price.toFixed(2)}
                     </p>
                   </div>
 
@@ -565,10 +572,10 @@ export default function Home() {
 
         {/* 3 Blog Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-          {BLOG_POSTS.map((post) => (
+          {blogs.map((post) => (
             <div
-              key={post.id}
-              onClick={() => navigate(`/blog/${post.id}`)}
+              key={post._id}
+              onClick={() => navigate(`/blog/${post._id}`)}
               className="bg-white rounded-[28px] overflow-hidden border border-gray-100/90 shadow-[0_2px_15px_rgba(0,0,0,0.03)] hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group cursor-pointer flex flex-col"
             >
               {/* Blog Image with News Pill Tag */}

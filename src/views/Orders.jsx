@@ -79,7 +79,7 @@ const Orders = () => {
                       />
                       <div className="min-w-0 flex-1">
                         <p className="font-semibold text-xs sm:text-sm truncate">{item.name}</p>
-                        <p className="text-xs sm:text-sm text-muted-foreground">{item.quantity} x ${item.price.toFixed(2)}</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground">{item.quantity} x ₹{item.price.toFixed(2)}</p>
                       </div>
                     </div>
                   ))}
@@ -89,7 +89,7 @@ const Orders = () => {
                   <span className="text-sm text-muted-foreground sm:hidden font-medium">Order Total:</span>
                   <p className="text-base sm:text-lg font-bold">
                     <span className="hidden sm:inline">Total: </span>
-                    <span className="text-brand-pink">${order.totalPrice.toFixed(2)}</span>
+                    <span className="text-brand-pink">₹{order.totalPrice.toFixed(2)}</span>
                   </p>
                 </div>
               </div>

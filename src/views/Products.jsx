@@ -419,7 +419,7 @@ export default function Products() {
               />
               <div className="flex items-center justify-between mt-3">
                 <span className="text-xs font-semibold text-gray-500">
-                  Price: $1 - ${priceRange}
+                  Price: ₹1 - ₹{priceRange}
                 </span>
                 <button
                   onClick={() => setCurrentPage(1)}
@@ -484,7 +484,7 @@ export default function Products() {
                           {prod.name}
                         </h4>
                         <p className="text-xs font-extrabold text-gray-900 mt-0.5">
-                          ${(prod.price || 0).toFixed(2)}
+                          ₹{(prod.price || 0).toFixed(2)}
                         </p>
                       </div>
                     </div>
@@ -540,7 +540,7 @@ export default function Products() {
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <h4 className="text-xs font-bold uppercase tracking-wider text-[#E050D0]">Price Range</h4>
-                    <span className="text-xs font-bold text-gray-800">${priceRange}</span>
+                    <span className="text-xs font-bold text-gray-800">₹{priceRange}</span>
                   </div>
                   <input
                     type="range"
@@ -551,8 +551,8 @@ export default function Products() {
                     className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#E050D0]"
                   />
                   <div className="flex justify-between text-[10px] text-gray-400 mt-1">
-                    <span>$1</span>
-                    <span>$159</span>
+                    <span>₹1</span>
+                    <span>₹159</span>
                   </div>
                 </div>
 
@@ -675,7 +675,7 @@ export default function Products() {
                             {prod.name}
                           </h3>
                           <p className="font-extrabold text-xs sm:text-sm text-gray-900">
-                            ${(prod.price || 0).toFixed(2)}
+                            ₹{(prod.price || 0).toFixed(2)}
                           </p>
                         </div>
 

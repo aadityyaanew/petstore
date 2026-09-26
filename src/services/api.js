@@ -81,6 +81,18 @@ export const api = {
   uploadImage: (formData) => axiosInstance.post('/upload', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   }),
+
+  // Categories
+  getCategories: () => axiosInstance.get('/categories'),
+  createCategory: (data) => axiosInstance.post('/categories', data),
+  updateCategory: (id, data) => axiosInstance.put(`/categories/${id}`, data),
+  deleteCategory: (id) => axiosInstance.delete(`/categories/${id}`),
+
+  // Blogs
+  getBlogs: () => axiosInstance.get('/blogs'),
+  createBlog: (data) => axiosInstance.post('/blogs', data),
+  updateBlog: (id, data) => axiosInstance.put(`/blogs/${id}`, data),
+  deleteBlog: (id) => axiosInstance.delete(`/blogs/${id}`),
 };
 
 export default api;

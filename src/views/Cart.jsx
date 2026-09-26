@@ -71,11 +71,11 @@ const Cart = () => {
                         {product.name || item.name || 'Product'}
                       </h3>
                       <p className="font-extrabold text-sm sm:text-base text-brand-pink whitespace-nowrap">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        ₹{(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
                     <p className="text-[11px] sm:text-xs text-muted-foreground mb-auto">
-                      Unit: ${item.price.toFixed(2)}
+                      Unit: ₹{item.price.toFixed(2)}
                     </p>
                     
                     <div className="flex justify-between items-center mt-3 pt-2 border-t border-gray-100">
@@ -115,7 +115,7 @@ const Cart = () => {
               <div className="space-y-3 text-xs sm:text-sm text-white/80 mb-5 sm:mb-6 border-b border-white/10 pb-5 sm:pb-6">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span className="font-semibold text-white">${subtotal.toFixed(2)}</span>
+                  <span className="font-semibold text-white">₹{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
@@ -123,13 +123,13 @@ const Cart = () => {
                 </div>
                 <div className="flex justify-between">
                   <span>Estimated Tax</span>
-                  <span className="font-semibold text-white">${tax.toFixed(2)}</span>
+                  <span className="font-semibold text-white">₹{tax.toFixed(2)}</span>
                 </div>
               </div>
               
               <div className="flex justify-between items-center mb-5 sm:mb-6">
                 <span className="text-base sm:text-lg font-bold">Total</span>
-                <span className="text-xl sm:text-2xl font-extrabold text-[#E050D0]">${total.toFixed(2)}</span>
+                <span className="text-xl sm:text-2xl font-extrabold text-[#E050D0]">₹{total.toFixed(2)}</span>
               </div>
               
               <Button 
