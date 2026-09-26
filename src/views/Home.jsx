@@ -135,21 +135,21 @@ const BLOG_POSTS = [
     id: 1,
     tag: 'News',
     date: '24 May 2024',
-    title: 'Urna Cras Et Mauris Congue Nunc Nisl Nisi Tempus Cursus',
+    title: 'Top 5 Fun Foraging Toys to Keep Your Bird Entertained',
     image: '/assets/asset-bafedd16.jpeg',
   },
   {
     id: 2,
     tag: 'News',
     date: '24 May 2024',
-    title: 'Id Tellus Dignissim In Nisi Aliquam. Malesuada Interdum',
+    title: 'The Ultimate Guide to Choosing the Right Perch for Your Parrot',
     image: '/assets/asset-b7038046.jpeg',
   },
   {
     id: 3,
     tag: 'News',
     date: '24 May 2024',
-    title: 'Mus Cursus Pellentesque Blandit Tortor Suspendisse Ornare',
+    title: "Why Wood Toys Are Essential for Your Feathered Friend's Health",
     image: '/assets/asset-f3942b3d.jpeg',
   },
 ];
@@ -712,7 +712,7 @@ export default function Home() {
           {BLOG_POSTS.map((post) => (
             <div
               key={post.id}
-              onClick={() => navigate('/about')}
+              onClick={() => navigate(`/blog/${post.id}`)}
               className="bg-white rounded-[28px] overflow-hidden border border-gray-100/90 shadow-[0_2px_15px_rgba(0,0,0,0.03)] hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group cursor-pointer flex flex-col"
             >
               {/* Blog Image with News Pill Tag */}

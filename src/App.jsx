@@ -19,6 +19,8 @@ import ContactUs from './views/ContactUs';
 import AboutUs from './views/AboutUs';
 import PrivacyPolicy from './views/PrivacyPolicy';
 import TermsConditions from './views/TermsConditions';
+import Blog from './views/Blog';
+import BlogPost from './views/BlogPost';
 
 // Admin Components
 import AdminLayout from './components/admin/AdminLayout';
@@ -61,6 +63,8 @@ function App() {
         <Route path="returns" element={<Returns />} />
         <Route path="contact" element={<ContactUs />} />
         <Route path="about" element={<AboutUs />} />
+        <Route path="blog" element={<Blog />} />
+        <Route path="blog/:id" element={<BlogPost />} />
         <Route path="privacy" element={<PrivacyPolicy />} />
         <Route path="terms" element={<TermsConditions />} />
       </Route>
