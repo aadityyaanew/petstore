@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Pet Store Theme - Matching logo.jpeg Orchid Pink & Sleek Dark Accents */
+    --background: 0 0% 100%;
+    --foreground: 222 20% 11%;        /* Rich deep dark */
+    --card: 0 0% 100%;
+    --card-foreground: 222 20% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 20% 11%;
+    --primary: 222 20% 11%;           /* Pitch charcoal/black */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 304 74% 60%;         /* #E050D0 Logo Orchid Pink */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 304 80% 97%;            /* Soft logo pink tint */
+    --accent-foreground: 304 74% 45%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 92%;
+    --input: 220 13% 92%;
+    --ring: 304 74% 60%;
+    --radius: 1rem;
+  }
+
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    padding: 0;
+    margin: 0;
+    overflow-x: clip;
+    max-width: 100vw;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+    @apply bg-background text-foreground;
+  }
+
+  input, textarea, select {
+    user-select: text;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+@layer components {
+  /* Pill Buttons matching the mockups */
+  .btn-pill-black {
+    @apply inline-flex items-center justify-center font-bold text-sm bg-black text-white px-8 py-3.5 rounded-full
+           hover:bg-neutral-800 transition-all duration-200 active:scale-95 shadow-sm hover:shadow-md cursor-pointer;
+  }
+
+  .btn-pill-pink {
+    @apply inline-flex items-center justify-center font-bold text-sm bg-[#E050D0] text-white px-8 py-3.5 rounded-full
+           hover:bg-[#C035B0] transition-all duration-200 active:scale-95 shadow-sm hover:shadow-md cursor-pointer;
+  }
+
+  .btn-circle-black {
+    @apply w-10 h-10 rounded-full bg-black text-white flex items-center justify-center
+           hover:bg-neutral-800 active:scale-95 transition-all shadow-sm cursor-pointer;
+  }
+
+  .btn-circle-pink-arrow {
+    @apply w-8 h-8 rounded-full border border-[#E050D0] text-[#E050D0] flex items-center justify-center
+           hover:bg-[#E050D0] hover:text-white transition-all cursor-pointer;
+  }
+
+  .section-title {
+    @apply text-2xl sm:text-3xl lg:text-[34px] font-extrabold tracking-tight text-gray-900;
+  }
+
+  .tag-pink {
+    @apply font-bold text-xs uppercase tracking-wider text-[#E050D0];
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Custom scrollbar hiding for horizontal category carousel */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .touch-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+

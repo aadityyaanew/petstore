@@ -1,0 +1,283 @@
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
+import User from '../src/lib/models/User.js';
+import Product from '../src/lib/models/Product.js';
+import connectDB from '../src/lib/db.js';
+
+dotenv.config({ path: '.env.local' });
+
+// Add mock admin data here so we can create it
+const adminData = {
+  name: 'Admin User',
+  email: process.env.ADMIN_EMAIL || 'admin@gmail.com',
+  password: 'admin@123',
+  role: 'admin',
+};
+
+const products = [
+  {
+    name: 'Tabletop Wooden Play Gym',
+    description: 'Premium handcrafted natural pine tabletop play gym with climbing ladders, rope swings, and feeding perches. Perfect for cockatiels, conures, and parrots.',
+    price: 34.99,
+    originalPrice: 44.99,
+    category: 'Toys',
+    brand: 'Poonch',
+    petType: 'parrot',
+    tags: ['Bird stands', 'Natural wood', 'Parrot'],
+    images: ['/assets/asset-4cbbe7b6.jpeg'],
+    stock: 25,
+    isFeatured: true,
+    rating: 5,
+    numReviews: 12,
+  },
+  {
+    name: 'Multi-Perch Gym with Feeder Cup',
+    description: 'Sturdy bird gym featuring multi-tiered natural perches, dual stainless steel feeding bowls, and an easy-clean solid wood base tray.',
+    price: 29.99,
+    originalPrice: 39.99,
+    category: 'Bowls',
+    brand: 'Poonch',
+    petType: 'parrot',
+    tags: ['Bird stands', 'Parrot', 'Bowls & Feeders'],
+    images: ['/assets/asset-fcc4ef82.jpeg'],
+    stock: 18,
+    isFeatured: true,
+    rating: 4.8,
+    numReviews: 9,
+  },
+  {
+    name: 'Natural Pine Ring Toss Game',
+    description: 'Interactive wooden intelligence and agility toy designed to stimulate natural curiosity and foraging behavior for medium to small birds.',
+    price: 14.99,
+    originalPrice: 19.99,
+    category: 'Toys',
+    brand: 'Natural Pine',
+    petType: 'parrot',
+    tags: ['Wooden toys', 'Small pets', 'Parrot'],
+    images: ['/assets/asset-bff48261.jpeg'],
+    stock: 40,
+    isFeatured: true,
+    rating: 4.9,
+    numReviews: 15,
+  },
+  {
+    name: 'Beaded Arch Swing with Brass Bells',
+    description: 'Colorful non-toxic wooden bead arch swing with bird-safe brass bells. Encourages balance, exercise, and playful beak tapping.',
+    price: 12.99,
+    originalPrice: 16.99,
+    category: 'Toys',
+    brand: 'Poonch',
+    petType: 'cockatiel',
+    tags: ['Wooden toys', 'Parrot', 'Chew toys'],
+    images: ['/assets/asset-6ebb9cd6.jpeg'],
+    stock: 30,
+    isFeatured: true,
+    rating: 4.7,
+    numReviews: 8,
+  },
+  {
+    name: 'Natural Wood T-Perch Set (3 Pcs)',
+    description: 'Set of 3 rustic hardwood T-perches made from untreated wild branches to keep claws trimmed and bird feet strong and healthy.',
+    price: 18.50,
+    originalPrice: 24.50,
+    category: 'Furniture',
+    brand: 'Natural Pine',
+    petType: 'budgie',
+    tags: ['Natural wood', 'Bird stands'],
+    images: ['/assets/asset-675fd014.jpeg'],
+    stock: 22,
+    isFeatured: true,
+    rating: 4.8,
+    numReviews: 14,
+  },
+  {
+    name: 'Stainless Chain Hanging Swing',
+    description: 'Heavy-duty bird swing with stainless steel safety chains, chewable hardwood dowels, and quick-link cage connectors.',
+    price: 15.99,
+    originalPrice: 21.99,
+    category: 'Toys',
+    brand: 'Poonch',
+    petType: 'conure',
+    tags: ['Wooden toys', 'Parrot'],
+    images: ['/assets/asset-6763452a.jpeg'],
+    stock: 15,
+    isFeatured: true,
+    rating: 4.6,
+    numReviews: 7,
+  },
+  {
+    name: 'Solid Pine Climbing Ladder',
+    description: 'Multi-rung natural pine ladder with metal hooks. Ideal for climbing, coordination, exercise, and cage playground expansion.',
+    price: 16.99,
+    originalPrice: 22.99,
+    category: 'Toys',
+    brand: 'EcoWood',
+    petType: 'parrot',
+    tags: ['Wooden toys', 'Natural wood'],
+    images: ['/assets/asset-8929307d.jpeg'],
+    stock: 35,
+    isFeatured: true,
+    rating: 4.9,
+    numReviews: 19,
+  },
+  {
+    name: 'Compact Tabletop Activity Bridge',
+    description: 'Delightful suspension bridge and chew toy station for small pet birds, cockatiels, hamsters, and small pets.',
+    price: 13.99,
+    originalPrice: 18.99,
+    category: 'Furniture',
+    brand: 'Natural Pine',
+    petType: 'lovebird',
+    tags: ['Small pets', 'Natural wood'],
+    images: ['/assets/asset-e78dd216.jpeg'],
+    stock: 20,
+    isFeatured: true,
+    rating: 4.5,
+    numReviews: 6,
+  },
+  {
+    name: 'Brain Game Training Base',
+    description: 'Cognitive puzzle toy for parrots with color sorting rings, shape blocks, and foraging slots for hidden treats.',
+    price: 19.44,
+    originalPrice: 26.00,
+    category: 'Toys',
+    brand: 'Poonch',
+    petType: 'parrot',
+    tags: ['Wooden toys', 'Chew toys'],
+    images: ['/assets/asset-70343c4c.jpeg'],
+    stock: 16,
+    isFeatured: false,
+    rating: 5.0,
+    numReviews: 11,
+  },
+  {
+    name: 'Multi-Level Activity Gym Stand',
+    description: 'Large multi-tiered bird playground featuring ladders, perches, swings, and removable stainless steel food trays.',
+    price: 38.00,
+    originalPrice: 49.99,
+    category: 'Furniture',
+    brand: 'Poonch',
+    petType: 'parrot',
+    tags: ['Bird stands', 'Parrot'],
+    images: ['/assets/asset-7cf3d705.jpeg'],
+    stock: 10,
+    isFeatured: false,
+    rating: 4.9,
+    numReviews: 23,
+  },
+  {
+    name: 'Handcrafted Woolen Pet Collar',
+    description: 'Ultra-soft handwoven comfort collar made of organic wool with safety quick-release buckle for pet birds and small animals.',
+    price: 19.11,
+    originalPrice: 25.00,
+    category: 'Clothing',
+    brand: 'Pet Spot',
+    petType: 'canary',
+    tags: ['Small pets', 'Accessories'],
+    images: ['/assets/categories/accessories.jpg'],
+    stock: 45,
+    isFeatured: false,
+    rating: 4.4,
+    numReviews: 5,
+  },
+  {
+    name: 'Breathable Travel Pet Carrier',
+    description: 'Lightweight panoramic travel carrier with 360-degree ventilation mesh, natural wood perch mount, and shoulder strap.',
+    price: 45.00,
+    originalPrice: 59.99,
+    category: 'Furniture',
+    brand: 'Green Line',
+    petType: 'parrot',
+    tags: ['Small pets', 'Bird stands'],
+    images: ['/assets/categories/bags.jpg'],
+    stock: 14,
+    isFeatured: false,
+    rating: 4.8,
+    numReviews: 16,
+  },
+  {
+    name: 'Curious Bird Ring Intelligence Game',
+    description: 'Engaging brain teaser puzzle made from untreated hardwood and certified food-safe bird dyes.',
+    price: 16.50,
+    originalPrice: 22.00,
+    category: 'Toys',
+    brand: 'Poonch',
+    petType: 'cockatiel',
+    tags: ['Wooden toys'],
+    images: ['/assets/asset-b7038046.jpeg'],
+    stock: 28,
+    isFeatured: false,
+    rating: 4.7,
+    numReviews: 9,
+  },
+  {
+    name: 'All-in-One Training & Gym Station',
+    description: 'Full workout center for large and medium parrots. Includes chewing ropes, swinging hoop, and double food bowls.',
+    price: 42.00,
+    originalPrice: 55.00,
+    category: 'Furniture',
+    brand: 'Poonch',
+    petType: 'conure',
+    tags: ['Bird stands', 'Parrot'],
+    images: ['/assets/asset-bafedd16.jpeg'],
+    stock: 8,
+    isFeatured: false,
+    rating: 5.0,
+    numReviews: 17,
+  },
+  {
+    name: 'Premium Seed & Fruit Avian Blend',
+    description: 'Veterinarian-formulated daily seed mix enriched with dried papaya, almonds, chia seeds, and essential vitamins.',
+    price: 21.99,
+    originalPrice: 28.99,
+    category: 'Food',
+    brand: 'Green Line',
+    petType: 'parrot',
+    tags: ['Food & Nutrition'],
+    images: ['/assets/categories/food.jpg'],
+    stock: 50,
+    isFeatured: false,
+    rating: 4.9,
+    numReviews: 31,
+  },
+  {
+    name: 'Dual Stainless Steel Clamp Feeder Bowls',
+    description: 'Rust-proof hygienic stainless steel dual food and water cups with heavy duty universal cage clamps.',
+    price: 15.49,
+    originalPrice: 20.00,
+    category: 'Bowls',
+    brand: 'Pet Spot',
+    petType: 'budgie',
+    tags: ['Bowls & Feeders'],
+    images: ['/assets/asset-fcc4ef82.jpeg'],
+    stock: 32,
+    isFeatured: false,
+    rating: 4.8,
+    numReviews: 14,
+  },
+];
+
+const seedDB = async () => {
+  try {
+    await connectDB();
+
+    console.log('Clearing database...');
+    await Product.deleteMany();
+    await User.deleteMany();
+
+    console.log('Seeding admin user...');
+    await User.create(adminData);
+
+    console.log('Seeding products...');
+    await Product.insertMany(products);
+
+    console.log('✅ Database seeded successfully');
+    process.exit();
+  } catch (error) {
+    console.error('❌ Error seeding database:', error);
+    process.exit(1);
+  }
+};
+
+seedDB();
