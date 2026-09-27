@@ -40,26 +40,7 @@ export default function ContactUs() {
 
   return (
     <div className="relative w-full min-h-screen bg-white text-gray-900 overflow-hidden selection:bg-[#E050D0]/20 selection:text-[#E050D0]">
-      {/* ─────────────────────────────────────────────────────────────
-          DECORATIVE ORGANIC PINK BLOBS (Matching Mockup Accents)
-      ───────────────────────────────────────────────────────────── */}
-      {/* Far Left Edge Semi-Circle Blob */}
-      <div
-        className="pointer-events-none absolute top-[210px] -left-10 w-20 h-44 sm:w-24 sm:h-52 rounded-r-full bg-[#E050D0] opacity-90 blur-[0.5px] z-0"
-        aria-hidden="true"
-      />
-
-      {/* Top Center Floating Accent Blob */}
-      <div
-        className="pointer-events-none absolute top-12 left-[32%] w-16 h-14 sm:w-20 sm:h-16 rounded-[45%_55%_65%_35%] bg-[#E050D0] opacity-85 z-0"
-        aria-hidden="true"
-      />
-
-      {/* Bottom Floating Accent Blob below Hero */}
-      <div
-        className="pointer-events-none absolute top-[430px] left-[39%] w-16 h-12 sm:w-20 sm:h-14 rounded-[50%_60%_40%_50%] bg-[#E050D0] opacity-85 z-0"
-        aria-hidden="true"
-      />
+      {/* Removed Organic Pink Blobs for clean Shadcn aesthetic */}
 
       {/* ─────────────────────────────────────────────────────────────
           1. HERO SECTION (Image 1 Style in Pink Theme)
@@ -70,41 +51,36 @@ export default function ContactUs() {
             
             {/* Left Column: Heading, Subtext, Shop Now Button */}
             <div className="lg:col-span-6 flex flex-col items-start pt-4 sm:pt-8">
-              <span className="font-bold text-xs sm:text-sm uppercase tracking-wider text-[#E050D0] mb-3 inline-block">
+              <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-secondary text-secondary-foreground mb-4">
                 Poonch Pet Store
               </span>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold tracking-tight text-gray-900 leading-[1.12] mb-5">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-bold tracking-tight text-foreground leading-[1.12] mb-5">
                 If animals could talk, they’d talk about us!
               </h1>
 
-              <p className="text-sm sm:text-base md:text-lg text-gray-500 leading-relaxed max-w-xl mb-8">
+              <p className="text-sm sm:text-base md:text-lg text-muted-foreground leading-relaxed max-w-xl mb-8">
                 At et vehicula sodales est proin turpis pellentesque sinulla a aliquam amet rhoncus quisque eget sit facilisi blandit et pellentesque aliquet et quisque tortor lacinia nullam
               </p>
 
               <div>
                 <button
                   onClick={() => navigate('/products')}
-                  className="inline-flex items-center justify-center font-bold text-sm sm:text-base bg-black hover:bg-neutral-800 text-white px-8 py-3.5 rounded-full transition-all duration-200 active:scale-95 shadow-md hover:shadow-lg cursor-pointer"
+                  className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8"
                 >
                   Shop Now
                 </button>
               </div>
             </div>
 
-            {/* Right Column: Circular Organic Pink Blob + Real Asset Photo */}
+            {/* Right Column: Clean Rectangle Image */}
             <div className="lg:col-span-6 flex justify-center items-center relative">
-              <div className="relative w-full max-w-[460px] aspect-[4/3] sm:aspect-square flex items-center justify-center">
-                {/* Soft Pink Organic Glow & Shape */}
-                <div className="absolute inset-0 bg-[#E050D0] rounded-[52%_48%_63%_37%/43%_58%_42%_57%] transform -rotate-3 transition-transform duration-700 hover:rotate-0" />
-                {/* Real Pet Store Feature Photo */}
-                <div className="relative z-10 w-[90%] h-[90%] rounded-[48%_52%_40%_60%/55%_45%_55%_45%] overflow-hidden shadow-2xl border-4 border-white bg-white">
-                  <img
-                    src="/assets/asset-b8e1a86b.jpeg"
-                    alt="Poonch Pet Store Friendly Caretaker"
-                    className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
+              <div className="relative w-full max-w-[460px] aspect-[4/3] rounded-2xl overflow-hidden border bg-muted shadow-sm">
+                <img
+                  src="/assets/asset-b8e1a86b.jpeg"
+                  alt="Poonch Pet Store Friendly Caretaker"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
 
@@ -119,22 +95,22 @@ export default function ContactUs() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
             
-            {/* Left Column: Contact Form inside Soft Rounded Card */}
+            {/* Left Column: Contact Form inside Standard Card */}
             <div className="lg:col-span-6 order-2 lg:order-1">
-              <div className="bg-[#F8F9FB] rounded-[24px] sm:rounded-[36px] p-5 xs:p-6 sm:p-10 border border-gray-100/90 shadow-[0_4px_30px_rgba(0,0,0,0.03)]">
+              <div className="bg-card text-card-foreground rounded-xl p-6 sm:p-10 border shadow-sm">
                 
                 {submitted && (
-                  <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold flex items-center gap-3 animate-fade-in">
-                    <CheckCircle2 size={20} className="text-emerald-600 shrink-0" />
+                  <div className="mb-6 p-4 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium flex items-center gap-3">
+                    <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
                     <span>Thank you! Your message has been sent. We'll be in touch within 24 hours.</span>
                   </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-4">
                   {/* First Name & Last Name (2 Columns) */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="firstName" className="block text-xs sm:text-sm font-bold text-gray-800 mb-2">
+                    <div className="space-y-2">
+                      <label htmlFor="firstName" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                         First Name
                       </label>
                       <input
@@ -145,11 +121,11 @@ export default function ContactUs() {
                         value={formData.firstName}
                         onChange={handleChange}
                         placeholder="First Name"
-                        className="w-full bg-white rounded-xl border border-gray-200/90 px-4 py-3 text-base sm:text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#E050D0] focus:ring-2 focus:ring-[#E050D0]/20 transition-all"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       />
                     </div>
-                    <div>
-                      <label htmlFor="lastName" className="block text-xs sm:text-sm font-bold text-gray-800 mb-2">
+                    <div className="space-y-2">
+                      <label htmlFor="lastName" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                         Last Name
                       </label>
                       <input
@@ -160,14 +136,14 @@ export default function ContactUs() {
                         value={formData.lastName}
                         onChange={handleChange}
                         placeholder="Last Name"
-                        className="w-full bg-white rounded-xl border border-gray-200/90 px-4 py-3 text-base sm:text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#E050D0] focus:ring-2 focus:ring-[#E050D0]/20 transition-all"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       />
                     </div>
                   </div>
 
                   {/* Email Address */}
-                  <div>
-                    <label htmlFor="email" className="block text-xs sm:text-sm font-bold text-gray-800 mb-2">
+                  <div className="space-y-2">
+                    <label htmlFor="email" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                       Email Address
                     </label>
                     <input
@@ -178,13 +154,13 @@ export default function ContactUs() {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="E-mail address"
-                      className="w-full bg-white rounded-xl border border-gray-200/90 px-4 py-3 text-base sm:text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#E050D0] focus:ring-2 focus:ring-[#E050D0]/20 transition-all"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     />
                   </div>
 
                   {/* Message */}
-                  <div>
-                    <label htmlFor="message" className="block text-xs sm:text-sm font-bold text-gray-800 mb-2">
+                  <div className="space-y-2">
+                    <label htmlFor="message" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                       Message
                     </label>
                     <textarea
@@ -195,20 +171,20 @@ export default function ContactUs() {
                       value={formData.message}
                       onChange={handleChange}
                       placeholder="Your message..."
-                      className="w-full bg-white rounded-xl border border-gray-200/90 p-4 text-base sm:text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#E050D0] focus:ring-2 focus:ring-[#E050D0]/20 transition-all resize-none"
+                      className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
                     />
                   </div>
 
-                  {/* Submit Button (Pill Button in Brand Pink) */}
+                  {/* Submit Button */}
                   <div className="pt-2">
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="w-full sm:w-auto inline-flex items-center justify-center font-bold text-sm sm:text-base bg-[#E050D0] hover:bg-[#C030B0] text-white px-9 py-3.5 rounded-full shadow-[0_4px_16px_rgba(224,80,208,0.35)] hover:shadow-[0_6px_22px_rgba(224,80,208,0.45)] transition-all duration-200 active:scale-95 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+                      className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-6 py-2 w-full sm:w-auto"
                     >
                       {submitting ? (
                         <div className="flex items-center gap-2">
-                          <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          <span className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
                           <span>Sending...</span>
                         </div>
                       ) : (
@@ -221,37 +197,37 @@ export default function ContactUs() {
               </div>
             </div>
 
-            {/* Right Column: Contact Details (Image 1 Style) */}
+            {/* Right Column: Contact Details (Shadcn Style) */}
             <div className="lg:col-span-6 order-1 lg:order-2 flex flex-col justify-center pt-2 sm:pt-4">
-              <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-gray-900 tracking-tight leading-tight mb-4">
+              <h2 className="text-3xl sm:text-4xl font-bold text-foreground tracking-tight leading-tight mb-4">
                 Feel free to contact us
               </h2>
 
-              <p className="text-sm sm:text-base text-gray-500 leading-relaxed max-w-lg mb-8 sm:mb-10">
+              <p className="text-base text-muted-foreground leading-relaxed max-w-lg mb-8 sm:mb-10">
                 At et vehicula sodales est proin turpis pellentesque sinulla a aliquam amet rhoncus quisque eget sit facilisi blandit et pellentesque aliquet et quisque tortor lacinia nullam
               </p>
 
-              {/* Contact Items with Solid Pink Circle Badges */}
+              {/* Contact Items with standard secondary icons */}
               <div className="space-y-6">
                 
                 {/* 1. Location */}
                 <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-full bg-[#E050D0] flex items-center justify-center text-white shrink-0 shadow-[0_4px_12px_rgba(224,80,208,0.3)]">
-                    <MapPin size={18} strokeWidth={2.2} />
+                  <div className="w-10 h-10 rounded-md bg-secondary flex items-center justify-center text-secondary-foreground shrink-0 border">
+                    <MapPin size={18} />
                   </div>
-                  <span className="font-bold text-sm sm:text-base text-gray-900">
+                  <span className="font-medium text-sm sm:text-base text-foreground">
                     123 Pet Care Way, Suite A, City, State, ZIP
                   </span>
                 </div>
 
                 {/* 2. Email */}
                 <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-full bg-[#E050D0] flex items-center justify-center text-white shrink-0 shadow-[0_4px_12px_rgba(224,80,208,0.3)]">
-                    <Mail size={18} strokeWidth={2.2} />
+                  <div className="w-10 h-10 rounded-md bg-secondary flex items-center justify-center text-secondary-foreground shrink-0 border">
+                    <Mail size={18} />
                   </div>
                   <a
                     href="mailto:support@poonchpetstore.com"
-                    className="font-bold text-sm sm:text-base text-gray-900 hover:text-[#E050D0] transition-colors"
+                    className="font-medium text-sm sm:text-base text-foreground hover:underline transition-colors"
                   >
                     support@poonchpetstore.com
                   </a>
@@ -259,12 +235,12 @@ export default function ContactUs() {
 
                 {/* 3. Phone */}
                 <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-full bg-[#E050D0] flex items-center justify-center text-white shrink-0 shadow-[0_4px_12px_rgba(224,80,208,0.3)]">
-                    <Phone size={18} strokeWidth={2.2} />
+                  <div className="w-10 h-10 rounded-md bg-secondary flex items-center justify-center text-secondary-foreground shrink-0 border">
+                    <Phone size={18} />
                   </div>
                   <a
                     href="tel:+18001234567"
-                    className="font-bold text-sm sm:text-base text-gray-900 hover:text-[#E050D0] transition-colors"
+                    className="font-medium text-sm sm:text-base text-foreground hover:underline transition-colors"
                   >
                     +1 (800) 123-4567
                   </a>
@@ -272,23 +248,23 @@ export default function ContactUs() {
 
                 {/* 4. Business Hours */}
                 <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-full bg-[#E050D0] flex items-center justify-center text-white shrink-0 shadow-[0_4px_12px_rgba(224,80,208,0.3)]">
-                    <Clock size={18} strokeWidth={2.2} />
+                  <div className="w-10 h-10 rounded-md bg-secondary flex items-center justify-center text-secondary-foreground shrink-0 border">
+                    <Clock size={18} />
                   </div>
-                  <span className="font-bold text-sm sm:text-base text-gray-900">
+                  <span className="font-medium text-sm sm:text-base text-foreground">
                     Mon - Fri: 9AM - 8PM EST
                   </span>
                 </div>
 
-                {/* Wholesale Inquiries Card (Requirement 11) */}
-                <div className="mt-4 pt-4 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                {/* Wholesale Inquiries */}
+                <div className="mt-4 pt-4 border-t flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <h4 className="font-bold text-gray-900 text-xs uppercase tracking-wider text-[#E050D0]">Wholesale Inquiries</h4>
-                    <p className="text-xs text-gray-500 mt-0.5">Available for local pet shops and avian specialists upon request.</p>
+                    <h4 className="font-semibold text-foreground text-sm tracking-wide">Wholesale Inquiries</h4>
+                    <p className="text-sm text-muted-foreground mt-0.5">Available for local pet shops and avian specialists upon request.</p>
                   </div>
                   <a
                     href="mailto:support@poonchpetstore.com?subject=Wholesale%20Inquiry%20-%20Poonch%20Pet%20Store"
-                    className="self-start sm:self-auto px-3.5 py-1.5 rounded-full bg-gray-900 hover:bg-[#E050D0] text-white text-xs font-bold transition-colors shadow-sm"
+                    className="self-start sm:self-auto inline-flex items-center justify-center rounded-md text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-4"
                   >
                     Inquire
                   </a>

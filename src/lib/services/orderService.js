@@ -5,21 +5,24 @@ import User from '../models/User.js';
 import * as razorpayService from './razorpayService.js';
 import { sendOrderConfirmationEmail, sendNewOrderAlertEmail, sendLowStockAlertEmail } from './emailService.js';
 
+import Coupon from '../models/Coupon.js';
+
 /**
- * Create a new order, validate stock, decrement stock, and send emails
+ * Create a new order, validate stock, recalculate prices server-side, decrement stock, and send emails
  */
-export const createOrder = async (userId, { shippingAddress, paymentMethod, items, itemsPrice, shippingPrice, totalPrice, couponCode, discountAmount }) => {
+export const createOrder = async (userId, { shippingAddress, paymentMethod, items, couponCode }) => {
   if (!items || items.length === 0) {
     const err = new Error('No order items');
     err.statusCode = 400;
     throw err;
   }
 
-  // ── Step 1: Validate stock for all items ──────────────────────────────────
+  // ── Step 1: Validate stock & recalculate prices from database ─────────────
+  let calculatedItemsPrice = 0;
   for (const item of items) {
     const product = await Product.findById(item.product);
     if (!product) {
-      const err = new Error(`Product not found: ${item.name}`);
+      const err = new Error(`Product not found: ${item.name || item.product}`);
       err.statusCode = 404;
       throw err;
     }
@@ -30,18 +33,38 @@ export const createOrder = async (userId, { shippingAddress, paymentMethod, item
       err.statusCode = 400;
       throw err;
     }
+    // Enforce server product price and details
+    item.price = product.price;
+    item.name = product.name;
+    calculatedItemsPrice += product.price * item.quantity;
   }
+
+  const serverShippingPrice = calculatedItemsPrice > 100 ? 0 : 10;
+  let serverDiscountAmount = 0;
+
+  if (couponCode) {
+    const coupon = await Coupon.findOne({ code: String(couponCode).toUpperCase(), isActive: true });
+    if (coupon && new Date(coupon.expiryDate) > new Date()) {
+      if (coupon.discountType === 'percentage') {
+        serverDiscountAmount = (calculatedItemsPrice * coupon.discountValue) / 100;
+      } else {
+        serverDiscountAmount = coupon.discountValue;
+      }
+    }
+  }
+
+  const serverTotalPrice = Math.max(0, calculatedItemsPrice + serverShippingPrice - serverDiscountAmount);
 
   const orderData = {
     user: userId,
     items,
     shippingAddress,
     paymentMethod,
-    itemsPrice,
-    shippingPrice,
-    couponCode,
-    discountAmount,
-    totalPrice,
+    itemsPrice: calculatedItemsPrice,
+    shippingPrice: serverShippingPrice,
+    couponCode: couponCode || '',
+    discountAmount: serverDiscountAmount,
+    totalPrice: serverTotalPrice,
   };
 
   // ── Step 2: Branch by payment method ──────────────────────────────────────
@@ -49,8 +72,8 @@ export const createOrder = async (userId, { shippingAddress, paymentMethod, item
     // Create the order record first
     const initialOrder = await Order.create(orderData);
 
-    // Create Razorpay order
-    const rzpOrder = await razorpayService.createRazorpayOrder(totalPrice, initialOrder._id.toString());
+    // Create Razorpay order with server-validated total price
+    const rzpOrder = await razorpayService.createRazorpayOrder(orderData.totalPrice, initialOrder._id.toString());
     initialOrder.razorpayOrderId = rzpOrder.id;
     await initialOrder.save();
 
@@ -134,21 +157,30 @@ const checkAndSendLowStockAlert = (items) => {
  * Get all orders for the logged-in user
  */
 export const getMyOrders = async (userId) => {
-  return await Order.find({ user: userId }).sort({ createdAt: -1 });
+  return await Order.find({ user: userId })
+    .populate('items.product', 'name images image price')
+    .sort({ createdAt: -1 })
+    .lean();
 };
 
 /**
  * Get a single order by ID (with ownership/admin check)
  */
 export const getOrderById = async (orderId, requestingUser) => {
-  const order = await Order.findById(orderId).populate('user', 'name email');
+  const order = await Order.findById(orderId)
+    .populate('user', 'name email')
+    .populate('items.product', 'name images image price')
+    .lean();
   if (!order) {
     const err = new Error('Order not found');
     err.statusCode = 404;
     throw err;
   }
 
-  const isOwner = order.user._id.toString() === requestingUser._id.toString();
+  const userIdStr = typeof order.user === 'object' ? order.user._id.toString() : order.user.toString();
+  const requestingUserIdStr = requestingUser._id ? requestingUser._id.toString() : requestingUser.id?.toString();
+
+  const isOwner = userIdStr === requestingUserIdStr;
   const isAdmin = requestingUser.role === 'admin';
   if (!isOwner && !isAdmin) {
     const err = new Error('Not authorized');
@@ -163,13 +195,17 @@ export const getOrderById = async (orderId, requestingUser) => {
  * Get all orders (admin only)
  */
 export const getAllOrders = async () => {
-  return await Order.find({}).populate('user', 'name email').sort({ createdAt: -1 });
+  return await Order.find({})
+    .populate('user', 'name email')
+    .populate('items.product', 'name images image price')
+    .sort({ createdAt: -1 })
+    .lean();
 };
 
 /**
  * Update an order's status (admin only)
  */
-export const updateOrderStatus = async (orderId, status) => {
+export const updateOrderStatus = async (orderId, updateData) => {
   const order = await Order.findById(orderId);
   if (!order) {
     const err = new Error('Order not found');
@@ -177,8 +213,14 @@ export const updateOrderStatus = async (orderId, status) => {
     throw err;
   }
 
-  order.status = status;
-  if (status === 'delivered') order.deliveredAt = Date.now();
+  if (updateData.status) order.status = updateData.status;
+  if (updateData.courierPartner !== undefined) order.courierPartner = updateData.courierPartner;
+  if (updateData.trackingLink !== undefined) order.trackingLink = updateData.trackingLink;
+  
+  if (order.status.toLowerCase() === 'delivered' && !order.deliveredAt) {
+    order.deliveredAt = Date.now();
+  }
+  
   await order.save();
 
   return order;

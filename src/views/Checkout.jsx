@@ -3,22 +3,39 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import api from '../services/api';
+import { getItemImageUrl } from '../components/ProductCard';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
+import { Skeleton } from '../components/ui/skeleton';
 
 const STEPS = ['Shipping Address', 'Payment Details'];
+
+const INDIAN_STATES = [
+  "Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", 
+  "Chandigarh", "Chhattisgarh", "Dadra and Nagar Haveli", "Daman and Diu", "Delhi", "Goa", 
+  "Gujarat", "Haryana", "Himachal Pradesh", "Jammu and Kashmir", "Jharkhand", "Karnataka", 
+  "Kerala", "Ladakh", "Lakshadweep", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", 
+  "Mizoram", "Nagaland", "Odisha", "Puducherry", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", 
+  "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
+];
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { cart, emptyCart } = useCart();
+  const { cart, emptyCart, loading: cartLoading } = useCart();
   const [activeStep, setActiveStep] = useState(0);
+  
+  const defaultAddressIdx = user?.addresses?.length > 0 
+    ? Math.max(0, user.addresses.findIndex(a => a.isDefault)) 
+    : -1;
+  const [selectedAddressIndex, setSelectedAddressIndex] = useState(defaultAddressIdx);
+
   const [formData, setFormData] = useState({
     fullName: user?.name || '',
     street: '',
     city: '',
     state: '',
-    zipCode: '',
+    pincode: '',
     phone: '',
     paymentMethod: 'Card',
   });
@@ -30,7 +47,16 @@ const Checkout = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleNext = () => setActiveStep((prev) => prev + 1);
+  const handleNext = () => {
+    if (activeStep === 0) {
+      if (selectedAddressIndex === -1) {
+        if (!formData.fullName || !formData.street || !formData.city || !formData.state || !formData.pincode || !formData.phone) {
+          return alert('Please fill all address fields.');
+        }
+      }
+    }
+    setActiveStep((prev) => prev + 1);
+  };
   const handleBack = () => setActiveStep((prev) => prev - 1);
 
   const calculateTotal = () => {
@@ -56,21 +82,24 @@ const Checkout = () => {
       const discountAmount = appliedCoupon?.discountAmount || 0;
       const totalPrice = itemsPrice + shippingPrice - discountAmount;
 
+      const isNewAddress = selectedAddressIndex === -1;
+      const selectedAddress = user?.addresses?.[selectedAddressIndex] || {};
+
       const orderData = {
         items: cart.items.map(i => ({
           product: i.product?._id || i.product,
           name: i.product?.name || i.name || 'Pet Product',
-          image: i.product?.images?.[0] || i.product?.image || '',
+          image: getItemImageUrl(i),
           price: i.product?.price ?? i.price ?? 0,
           quantity: i.quantity,
         })),
         shippingAddress: {
-          fullName: formData.fullName,
-          street: formData.street,
-          city: formData.city,
-          state: formData.state,
-          zipCode: formData.zipCode,
-          phone: formData.phone,
+          fullName: isNewAddress ? formData.fullName : selectedAddress.fullName,
+          street: isNewAddress ? formData.street : selectedAddress.street,
+          city: isNewAddress ? formData.city : selectedAddress.city,
+          state: isNewAddress ? formData.state : selectedAddress.state,
+          zipCode: isNewAddress ? formData.pincode : selectedAddress.pincode,
+          phone: isNewAddress ? formData.phone : selectedAddress.phone,
           country: 'India',
         },
         paymentMethod: formData.paymentMethod,
@@ -138,6 +167,23 @@ const Checkout = () => {
     }
   };
 
+  if (cartLoading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
+        <Skeleton className="h-10 w-48 mx-auto mb-8" />
+        <Skeleton className="h-10 w-full max-w-md mx-auto mb-8 rounded-full" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="lg:col-span-2">
+            <Skeleton className="h-96 w-full rounded-2xl" />
+          </div>
+          <div className="lg:col-span-1">
+            <Skeleton className="h-96 w-full rounded-2xl" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!cart?.items?.length) {
     return (
       <div className="py-20 text-center px-4">
@@ -152,7 +198,7 @@ const Checkout = () => {
   const discountAmount = appliedCoupon?.discountAmount || 0;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-extrabold text-center mb-8">Checkout</h1>
       
       <div className="flex justify-center mb-6 sm:mb-8">
@@ -173,34 +219,81 @@ const Checkout = () => {
         <div className="lg:col-span-2">
           <div className="bg-white rounded-2xl border border-border shadow-sm p-4 xs:p-6 sm:p-8">
             {activeStep === 0 && (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">Shipping Address</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-xs sm:text-sm font-semibold">Full Name</label>
-                    <Input name="fullName" value={formData.fullName} onChange={handleChange} className="text-base sm:text-sm" />
+                
+                {/* Saved Addresses List */}
+                {user?.addresses?.length > 0 && (
+                  <div className="space-y-3 mb-6">
+                    {user.addresses.map((addr, idx) => (
+                      <label key={idx} className={`flex items-start gap-4 p-4 border rounded-xl cursor-pointer transition-colors ${selectedAddressIndex === idx ? 'border-brand-pink bg-brand-pink/5' : 'border-border hover:bg-gray-50'}`}>
+                        <input 
+                          type="radio" 
+                          name="savedAddress" 
+                          checked={selectedAddressIndex === idx}
+                          onChange={() => setSelectedAddressIndex(idx)}
+                          className="mt-1 w-4 h-4 text-brand-pink focus:ring-brand-pink"
+                        />
+                        <div className="flex-1">
+                          <h4 className="font-bold text-gray-900">{addr.fullName} {addr.isDefault && <span className="ml-2 text-[10px] bg-gray-200 px-2 py-0.5 rounded-full uppercase tracking-wider text-gray-600">Default</span>}</h4>
+                          <p className="text-sm text-gray-600 mt-0.5">{addr.street}</p>
+                          <p className="text-sm text-gray-600">{addr.city}, {addr.state} {addr.pincode}</p>
+                          <p className="text-sm font-semibold text-gray-700 mt-1">Phone: {addr.phone}</p>
+                        </div>
+                      </label>
+                    ))}
+                    <label className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-colors ${selectedAddressIndex === -1 ? 'border-brand-pink bg-brand-pink/5' : 'border-border hover:bg-gray-50'}`}>
+                      <input 
+                        type="radio" 
+                        name="savedAddress" 
+                        checked={selectedAddressIndex === -1}
+                        onChange={() => setSelectedAddressIndex(-1)}
+                        className="w-4 h-4 text-brand-pink focus:ring-brand-pink"
+                      />
+                      <span className="font-bold text-gray-900">Use a different address</span>
+                    </label>
                   </div>
-                  <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-xs sm:text-sm font-semibold">Street Address</label>
-                    <Input name="street" value={formData.street} onChange={handleChange} className="text-base sm:text-sm" />
+                )}
+
+                {selectedAddressIndex === -1 && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-5 bg-gray-50 rounded-xl border border-border">
+                    <div className="space-y-1.5 sm:col-span-2">
+                      <label className="text-xs sm:text-sm font-semibold">Full Name</label>
+                      <Input name="fullName" value={formData.fullName} onChange={handleChange} required className="bg-white" />
+                    </div>
+                    <div className="space-y-1.5 sm:col-span-2">
+                      <label className="text-xs sm:text-sm font-semibold">Street Address / Locality</label>
+                      <Input name="street" value={formData.street} onChange={handleChange} required className="bg-white" placeholder="House No, Building, Street" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs sm:text-sm font-semibold">Pincode</label>
+                      <Input name="pincode" value={formData.pincode} onChange={handleChange} required className="bg-white" placeholder="6 digits" pattern="[0-9]{6}" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs sm:text-sm font-semibold">City</label>
+                      <Input name="city" value={formData.city} onChange={handleChange} required className="bg-white" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs sm:text-sm font-semibold">State</label>
+                      <select 
+                        name="state" 
+                        value={formData.state} 
+                        onChange={handleChange} 
+                        required 
+                        className="w-full h-10 px-3 py-2 rounded-md border border-input bg-white text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      >
+                        <option value="" disabled>Select State</option>
+                        {INDIAN_STATES.map(state => (
+                          <option key={state} value={state}>{state}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs sm:text-sm font-semibold">Phone Number</label>
+                      <Input name="phone" type="tel" value={formData.phone} onChange={handleChange} required className="bg-white" placeholder="10 digits" />
+                    </div>
                   </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs sm:text-sm font-semibold">City</label>
-                    <Input name="city" value={formData.city} onChange={handleChange} className="text-base sm:text-sm" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs sm:text-sm font-semibold">State</label>
-                    <Input name="state" value={formData.state} onChange={handleChange} className="text-base sm:text-sm" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs sm:text-sm font-semibold">ZIP Code</label>
-                    <Input name="zipCode" value={formData.zipCode} onChange={handleChange} className="text-base sm:text-sm" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs sm:text-sm font-semibold">Phone Number</label>
-                    <Input name="phone" value={formData.phone} onChange={handleChange} className="text-base sm:text-sm" />
-                  </div>
-                </div>
+                )}
               </div>
             )}
 
@@ -208,18 +301,21 @@ const Checkout = () => {
               <div className="space-y-4">
                 <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">Payment Method</h2>
                 <div className="space-y-3">
-                  {['Card', 'UPI', 'COD'].map((method) => (
-                    <label key={method} className="flex items-center gap-3 p-3.5 sm:p-4 border border-border rounded-xl cursor-pointer hover:bg-accent/50 transition-colors">
+                  {[
+                    { value: 'Card', label: 'Razorpay Secure (UPI, Card, Int\'l Card, Apple Pay)' },
+                    { value: 'COD', label: 'Cash on Delivery (COD)' }
+                  ].map((method) => (
+                    <label key={method.value} className="flex items-center gap-3 p-3.5 sm:p-4 border border-border rounded-xl cursor-pointer hover:bg-accent/50 transition-colors">
                       <input 
                         type="radio" 
                         name="paymentMethod" 
-                        value={method} 
-                        checked={formData.paymentMethod === method}
+                        value={method.value} 
+                        checked={formData.paymentMethod === method.value}
                         onChange={handleChange}
                         className="w-4 h-4 text-[#E050D0] focus:ring-[#E050D0]"
                       />
                       <span className="font-medium text-sm sm:text-base">
-                        {method === 'Card' ? 'Credit / Debit Card' : method === 'UPI' ? 'UPI' : 'Cash on Delivery (COD)'}
+                        {method.label}
                       </span>
                     </label>
                   ))}

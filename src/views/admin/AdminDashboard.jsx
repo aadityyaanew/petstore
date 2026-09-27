@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { TrendingUp, Package, ShoppingCart, Users, DollarSign, AlertTriangle } from 'lucide-react';
 import { Badge } from '../../components/ui/badge';
+import { Skeleton } from '../../components/ui/skeleton';
 import api from '../../services/api';
 
 const AdminDashboard = () => {
@@ -51,8 +52,17 @@ const AdminDashboard = () => {
   }, []);
 
   if (loading) return (
-    <div className="flex justify-center py-32">
-      <div className="w-12 h-12 border-4 border-brand-pink/20 border-t-brand-pink rounded-full animate-spin" />
+    <div className="max-w-7xl mx-auto space-y-8">
+      <Skeleton className="h-10 w-64 mb-8" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-32 rounded-3xl" />
+        ))}
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Skeleton className="h-96 rounded-3xl" />
+        <Skeleton className="h-96 rounded-3xl" />
+      </div>
     </div>
   );
 

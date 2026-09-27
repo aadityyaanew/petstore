@@ -10,7 +10,10 @@ export async function POST(request) {
     await connectDB();
     const user = await requireAuth(request);
     
-    const { razorpayOrderId, razorpayPaymentId, razorpaySignature } = await request.json();
+    const body = await request.json();
+    const razorpayOrderId = body.razorpay_order_id || body.razorpayOrderId;
+    const razorpayPaymentId = body.razorpay_payment_id || body.razorpayPaymentId;
+    const razorpaySignature = body.razorpay_signature || body.razorpaySignature;
 
     if (!razorpayOrderId || !razorpayPaymentId || !razorpaySignature) {
       return NextResponse.json({ message: 'Missing payment details' }, { status: 400 });

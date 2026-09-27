@@ -54,7 +54,7 @@ export const api = {
 
   // Admin Orders
   getAllOrders: () => axiosInstance.get('/orders'),
-  updateOrderStatus: (id, status) => axiosInstance.put(`/orders/${id}/status`, { status }),
+  updateOrderStatus: (id, data) => axiosInstance.put(`/orders/${id}/status`, data),
 
   // Admin Users
   getAllUsers: () => axiosInstance.get('/users'),

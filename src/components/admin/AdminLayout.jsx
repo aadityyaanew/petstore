@@ -100,7 +100,7 @@ const AdminLayout = () => {
       )}
 
       {/* Desktop Persistent Sidebar */}
-      <aside className="hidden md:flex w-64 bg-white border-r border-border flex-col shrink-0 min-h-screen sticky top-0">
+      <aside className="hidden md:flex w-64 bg-white border-r border-border flex-col shrink-0 h-screen sticky top-0">
         <div className="p-6 flex items-center gap-3 border-b border-border">
           <div className="w-8 h-8 rounded-lg bg-brand-pink text-white flex items-center justify-center">
             <ShieldCheck size={18} />

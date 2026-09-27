@@ -8,8 +8,8 @@ export async function PUT(request, { params }) {
     await connectDB();
     await requireAdmin(request);
     const { id } = await params;
-    const { status } = await request.json();
-    const order = await updateOrderStatus(id, status);
+    const body = await request.json();
+    const order = await updateOrderStatus(id, body);
     return NextResponse.json(order);
   } catch (err) {
     if (err instanceof Response) return err;

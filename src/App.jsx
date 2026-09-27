@@ -10,6 +10,7 @@ import Profile from './views/Profile';
 import Login from './views/Login';
 import Register from './views/Register';
 import Orders from './views/Orders';
+import OrderDetails from './views/OrderDetails';
 import ForgotPassword from './views/ForgotPassword';
 import ResetPassword from './views/ResetPassword';
 import FAQ from './views/FAQ';
@@ -26,6 +27,7 @@ import BlogPost from './views/BlogPost';
 import AdminLayout from './components/admin/AdminLayout';
 import AdminDashboard from './views/admin/AdminDashboard';
 import AdminProducts from './views/admin/AdminProducts';
+import AdminProductForm from './views/admin/AdminProductForm';
 import AdminOrders from './views/admin/AdminOrders';
 import AdminUsers from './views/admin/AdminUsers';
 import AdminCoupons from './views/admin/AdminCoupons';
@@ -58,6 +60,7 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="orders" element={<Orders />} />
+        <Route path="orders/:id" element={<OrderDetails />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="reset-password/:token" element={<ResetPassword />} />
         <Route path="faq" element={<FAQ />} />
@@ -78,6 +81,8 @@ function App() {
       <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
         <Route index element={<AdminDashboard />} />
         <Route path="products" element={<AdminProducts />} />
+        <Route path="products/new" element={<AdminProductForm />} />
+        <Route path="products/edit/:id" element={<AdminProductForm />} />
         <Route path="categories" element={<AdminCategories />} />
         <Route path="orders" element={<AdminOrders />} />
         <Route path="users" element={<AdminUsers />} />

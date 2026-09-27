@@ -32,6 +32,16 @@ const userSchema = new mongoose.Schema({
     zipCode: String,
     country: { type: String, default: 'India' },
   },
+  addresses: [{
+    fullName: String,
+    phone: String,
+    street: String,
+    city: String,
+    state: String,
+    pincode: String,
+    country: { type: String, default: 'India' },
+    isDefault: { type: Boolean, default: false }
+  }],
   avatar: {
     type: String,
     default: '',
@@ -58,4 +68,5 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-export default mongoose.models.User || mongoose.model('User', userSchema);
+delete mongoose.models.User;
+export default mongoose.model('User', userSchema);

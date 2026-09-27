@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  const value = { user, loading, login, googleLogin, completeGoogleSignup, logout };
+  const value = { user, setUser, loading, login, googleLogin, completeGoogleSignup, logout };
 
   return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
 };

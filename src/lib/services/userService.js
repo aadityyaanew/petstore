@@ -10,11 +10,13 @@ export const getUserProfile = async (userId) => {
 /**
  * Update user profile
  */
-export const updateUserProfile = async (userId, { name, address, currentPassword, newPassword }) => {
+export const updateUserProfile = async (userId, { name, address, addresses, phone, currentPassword, newPassword }) => {
   const user = await User.findById(userId);
 
   if (name) user.name = name;
+  if (phone) user.phone = phone;
   if (address) user.address = address;
+  if (addresses) user.addresses = addresses;
 
   if (currentPassword && newPassword) {
     const isMatch = await user.matchPassword(currentPassword);
@@ -31,8 +33,10 @@ export const updateUserProfile = async (userId, { name, address, currentPassword
     _id: user._id,
     name: user.name,
     email: user.email,
+    phone: user.phone,
     role: user.role,
     address: user.address,
+    addresses: user.addresses,
   };
 };
 

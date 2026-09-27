@@ -4,6 +4,9 @@ import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Minus, Plus, Trash2, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
+import { Skeleton } from '../components/ui/skeleton';
+
+import { getItemImageUrl } from '../components/ProductCard';
 
 const Cart = () => {
   const { cart, loading: cartLoading, updateCartItem, removeFromCart } = useCart();
@@ -33,8 +36,31 @@ const Cart = () => {
 
   if (cartLoading) {
     return (
-      <div className="flex justify-center py-20">
-        <div className="w-10 h-10 border-4 border-brand-pink/20 border-t-brand-pink rounded-full animate-spin" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+        <Skeleton className="h-10 w-48 mb-8" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-white rounded-2xl border border-border">
+                <Skeleton className="w-20 h-20 sm:w-28 sm:h-28 rounded-xl shrink-0" />
+                <div className="flex flex-col flex-1 gap-2 py-1">
+                  <div className="flex justify-between">
+                    <Skeleton className="h-5 w-1/2" />
+                    <Skeleton className="h-5 w-16" />
+                  </div>
+                  <Skeleton className="h-4 w-1/4" />
+                  <div className="mt-auto pt-3 flex justify-between">
+                    <Skeleton className="h-8 w-24 rounded-lg" />
+                    <Skeleton className="h-8 w-8 rounded-lg" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="lg:col-span-1">
+            <Skeleton className="h-[300px] w-full rounded-3xl" />
+          </div>
+        </div>
       </div>
     );
   }
@@ -52,8 +78,8 @@ const Cart = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-4">
             {cartItems.map((item) => {
-              const product = item.product || {};
-              const itemImage = product.images?.[0] || product.image || '/assets/asset-4cbbe7b6.jpeg';
+              const product = (typeof item.product === 'object' && item.product !== null) ? item.product : {};
+              const itemImage = getItemImageUrl(item);
               return (
                 <div key={item._id || product._id} className="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-white rounded-2xl border border-border shadow-sm">
                   <img 

@@ -10,6 +10,61 @@ import { useState } from 'react';
 
 const LOW_STOCK_THRESHOLD = 5;
 
+export const getProductImageUrl = (product) => {
+  if (!product) return 'https://placehold.co/400x400/f8f9fa/a1a1aa?text=No+Image';
+
+  const firstImg = product.images?.[0];
+
+  if (typeof firstImg === 'string' && firstImg !== '[object Object]') {
+    return firstImg.startsWith('http') || firstImg.startsWith('/') ? firstImg : `${BASE_URL}${firstImg}`;
+  }
+
+  if (typeof firstImg === 'object' && firstImg !== null) {
+    if (typeof firstImg.url === 'string' && firstImg.url !== '[object Object]') {
+      return firstImg.url.startsWith('http') || firstImg.url.startsWith('/') ? firstImg.url : `${BASE_URL}${firstImg.url}`;
+    }
+    const rawObj = firstImg._doc || firstImg;
+    const chars = Object.keys(rawObj)
+      .filter((k) => !isNaN(k))
+      .sort((a, b) => Number(a) - Number(b))
+      .map((k) => rawObj[k])
+      .join('');
+    if (chars && chars.length > 2) {
+      return chars.startsWith('http') || chars.startsWith('/') ? chars : `${BASE_URL}${chars}`;
+    }
+  }
+
+  if (typeof product.image === 'string' && product.image !== '[object Object]') {
+    return product.image.startsWith('http') || product.image.startsWith('/') ? product.image : `${BASE_URL}${product.image}`;
+  }
+
+  return 'https://placehold.co/400x400/f8f9fa/a1a1aa?text=No+Image';
+};
+
+export const getItemImageUrl = (item) => {
+  if (!item) return 'https://placehold.co/400x400/f8f9fa/a1a1aa?text=No+Image';
+
+  // 1. Populated product object
+  if (item.product && typeof item.product === 'object') {
+    const prodImg = getProductImageUrl(item.product);
+    if (prodImg && !prodImg.includes('No+Image')) return prodImg;
+  }
+
+  // 2. Direct item.image field (ignoring ObjectId strings)
+  const img = item.image;
+  if (typeof img === 'string' && img !== '[object Object]' && !img.match(/^[0-9a-fA-F]{24}$/)) {
+    return img.startsWith('http') || img.startsWith('/') ? img : `${BASE_URL}${img}`;
+  }
+
+  if (typeof img === 'object' && img !== null) {
+    if (typeof img.url === 'string' && img.url !== '[object Object]') {
+      return img.url.startsWith('http') || img.url.startsWith('/') ? img.url : `${BASE_URL}${img.url}`;
+    }
+  }
+
+  return 'https://placehold.co/400x400/f8f9fa/a1a1aa?text=No+Image';
+};
+
 const ProductCard = ({ product, onToast }) => {
   const navigate = useNavigate();
 
@@ -21,10 +76,7 @@ const ProductCard = ({ product, onToast }) => {
   const isOutOfStock = product?.stock === 0;
   const isLowStock = product?.stock > 0 && product?.stock <= (product?.lowStockThreshold ?? LOW_STOCK_THRESHOLD);
 
-  const rawImage = product?.images?.[0] || product?.image || '/assets/asset-4cbbe7b6.jpeg';
-  const imageUrl = rawImage.startsWith('http') || rawImage.startsWith('/')
-    ? rawImage
-    : `${BASE_URL}${rawImage}`;
+  const imageUrl = getProductImageUrl(product);
 
   const handleAddToCart = async (e) => {
     e.stopPropagation();
@@ -54,8 +106,8 @@ const ProductCard = ({ product, onToast }) => {
     <div
       onClick={() => navigate(`/product/${productId}`)}
       className={cn(
-        "group relative flex flex-col bg-[#F8F9FA] rounded-3xl border border-gray-100 p-4 sm:p-5 transition-all duration-300 cursor-pointer",
-        "hover:-translate-y-1.5 hover:shadow-xl hover:border-gray-200",
+        "group relative flex flex-col bg-card rounded-xl p-4 transition-all duration-300 cursor-pointer",
+        "border border-border hover:border-primary/50 hover:shadow-md",
         isOutOfStock && "opacity-80"
       )}
     >
@@ -66,7 +118,7 @@ const ProductCard = ({ product, onToast }) => {
             Out of Stock
           </Badge>
         ) : isLowStock ? (
-          <Badge className="bg-[#E050D0] text-white text-[10px] font-bold rounded-full">
+          <Badge className="bg-primary text-primary-foreground text-[10px] font-bold rounded-full">
             Only {product.stock} left!
           </Badge>
         ) : product.isNew ? (
@@ -78,13 +130,12 @@ const ProductCard = ({ product, onToast }) => {
 
 
       {/* Image Area */}
-      <div className="relative overflow-hidden rounded-2xl bg-white aspect-square flex items-center justify-center mb-3">
+      <div className="relative overflow-hidden rounded-lg bg-muted/30 aspect-square flex items-center justify-center mb-4 transition-colors duration-300">
         <img
           src={imageUrl}
           alt={product.title || product.name}
           className={cn(
-            "w-full h-full object-cover transition-transform duration-500",
-            !isOutOfStock && "group-hover:scale-105",
+            "w-full h-full object-cover",
             isOutOfStock && "grayscale-[30%]"
           )}
         />
@@ -96,21 +147,21 @@ const ProductCard = ({ product, onToast }) => {
       </div>
 
       {/* Title & Category */}
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 px-1">
         {product.category && (
-          <span className="text-[11px] font-bold text-[#E050D0] uppercase tracking-wider mb-1">
+          <span className="text-[10px] sm:text-[11px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">
             {product.category}
           </span>
         )}
-        <h3 className="font-bold text-sm sm:text-base text-gray-900 line-clamp-2 leading-snug group-hover:text-[#E050D0] transition-colors mb-2">
+        <h3 className="font-semibold text-sm sm:text-[15px] text-foreground line-clamp-2 leading-tight group-hover:text-primary transition-colors mb-3">
           {product.title || product.name}
         </h3>
       </div>
 
       {/* Price & Action Row */}
-      <div className="pt-2 flex items-center justify-between border-t border-gray-200/60 mt-auto">
+      <div className="pt-3 px-1 flex items-center justify-between border-t border-border mt-auto">
         <div>
-          <span className="text-base sm:text-lg font-extrabold text-gray-900">
+          <span className="text-base sm:text-lg font-bold text-foreground tracking-tight">
             ₹{(product.price || 0).toFixed(2)}
           </span>
         </div>
@@ -119,10 +170,10 @@ const ProductCard = ({ product, onToast }) => {
           onClick={handleAddToCart}
           disabled={isOutOfStock}
           className={cn(
-            "px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-1.5 shadow-sm",
+            "px-4 py-2 rounded-md text-xs font-semibold transition-all duration-300 flex items-center gap-1.5 shadow-sm",
             isOutOfStock
-              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-              : "bg-black hover:bg-neutral-800 active:scale-95 text-white cursor-pointer"
+              ? "bg-muted text-muted-foreground cursor-not-allowed"
+              : "bg-primary hover:bg-primary/90 active:scale-95 text-primary-foreground cursor-pointer hover:shadow-md"
           )}
         >
           <ShoppingCart size={13} />

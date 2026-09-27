@@ -6,181 +6,13 @@ import { ChevronLeft, ChevronRight, Heart, SlidersHorizontal, X, ArrowRight, Che
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
+import ProductCard, { getProductImageUrl } from '../components/ProductCard';
 import { cn } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const BIRD_TYPES = [
-  { id: 'parrot', name: 'Parrot', image: '/assets/birds/parrot.jpg' },
-  { id: 'cockatiel', name: 'Cockatiel', image: '/assets/birds/cockatiel.jpg' },
-  { id: 'budgie', name: 'Budgie', image: '/assets/birds/budgie.jpg' },
-  { id: 'conure', name: 'Sun Conure', image: '/assets/birds/conure.jpg' },
-  { id: 'lovebird', name: 'Lovebird', image: '/assets/birds/lovebird.jpg' },
-  { id: 'canary', name: 'Canary', image: '/assets/birds/canary.jpg' },
-];
-
-const CATEGORIES_FILTER = [
-  { id: 'Furniture', label: 'Furniture', count: 27 },
-  { id: 'Bowls', label: 'Bowls & Feeders', count: 20 },
-  { id: 'Clothing', label: 'Accessories', count: 18 },
-  { id: 'Food', label: 'Food & Nutrition', count: 20 },
-  { id: 'Toys', label: 'Toys & Gyms', count: 8 },
-  { id: 'Sale', label: 'Sale', count: 12 },
-];
+// Dynamic filters will be computed from the database in the component
 
 
-
-const FILTER_TAGS = ['Bird stands', 'Wooden toys', 'Natural wood', 'Parrot', 'Small pets', 'Chew toys'];
-
-const POPULAR_SIDEBAR_PRODUCTS = [
-  { id: 'pop-1', name: 'Ring Puzzle Game', price: 14.99, image: '/assets/asset-bff48261.jpeg' },
-  { id: 'pop-2', name: 'Pine Play Gym Stand', price: 34.99, image: '/assets/asset-4cbbe7b6.jpeg' },
-  { id: 'pop-3', name: 'Beaded Perch Swing', price: 12.99, image: '/assets/asset-6ebb9cd6.jpeg' },
-  { id: 'pop-4', name: 'Tabletop Gym & Feeder', price: 29.99, image: '/assets/asset-fcc4ef82.jpeg' },
-  { id: 'pop-5', name: 'Natural T-Perch Set', price: 18.50, image: '/assets/asset-675fd014.jpeg' },
-];
-
-const SHOP_CATALOG = [
-  {
-    id: 'prod-1',
-    name: 'Tabletop Wooden Play Gym',
-    price: 34.99,
-    category: 'Toys',
-    pet: 'parrot',
-    brand: 'Poonch',
-    tags: ['Bird stands', 'Natural wood'],
-    image: '/assets/asset-4cbbe7b6.jpeg',
-  },
-  {
-    id: 'prod-2',
-    name: 'Multi-Perch Gym with Feeder Cup',
-    price: 29.99,
-    category: 'Bowls',
-    pet: 'parrot',
-    brand: 'Poonch',
-    tags: ['Bird stands', 'Parrot'],
-    image: '/assets/asset-fcc4ef82.jpeg',
-  },
-  {
-    id: 'prod-3',
-    name: 'Natural Pine Ring Toss Game',
-    price: 14.99,
-    category: 'Toys',
-    pet: 'parrot',
-    brand: 'Natural Pine',
-    tags: ['Wooden toys', 'Small pets'],
-    image: '/assets/asset-bff48261.jpeg',
-  },
-  {
-    id: 'prod-4',
-    name: 'Beaded Arch Swing with Brass Bells',
-    price: 12.99,
-    category: 'Toys',
-    pet: 'parrot',
-    brand: 'Poonch',
-    tags: ['Wooden toys', 'Parrot'],
-    image: '/assets/asset-6ebb9cd6.jpeg',
-  },
-  {
-    id: 'prod-5',
-    name: 'Natural Wood T-Perch Set (3 Pcs)',
-    price: 18.50,
-    category: 'Furniture',
-    pet: 'parrot',
-    brand: 'Natural Pine',
-    tags: ['Natural wood', 'Bird stands'],
-    image: '/assets/asset-675fd014.jpeg',
-  },
-  {
-    id: 'prod-6',
-    name: 'Stainless Chain Hanging Swing',
-    price: 15.99,
-    category: 'Toys',
-    pet: 'parrot',
-    brand: 'Poonch',
-    tags: ['Wooden toys', 'Parrot'],
-    image: '/assets/asset-6763452a.jpeg',
-  },
-  {
-    id: 'prod-7',
-    name: 'Solid Pine Climbing Ladder',
-    price: 16.99,
-    category: 'Toys',
-    pet: 'parrot',
-    brand: 'EcoWood',
-    tags: ['Wooden toys', 'Natural wood'],
-    image: '/assets/asset-8929307d.jpeg',
-  },
-  {
-    id: 'prod-8',
-    name: 'Compact Tabletop Activity Bridge',
-    price: 13.99,
-    category: 'Furniture',
-    pet: 'hamster',
-    brand: 'Natural Pine',
-    tags: ['Small pets', 'Natural wood'],
-    image: '/assets/asset-e78dd216.jpeg',
-  },
-  {
-    id: 'prod-9',
-    name: 'Brain Game Training Base',
-    price: 19.44,
-    category: 'Toys',
-    pet: 'parrot',
-    brand: 'Poonch',
-    tags: ['Wooden toys', 'Chew toys'],
-    image: '/assets/asset-70343c4c.jpeg',
-  },
-  {
-    id: 'prod-10',
-    name: 'Multi-Level Activity Gym Stand',
-    price: 38.00,
-    category: 'Furniture',
-    pet: 'parrot',
-    brand: 'Poonch',
-    tags: ['Bird stands', 'Parrot'],
-    image: '/assets/asset-7cf3d705.jpeg',
-  },
-  {
-    id: 'prod-11',
-    name: 'Handcrafted Woolen Pet Collar',
-    price: 19.11,
-    category: 'Clothing',
-    pet: 'cat',
-    brand: 'Pet Spot',
-    tags: ['Small pets', 'Cat'],
-    image: '/assets/categories/accessories.jpg',
-  },
-  {
-    id: 'prod-12',
-    name: 'Breathable Travel Pet Carrier',
-    price: 45.00,
-    category: 'Furniture',
-    pet: 'dog',
-    brand: 'Green Line',
-    tags: ['Small pets'],
-    image: '/assets/categories/bags.jpg',
-  },
-  // Page 2 Products
-  {
-    id: 'prod-13',
-    name: 'Curious Bird Ring Intelligence Game',
-    price: 16.50,
-    category: 'Toys',
-    pet: 'parrot',
-    brand: 'Poonch',
-    tags: ['Wooden toys'],
-    image: '/assets/asset-b7038046.jpeg',
-  },
-  {
-    id: 'prod-14',
-    name: 'All-in-One Training & Gym Station',
-    price: 42.00,
-    category: 'Furniture',
-    pet: 'parrot',
-    brand: 'Poonch',
-    tags: ['Bird stands'],
-    image: '/assets/asset-bafedd16.jpeg',
-  },
-];
 
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -197,12 +29,33 @@ export default function Products() {
   const [dbProducts, setDbProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Dynamic Filters Computed from dbProducts
+  const dynamicCategories = useMemo(() => {
+    const cats = {};
+    dbProducts.forEach(p => {
+      if (p.category) {
+        cats[p.category] = (cats[p.category] || 0) + 1;
+      }
+    });
+    return Object.keys(cats).map(cat => ({ id: cat, label: cat, count: cats[cat] })).sort((a, b) => b.count - a.count);
+  }, [dbProducts]);
+
+  const dynamicTags = useMemo(() => {
+    const tagSet = new Set();
+    dbProducts.forEach(p => {
+      if (Array.isArray(p.tags)) {
+        p.tags.forEach(t => tagSet.add(t));
+      }
+    });
+    return Array.from(tagSet).sort();
+  }, [dbProducts]);
+
   // Filters State
-  const [selectedPet, setSelectedPet] = useState(initialCategory.toLowerCase() || 'parrot');
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedPet, setSelectedPet] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState(initialCategory ? [initialCategory] : []);
 
   const [selectedTags, setSelectedTags] = useState([]);
-  const [priceRange, setPriceRange] = useState(159);
+  const [priceRange, setPriceRange] = useState(1000);
   const [sortBy, setSortBy] = useState('latest');
   const [currentPage, setCurrentPage] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -226,12 +79,7 @@ export default function Products() {
     fetchProductsData();
   }, []);
 
-  useEffect(() => {
-    if (initialCategory) {
-      const matchPet = BIRD_TYPES.find((p) => p.name.toLowerCase() === initialCategory.toLowerCase());
-      if (matchPet) setSelectedPet(matchPet.id);
-    }
-  }, [initialCategory]);
+
 
   const scrollPet = (direction) => {
     if (petScrollRef.current) {
@@ -277,7 +125,7 @@ export default function Products() {
 
   // Filtered & Sorted Products from Database or Fallback
   const filteredProducts = useMemo(() => {
-    const source = dbProducts.length > 0 ? dbProducts : SHOP_CATALOG;
+    const source = dbProducts;
     return source.filter((p) => {
       const pName = p.name || p.title || '';
       const pCat = p.category || '';
@@ -360,39 +208,40 @@ export default function Products() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start relative">
 
           {/* ── LEFT SIDEBAR FILTERS (Desktop) ── */}
-          <aside className="hidden md:block md:col-span-4 lg:col-span-3 space-y-8 pr-2">
+          <aside className="hidden md:block md:col-span-4 lg:col-span-3 space-y-8 pr-4 sticky top-24 self-start">
 
             {/* 1. Filter by categories */}
             <div>
-              <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-4">
-                Filter by categories
+              <h3 className="text-sm font-bold text-foreground mb-4 border-b pb-2">
+                Categories
               </h3>
               <div className="space-y-2.5">
-                {CATEGORIES_FILTER.map((cat) => {
+                {dynamicCategories.length === 0 && <p className="text-xs text-muted-foreground">No categories found.</p>}
+                {dynamicCategories.map((cat) => {
                   const checked = selectedCategories.includes(cat.id);
                   return (
                     <label
                       key={cat.id}
                       onClick={() => handleCategoryToggle(cat.id)}
-                      className="flex items-center justify-between text-xs sm:text-sm text-gray-600 hover:text-gray-900 cursor-pointer select-none group"
+                      className="flex items-center justify-between text-sm text-muted-foreground hover:text-foreground cursor-pointer select-none group"
                     >
                       <div className="flex items-center gap-2.5">
                         <div
                           className={cn(
-                            "w-4 h-4 rounded border flex items-center justify-center transition-colors",
+                            "w-4 h-4 rounded-sm border flex items-center justify-center transition-colors",
                             checked
-                              ? "bg-[#E050D0] border-[#E050D0] text-white"
-                              : "border-gray-300 group-hover:border-[#E050D0]"
+                              ? "bg-primary border-primary text-primary-foreground"
+                              : "border-input group-hover:border-primary"
                           )}
                         >
-                          {checked && <Check size={11} strokeWidth={3} />}
+                          {checked && <Check size={12} strokeWidth={3} />}
                         </div>
                         <span>{cat.label}</span>
                       </div>
-                      <span className="text-[#E050D0] font-semibold text-xs">
+                      <span className="text-muted-foreground text-xs bg-secondary px-2 py-0.5 rounded-full">
                         {cat.count}
                       </span>
                     </label>
@@ -403,27 +252,27 @@ export default function Products() {
 
             {/* 2. Filter by Price */}
             <div>
-              <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-4">
-                Filter by Price
+              <h3 className="text-sm font-bold text-foreground mb-4 border-b pb-2">
+                Max Price
               </h3>
               <input
                 type="range"
                 min={1}
-                max={159}
+                max={1000}
                 value={priceRange}
                 onChange={(e) => {
                   setPriceRange(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#E050D0]"
+                className="w-full h-1.5 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
               />
               <div className="flex items-center justify-between mt-3">
-                <span className="text-xs font-semibold text-gray-500">
-                  Price: ₹1 - ₹{priceRange}
+                <span className="text-xs font-semibold text-muted-foreground">
+                  ₹1 - ₹{priceRange}
                 </span>
                 <button
                   onClick={() => setCurrentPage(1)}
-                  className="bg-black hover:bg-neutral-800 text-white text-[11px] font-bold px-3.5 py-1 rounded-full shadow-sm transition-all cursor-pointer"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-medium px-3 py-1 rounded-md transition-colors cursor-pointer"
                 >
                   Apply
                 </button>
@@ -431,23 +280,24 @@ export default function Products() {
             </div>
 
 
-            {/* 4. Filter by tags */}
+            {/* 3. Filter by tags */}
             <div>
-              <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-3">
-                Filter by tags
+              <h3 className="text-sm font-bold text-foreground mb-3 border-b pb-2">
+                Tags
               </h3>
               <div className="flex flex-wrap gap-2">
-                {FILTER_TAGS.map((tag) => {
+                {dynamicTags.length === 0 && <p className="text-xs text-muted-foreground">No tags found.</p>}
+                {dynamicTags.map((tag) => {
                   const active = selectedTags.includes(tag);
                   return (
                     <button
                       key={tag}
                       onClick={() => handleTagToggle(tag)}
                       className={cn(
-                        "text-xs font-semibold px-3 py-1 rounded-full border transition-all cursor-pointer",
+                        "text-xs font-medium px-3 py-1 rounded-md border transition-colors cursor-pointer",
                         active
-                          ? "bg-[#E050D0] text-white border-[#E050D0] shadow-sm"
-                          : "bg-white text-gray-600 border-gray-200 hover:border-[#E050D0] hover:text-[#E050D0]"
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "bg-background text-muted-foreground border-input hover:border-primary hover:text-primary"
                       )}
                     >
                       {tag}
@@ -457,33 +307,36 @@ export default function Products() {
               </div>
             </div>
 
-            {/* 5. Popular products (Real Images) */}
+            {/* 4. Popular products (Real Images) */}
             <div>
-              <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-4">
+              <h3 className="text-sm font-bold text-foreground mb-4 border-b pb-2">
                 Popular products
               </h3>
               <div className="space-y-3.5">
-                {(dbProducts.length > 0 ? dbProducts.slice(0, 5) : POPULAR_SIDEBAR_PRODUCTS).map((prod) => {
+                {dbProducts.slice(0, 5).map((prod) => {
                   const pid = prod._id || prod.id;
-                  const imageSrc = prod.images?.[0] || prod.image || '/assets/asset-bff48261.jpeg';
+                  const firstImg = prod.images?.[0];
+                  const rawImage = (typeof firstImg === 'object' && firstImg !== null ? firstImg?.url : firstImg) || prod.image;
+                  const finalImage = (rawImage && rawImage !== '[object Object]') ? rawImage : '/assets/placeholder-product.png';
+                  const imageSrc = finalImage.startsWith('http') || finalImage.startsWith('/') ? finalImage : `${BASE_URL}${finalImage}`;
                   return (
                     <div
                       key={pid}
                       onClick={() => navigate(`/product/${pid}`)}
                       className="flex items-center gap-3 group cursor-pointer"
                     >
-                      <div className="w-12 h-12 rounded-xl bg-white border border-gray-100 overflow-hidden shrink-0 group-hover:border-[#E050D0]/30 transition-colors p-1">
+                      <div className="w-12 h-12 rounded-md bg-background border border-input overflow-hidden shrink-0 transition-colors p-0.5">
                         <img
                           src={imageSrc}
                           alt={prod.name}
-                          className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform"
+                          className="w-full h-full object-cover rounded-sm group-hover:scale-105 transition-transform"
                         />
                       </div>
                       <div>
-                        <h4 className="text-xs font-bold text-gray-900 group-hover:text-[#E050D0] transition-colors leading-tight line-clamp-1">
+                        <h4 className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors leading-tight line-clamp-1">
                           {prod.name}
                         </h4>
-                        <p className="text-xs font-extrabold text-gray-900 mt-0.5">
+                        <p className="text-xs font-bold text-muted-foreground mt-0.5">
                           ₹{(prod.price || 0).toFixed(2)}
                         </p>
                       </div>
@@ -512,24 +365,24 @@ export default function Products() {
 
                 {/* Categories */}
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#E050D0] mb-2.5">Categories</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-foreground mb-2.5">Categories</h4>
                   <div className="space-y-1.5">
-                    {CATEGORIES_FILTER.map((c) => {
+                    {dynamicCategories.map((c) => {
                       const checked = selectedCategories.includes(c.id);
                       return (
                         <div
                           key={c.id}
                           onClick={() => handleCategoryToggle(c.id)}
                           className={cn(
-                            "flex items-center justify-between text-xs py-1.5 px-2.5 rounded-lg cursor-pointer transition-colors",
-                            checked ? "bg-[#E050D0]/10 text-[#E050D0] font-bold" : "text-gray-700 hover:bg-gray-50"
+                            "flex items-center justify-between text-xs py-1.5 px-2.5 rounded-md cursor-pointer transition-colors",
+                            checked ? "bg-primary/10 text-primary font-bold" : "text-muted-foreground hover:bg-secondary"
                           )}
                         >
                           <span className="flex items-center gap-2">
                             {checked && <Check size={12} strokeWidth={3} />}
                             {c.label}
                           </span>
-                          <span className="text-[11px] font-semibold opacity-75">{c.count}</span>
+                          <span className="text-[11px] font-semibold bg-secondary px-1.5 rounded-sm">{c.count}</span>
                         </div>
                       );
                     })}
@@ -539,39 +392,39 @@ export default function Products() {
                 {/* Price Slider */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#E050D0]">Price Range</h4>
-                    <span className="text-xs font-bold text-gray-800">₹{priceRange}</span>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-foreground">Price Range</h4>
+                    <span className="text-xs font-bold text-muted-foreground">₹{priceRange}</span>
                   </div>
                   <input
                     type="range"
                     min={1}
-                    max={159}
+                    max={1000}
                     value={priceRange}
                     onChange={(e) => setPriceRange(Number(e.target.value))}
-                    className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#E050D0]"
+                    className="w-full h-1.5 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
                   />
-                  <div className="flex justify-between text-[10px] text-gray-400 mt-1">
+                  <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
                     <span>₹1</span>
-                    <span>₹159</span>
+                    <span>₹1000</span>
                   </div>
                 </div>
 
 
                 {/* Tags */}
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#E050D0] mb-2">Tags</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-foreground mb-2">Tags</h4>
                   <div className="flex flex-wrap gap-1.5">
-                    {FILTER_TAGS.map((tag) => {
+                    {dynamicTags.map((tag) => {
                       const active = selectedTags.includes(tag);
                       return (
                         <button
                           key={tag}
                           onClick={() => handleTagToggle(tag)}
                           className={cn(
-                            "text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-all cursor-pointer",
+                            "text-[11px] font-medium px-2.5 py-1 rounded-md border transition-colors cursor-pointer",
                             active
-                              ? "bg-[#E050D0] text-white border-[#E050D0]"
-                              : "bg-gray-50 text-gray-600 border-gray-200"
+                              ? "bg-primary text-primary-foreground border-primary"
+                              : "bg-background text-muted-foreground border-input"
                           )}
                         >
                           {tag}
@@ -630,62 +483,73 @@ export default function Products() {
             </div>
 
             {/* 2-3 Columns Grid using REAL Asset Photography */}
-            {paginatedProducts.length === 0 ? (
-              <div className="text-center py-16 sm:py-20 bg-[#F9FAFB] rounded-3xl border border-gray-100">
+            {loading ? (
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+                {Array.from({ length: 6 }).map((_, idx) => (
+                  <div key={idx} className="bg-card rounded-lg p-3 sm:p-5 border shadow-sm relative group flex flex-col justify-between">
+                    <Skeleton className="w-full aspect-square rounded-md mb-3" />
+                    <div className="pt-2 flex flex-col justify-between border-t border-border/50 gap-2">
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-4 w-1/4" />
+                    </div>
+                    <div className="mt-3">
+                      <Skeleton className="h-9 w-full rounded-md" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : paginatedProducts.length === 0 ? (
+              <div className="text-center py-16 sm:py-20 bg-muted/30 rounded-xl border border-border">
 
-                <h3 className="font-extrabold text-base text-gray-900 mb-1">No products match your filters</h3>
-                <p className="text-xs text-gray-500 mb-4">Try clearing some filters to see more items.</p>
+                <h3 className="font-semibold text-base text-foreground mb-1">No products match your filters</h3>
+                <p className="text-xs text-muted-foreground mb-4">Try clearing some filters to see more items.</p>
                 <button
                   onClick={() => {
                     setSelectedCategories([]);
                     setSelectedTags([]);
-                    setPriceRange(159);
+                    setPriceRange(1000);
                     setSelectedPet('');
                   }}
-                  className="text-xs font-bold text-[#E050D0] hover:underline"
+                  className="text-xs font-medium text-primary hover:underline"
                 >
                   Reset all filters
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 {paginatedProducts.map((prod) => {
                   const pid = prod._id || prod.id;
-
-                  const imageSrc = prod.images?.[0] || prod.image || '/assets/asset-4cbbe7b6.jpeg';
+                  const imageSrc = getProductImageUrl(prod);
                   return (
                     <div
                       key={pid}
                       onClick={() => navigate(`/product/${pid}`)}
-                      className="bg-[#F8F9FA] rounded-[20px] sm:rounded-[28px] p-3 xs:p-4 sm:p-6 border border-gray-100/90 relative group flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 cursor-pointer"
+                      className="bg-card rounded-lg p-3 sm:p-5 border shadow-sm relative group flex flex-col justify-between transition-all duration-300 hover:shadow-md cursor-pointer"
                     >
                       {/* Product Real Photo Area */}
-                      <div className="py-2 sm:py-4 flex items-center justify-center aspect-square bg-white rounded-2xl overflow-hidden p-2 mb-2 sm:mb-3">
+                      <div className="py-2 sm:py-4 flex items-center justify-center aspect-square bg-white rounded-md overflow-hidden mb-3">
                         <img
                           src={imageSrc}
                           alt={prod.name}
-                          className="w-full h-full object-cover transform group-hover:scale-108 transition-transform duration-500"
+                          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                         />
                       </div>
 
                       {/* Footer: Title + Price on left, Wishlist Heart on right */}
-                      <div className="pt-2 sm:pt-3 flex items-end justify-between border-t border-gray-200/50">
-                        <div className="pr-1">
-                          <h3 className="font-bold text-xs sm:text-sm text-gray-900 group-hover:text-[#E050D0] transition-colors leading-tight mb-0.5 sm:mb-1 line-clamp-1">
-                            {prod.name}
-                          </h3>
-                          <p className="font-extrabold text-xs sm:text-sm text-gray-900">
-                            ₹{(prod.price || 0).toFixed(2)}
-                          </p>
-                        </div>
-
+                      <div className="pt-2 flex flex-col justify-between border-t border-border/50">
+                        <h3 className="font-medium text-sm text-foreground group-hover:text-primary transition-colors leading-tight mb-1 line-clamp-1">
+                          {prod.name}
+                        </h3>
+                        <p className="font-bold text-sm text-foreground">
+                          ₹{(prod.price || 0).toFixed(2)}
+                        </p>
                       </div>
 
-                      {/* Quick Add (Visible on Mobile Touch, Hover on Desktop) */}
-                      <div className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 mt-2">
+                      {/* Quick Add */}
+                      <div className="mt-3">
                         <button
                           onClick={(e) => handleQuickAdd(prod, e)}
-                          className="w-full py-1.5 sm:py-2 rounded-full bg-black hover:bg-neutral-800 text-white text-[10px] sm:text-[11px] font-bold transition-all shadow-sm active:scale-95 cursor-pointer"
+                          className="w-full py-2 rounded-md bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-medium transition-colors shadow-sm active:scale-95 cursor-pointer"
                         >
                           Add to Cart
                         </button>

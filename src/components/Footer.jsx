@@ -63,42 +63,8 @@ const SOCIAL_ICONS = [
 
 export default function Footer() {
   return (
-    <footer className="relative bg-[#FAFBFD] text-gray-800 pt-12 sm:pt-16 pb-28 md:pb-14 border-t border-gray-100 overflow-hidden selection:bg-[#E050D0]/20 selection:text-[#E050D0]">
-      {/* ── BACKGROUND SCATTERED FEATHER WATERMARKS (Avian Theme) ── */}
-      <div className="absolute inset-0 pointer-events-none select-none overflow-hidden opacity-[0.06] z-0">
-        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <g id="footerFeather">
-              <path
-                d="M14 2 C10 6, 4 14, 4 22 C4 28, 8 33, 14 36 C20 33, 24 28, 24 22 C24 14, 18 6, 14 2 Z"
-                fill="#111827"
-              />
-              <path
-                d="M14 2 L14 38"
-                stroke="#111827"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-              />
-            </g>
-          </defs>
-          <use href="#footerFeather" x="40" y="50" transform="rotate(-15 40 50) scale(1.1)" />
-          <use href="#footerFeather" x="180" y="160" transform="rotate(25 180 160) scale(1.4)" />
-          <use href="#footerFeather" x="340" y="40" transform="rotate(-10 340 40) scale(0.9)" />
-          <use href="#footerFeather" x="500" y="180" transform="rotate(18 500 180) scale(1.2)" />
-          <use href="#footerFeather" x="720" y="60" transform="rotate(-20 720 60) scale(1.0)" />
-          <use href="#footerFeather" x="900" y="140" transform="rotate(30 900 140) scale(1.3)" />
-          <use href="#footerFeather" x="1100" y="70" transform="rotate(-12 1100 70) scale(1.1)" />
-          <use href="#footerFeather" x="1250" y="180" transform="rotate(15 1250 180) scale(1.0)" />
-        </svg>
-      </div>
-
-      {/* ── BOTTOM-RIGHT DECORATIVE ORGANIC PINK BLOB (Image 1 Mockup) ── */}
-      <div
-        className="pointer-events-none absolute -bottom-14 -right-14 w-48 h-48 sm:w-60 sm:h-60 rounded-[55%_45%_50%_50%] bg-[#E050D0] opacity-90 z-0"
-        aria-hidden="true"
-      />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <footer className="bg-background text-foreground pt-12 sm:pt-16 pb-28 md:pb-14 border-t border-border">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 sm:gap-8 mb-12 sm:mb-14">
 
           {/* Column 1 & 2: Brand Info + Mission Statement + Round Socials */}
@@ -107,22 +73,22 @@ export default function Footer() {
               <img
                 src="/logo.jpeg"
                 alt="Poonch Pet Store"
-                className="w-10 h-10 rounded-full object-cover ring-2 ring-[#E050D0]/30 group-hover:ring-[#E050D0] transition-all"
+                className="w-10 h-10 rounded-full object-cover ring-2 ring-primary/20 group-hover:ring-primary transition-all"
               />
-              <span className="font-extrabold text-xl text-gray-900 tracking-tight">
+              <span className="font-[family-name:var(--font-lora)] font-bold text-xl text-foreground tracking-tight">
                 Poonch Pet Store
               </span>
             </Link>
 
-            <span className="text-[11px] font-bold text-[#E050D0] bg-[#E050D0]/10 px-2.5 py-0.5 rounded-full inline-block mb-3">
+            <span className="text-[11px] font-bold text-primary bg-primary/10 px-2.5 py-0.5 rounded-md inline-block mb-3">
               Safe Play, Happy Tails &amp; Feathered Friends.
             </span>
 
-            <p className="text-xs sm:text-sm text-gray-500 leading-relaxed max-w-sm mb-6">
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-sm mb-6">
               Poonch Pet Store is dedicated to delivering safe, non-toxic, and engaging accessories designed to enrich the lives of pets and their humans.
             </p>
 
-            {/* Social Icons (Round dark badges matching mockup) */}
+            {/* Social Icons */}
             <div className="flex items-center gap-2.5">
               {SOCIAL_ICONS.map((s) => (
                 <a
@@ -131,7 +97,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.name}
-                  className="w-8 h-8 rounded-full bg-gray-900 text-white flex items-center justify-center hover:bg-[#E050D0] transition-all duration-200 transform hover:scale-105 shadow-sm"
+                  className="w-8 h-8 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all duration-200 transform hover:scale-105 shadow-sm"
                 >
                   {s.icon}
                 </a>
@@ -141,13 +107,13 @@ export default function Footer() {
 
           {/* Column 3: Company */}
           <div>
-            <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-4">
+            <h3 className="text-xs sm:text-sm font-bold text-foreground mb-4">
               Company
             </h3>
             <ul className="space-y-2.5">
               {COMPANY_LINKS.map((l) => (
                 <li key={l.label}>
-                  <Link to={l.to} className="text-xs sm:text-sm text-gray-500 hover:text-[#E050D0] transition-colors">
+                  <Link to={l.to} className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
                     {l.label}
                   </Link>
                 </li>
@@ -157,13 +123,13 @@ export default function Footer() {
 
           {/* Column 4: Useful links */}
           <div>
-            <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-4">
+            <h3 className="text-xs sm:text-sm font-bold text-foreground mb-4">
               Useful links
             </h3>
             <ul className="space-y-2.5">
               {USEFUL_LINKS.map((l) => (
                 <li key={l.label}>
-                  <Link to={l.to} className="text-xs sm:text-sm text-gray-500 hover:text-[#E050D0] transition-colors">
+                  <Link to={l.to} className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
                     {l.label}
                   </Link>
                 </li>
@@ -173,13 +139,13 @@ export default function Footer() {
 
           {/* Column 5: Customer Service */}
           <div>
-            <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-4">
+            <h3 className="text-xs sm:text-sm font-bold text-foreground mb-4">
               Customer Service
             </h3>
             <ul className="space-y-2.5">
               {CUSTOMER_SERVICE_LINKS.map((l) => (
                 <li key={l.label}>
-                  <Link to={l.to} className="text-xs sm:text-sm text-gray-500 hover:text-[#E050D0] transition-colors">
+                  <Link to={l.to} className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
                     {l.label}
                   </Link>
                 </li>
@@ -189,20 +155,20 @@ export default function Footer() {
 
           {/* Column 6: Store */}
           <div>
-            <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-4">
+            <h3 className="text-xs sm:text-sm font-bold text-foreground mb-4">
               Store Location
             </h3>
-            <ul className="space-y-3 text-xs sm:text-sm text-gray-500">
+            <ul className="space-y-3 text-xs sm:text-sm text-muted-foreground">
               <li className="leading-snug">
                 123 Pet Care Way, Suite A, City, State, ZIP
               </li>
               <li>
-                <a href="tel:+18001234567" className="hover:text-[#E050D0] transition-colors font-medium">
+                <a href="tel:+18001234567" className="hover:text-primary transition-colors font-medium">
                   +1 (800) 123-4567
                 </a>
               </li>
               <li>
-                <a href="mailto:support@poonchpetstore.com" className="hover:text-[#E050D0] transition-colors font-medium">
+                <a href="mailto:support@poonchpetstore.com" className="hover:text-primary transition-colors font-medium">
                   support@poonchpetstore.com
                 </a>
               </li>
@@ -212,10 +178,18 @@ export default function Footer() {
         </div>
 
         {/* ── BOTTOM ROW: Copyright & Payment Badges ── */}
-        <div className="border-t border-gray-200/80 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-gray-400">
-          <p>
-            © copyright Poonch Pet Store. 2026.
+        <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-xs text-muted-foreground font-medium">
+            © {new Date().getFullYear()} Poonch Pet Store. All rights reserved.
           </p>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground font-medium mr-2">Secure Payments:</span>
+            <img
+              src="/assets/payment-method-69e7ec.svg"
+              alt="Accepted Payment Methods: UPI, Visa, Mastercard, RuPay"
+              className="h-4 object-contain"
+            />
+          </div>
         </div>
       </div>
     </footer>

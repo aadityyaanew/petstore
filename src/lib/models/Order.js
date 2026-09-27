@@ -48,10 +48,12 @@ const orderSchema = new mongoose.Schema({
   razorpaySignature: { type: String },
   status: {
     type: String,
-    enum: ['processing', 'confirmed', 'shipped', 'delivered', 'cancelled'],
-    default: 'processing',
+    enum: ['Pending', 'Processing', 'Packed', 'Shipped', 'Out for Delivery', 'Delivered', 'Returned', 'Cancelled', 'processing', 'confirmed', 'shipped', 'delivered', 'cancelled'],
+    default: 'Pending',
   },
+  courierPartner: { type: String, default: '' },
+  trackingLink: { type: String, default: '' },
   deliveredAt: Date,
 }, { timestamps: true });
-
-export default mongoose.models.Order || mongoose.model('Order', orderSchema);
+delete mongoose.models.Order;
+export default mongoose.model('Order', orderSchema);

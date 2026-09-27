@@ -1,11 +1,13 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Heart, ArrowRight, Star, Quote } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Heart, ArrowRight, Star, Quote, ShoppingCart, Bird, Leaf } from 'lucide-react';
 import BrandPartners from '../components/BrandPartners';
+import ProductCard from '../components/ProductCard';
 import api, { BASE_URL } from '../services/api';
 import { useCart } from '../context/CartContext';
 import { cn } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const CATEGORIES_DATA = [
   {
@@ -164,14 +166,19 @@ export default function Home() {
   const [currentBanner, setCurrentBanner] = useState(0);
   const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [bestSellingProducts, setBestSellingProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [bannersRes, blogsRes, categoriesRes] = await Promise.all([
+        setLoading(true);
+        const [bannersRes, blogsRes, categoriesRes, productsRes] = await Promise.all([
           api.getBanners(),
           api.getBlogs(),
-          api.getCategories()
+          api.getCategories(),
+          api.getProducts({ limit: 12 })
         ]);
         if (bannersRes.data && bannersRes.data.banners) {
           setBanners(bannersRes.data.banners);
@@ -182,8 +189,15 @@ export default function Home() {
         if (categoriesRes.data && categoriesRes.data.categories) {
           setCategories(categoriesRes.data.categories.filter(c => c.isActive));
         }
+        if (productsRes.data && productsRes.data.products) {
+          const prods = productsRes.data.products;
+          setFeaturedProducts(prods.slice(0, 3));
+          setBestSellingProducts(prods.slice(3, 11));
+        }
       } catch (error) {
         console.error('Failed to fetch data', error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -233,48 +247,64 @@ export default function Home() {
       )}
 
       {/* ─────────────────────────────────────────────────────────────
-          1. HERO SECTION (Full Background Image)
+          1. HERO SECTION (Ultra-Premium Carousel)
       ───────────────────────────────────────────────────────────── */}
-      <section className="relative w-full min-h-[500px] sm:min-h-[600px] lg:min-h-[700px] flex items-center bg-gray-900 overflow-hidden">
+      <section className="relative w-full min-h-[85vh] lg:min-h-[90vh] flex items-center bg-[#0F172A] overflow-hidden">
         {banners.length > 0 ? (
           banners.map((banner, index) => (
             <div 
               key={banner._id || index}
-              className={`absolute inset-0 transition-opacity duration-1000 ${index === currentBanner ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+              className={`absolute inset-0 transition-all duration-[1200ms] ease-in-out ${index === currentBanner ? 'opacity-100 z-10 scale-100' : 'opacity-0 z-0 scale-105'}`}
             >
-              <div 
-                className="absolute inset-0 z-0"
-                style={{ 
-                  background: banner.image 
-                    ? `url(${banner.image.startsWith('http') ? banner.image : `${BASE_URL}${banner.image}`})`
-                    : banner.gradient || 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center'
-                }}
-              >
-                {/* Gradient overlay for text readability */}
-                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 lg:via-black/20 to-transparent"></div>
+              {/* Background Image & Multi-layer Overlay */}
+              <div className="absolute inset-0 z-0">
+                <img 
+                  src={banner.image?.startsWith('http') ? banner.image : `${BASE_URL}${banner.image}`} 
+                  alt={banner.title}
+                  className="w-full h-full object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 via-gray-900/70 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0F172A]/80"></div>
               </div>
 
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full h-full flex items-center">
-                <div className="max-w-2xl text-white">
+              {/* Foreground Content */}
+              <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 relative z-10 w-full h-full flex items-center">
+                <div className="max-w-2xl text-white transform transition-all duration-[1200ms] delay-300">
                   {banner.subtitle && (
-                    <span className="font-bold text-[11px] xs:text-xs sm:text-sm uppercase tracking-wider text-white bg-white/20 border border-white/30 px-3 xs:px-3.5 py-1 rounded-full mb-3 sm:mb-4 inline-block backdrop-blur-sm">
-                      {banner.subtitle}
-                    </span>
+                    <div className="flex items-center gap-3 mb-5">
+                      <span className="w-10 h-[2px] bg-[#E050D0]"></span>
+                      <span className="font-extrabold text-[11px] sm:text-xs uppercase tracking-[0.2em] text-[#E050D0]">
+                        {banner.subtitle}
+                      </span>
+                    </div>
                   )}
-                  <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-extrabold tracking-tight leading-[1.1] mb-4 sm:mb-6">
-                    {banner.title}
+                  
+                  <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[84px] font-extrabold tracking-tight leading-[1.05] mb-6 drop-shadow-sm font-display">
+                    {banner.title.split(' ').map((word, i, arr) => (
+                      <span key={i} className={i === arr.length - 1 ? "text-[#E050D0]" : ""}>{word} </span>
+                    ))}
                   </h1>
-                  <p className="text-sm xs:text-base sm:text-lg text-white/90 leading-relaxed max-w-xl mb-6 sm:mb-8 font-medium drop-shadow-md">
+                  
+                  <p className="text-sm sm:text-lg text-white/80 leading-relaxed max-w-lg mb-8 font-medium border-l-2 border-white/20 pl-4">
                     Handcrafted natural pine stands, chewable play gyms, and safe perches designed for parrots, cockatiels, budgies, and feathered friends.
                   </p>
-                  <div>
+                  
+                  <div className="flex flex-wrap items-center gap-4">
                     <button
                       onClick={() => navigate(banner.buttonLink || '/products')}
-                      className="inline-flex items-center justify-center font-bold text-xs xs:text-sm sm:text-base bg-[#E050D0] hover:bg-[#c945ba] text-white px-8 xs:px-10 py-3.5 sm:py-4 rounded-full transition-all duration-200 active:scale-95 shadow-lg hover:shadow-xl cursor-pointer"
+                      className="inline-flex items-center justify-center font-extrabold text-sm bg-white hover:bg-gray-100 text-gray-900 px-10 py-4 rounded-full transition-all duration-300 active:scale-95 shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:shadow-[0_8px_40px_rgb(224,80,208,0.3)] cursor-pointer group"
                     >
-                      {banner.buttonText || 'Shop Now'}
+                      {banner.buttonText || 'Shop Collection'}
+                      <ArrowRight size={16} className="ml-2 group-hover:translate-x-1.5 transition-transform" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        const target = document.getElementById('featured-products');
+                        if(target) target.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      className="inline-flex items-center justify-center font-extrabold text-sm text-white px-8 py-4 rounded-full transition-all duration-300 hover:bg-white/10 active:scale-95 cursor-pointer backdrop-blur-sm"
+                    >
+                      View Best Sellers
                     </button>
                   </div>
                 </div>
@@ -283,36 +313,41 @@ export default function Home() {
           ))
         ) : (
           /* Fallback Original Hero */
-          <div className="absolute inset-0 z-10">
+          <div className="absolute inset-0 z-10 scale-100">
             <div className="absolute inset-0 z-0">
               <img
                 src="/assets/herobackground.png"
                 alt="Hero Background"
                 className="w-full h-full object-cover object-right sm:object-center"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 lg:via-black/20 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 via-gray-900/70 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0F172A]/80"></div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full h-full flex items-center">
+            <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 relative z-10 w-full h-full flex items-center">
               <div className="max-w-2xl text-white">
-                <span className="font-bold text-[11px] xs:text-xs sm:text-sm uppercase tracking-wider text-white bg-white/20 border border-white/30 px-3 xs:px-3.5 py-1 rounded-full mb-3 sm:mb-4 inline-block backdrop-blur-sm">
-                  Bird Shop &amp; Toys
-                </span>
+                <div className="flex items-center gap-3 mb-5">
+                  <span className="w-10 h-[2px] bg-[#E050D0]"></span>
+                  <span className="font-extrabold text-[11px] sm:text-xs uppercase tracking-[0.2em] text-[#E050D0]">
+                    Bird Shop &amp; Toys
+                  </span>
+                </div>
 
-                <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-extrabold tracking-tight leading-[1.1] mb-4 sm:mb-6">
-                  A bird store with everything they need
+                <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[84px] font-extrabold tracking-tight leading-[1.05] mb-6 drop-shadow-sm font-display">
+                  Everything they <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#E050D0] to-[#FBA8FA]">need.</span>
                 </h1>
 
-                <p className="text-sm xs:text-base sm:text-lg text-white/90 leading-relaxed max-w-xl mb-6 sm:mb-8 font-medium drop-shadow-md">
+                <p className="text-sm sm:text-lg text-white/80 leading-relaxed max-w-lg mb-8 font-medium border-l-2 border-white/20 pl-4">
                   Handcrafted natural pine stands, chewable play gyms, and safe perches designed for parrots, cockatiels, budgies, and feathered friends.
                 </p>
 
-                <div>
+                <div className="flex flex-wrap items-center gap-4">
                   <button
                     onClick={() => navigate('/products')}
-                    className="inline-flex items-center justify-center font-bold text-xs xs:text-sm sm:text-base bg-[#E050D0] hover:bg-[#c945ba] text-white px-8 xs:px-10 py-3.5 sm:py-4 rounded-full transition-all duration-200 active:scale-95 shadow-lg hover:shadow-xl cursor-pointer"
+                    className="inline-flex items-center justify-center font-extrabold text-sm bg-white hover:bg-gray-100 text-gray-900 px-10 py-4 rounded-full transition-all duration-300 active:scale-95 shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:shadow-[0_8px_40px_rgb(224,80,208,0.3)] cursor-pointer group"
                   >
-                    Shop Now
+                    Shop Collection
+                    <ArrowRight size={16} className="ml-2 group-hover:translate-x-1.5 transition-transform" />
                   </button>
                 </div>
               </div>
@@ -322,122 +357,97 @@ export default function Home() {
         
         {/* Navigation Dots if multiple banners */}
         {banners.length > 1 && (
-          <div className="absolute bottom-6 left-0 right-0 z-20 flex justify-center gap-2">
+          <div className="absolute bottom-10 left-0 right-0 z-20 flex justify-center gap-3">
             {banners.map((_, idx) => (
               <button 
                 key={idx}
                 onClick={() => setCurrentBanner(idx)}
-                className={`w-3 h-3 rounded-full transition-all ${idx === currentBanner ? 'bg-[#E050D0] scale-110' : 'bg-white/50 hover:bg-white/80'}`}
-              />
+                className={`w-12 h-1.5 rounded-full transition-all duration-500 overflow-hidden bg-white/30`}
+              >
+                <div 
+                  className="h-full bg-[#E050D0] transition-all duration-[5000ms] ease-linear"
+                  style={{ width: idx === currentBanner ? '100%' : '0%' }}
+                />
+              </button>
             ))}
           </div>
         )}
       </section>
 
 
+
+
       {/* ─────────────────────────────────────────────────────────────
-          3. FEATURED PRODUCTS (Matching Mockup with Real Product Photos)
+          2. CATEGORIES SECTION
       ───────────────────────────────────────────────────────────── */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+      {categories.length > 0 && (
+        <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 bg-white">
+          <div className="flex items-center justify-between mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold tracking-tight text-gray-900">
+              Shop by Category
+            </h2>
+            <button onClick={() => navigate('/products')} className="text-sm font-bold text-[#E050D0] hover:text-gray-900 transition-colors flex items-center gap-1">
+              View All <ArrowRight size={16} />
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
+            {categories.map((cat) => (
+              <div 
+                key={cat._id}
+                onClick={() => navigate(`/products?category=${encodeURIComponent(cat.name)}`)}
+                className="group cursor-pointer flex flex-col items-center text-center"
+              >
+                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-gray-100 mb-4 border-4 border-transparent group-hover:border-[#E050D0]/20 transition-all duration-300 group-hover:shadow-lg relative">
+                  <img 
+                    src={cat.image || '/assets/placeholder-category.png'} 
+                    alt={cat.name}
+                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+                <h3 className="font-extrabold text-sm sm:text-base text-gray-900 group-hover:text-[#E050D0] transition-colors">
+                  {cat.name}
+                </h3>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+
+      {/* ─────────────────────────────────────────────────────────────
+          3. FEATURED PRODUCTS (Using Real ProductCard)
+      ───────────────────────────────────────────────────────────── */}
+      <section id="featured-products" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
         <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold tracking-tight text-gray-900 text-center mb-8 sm:mb-14">
           Featured products
         </h2>
 
-        {/* 3 Product Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-8">
-          {FEATURED_PRODUCTS.map((prod) => {
-
-            return (
-              <div
-                key={prod.id}
-                onClick={() => navigate('/products')}
-                className="bg-[#F8F9FA] rounded-[24px] sm:rounded-[28px] p-5 sm:p-7 border border-gray-100/90 relative group flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 cursor-pointer"
-              >
-                {/* Product Photo */}
-                <div className="py-4 sm:py-8 flex items-center justify-center h-44 sm:h-56">
-                  <img
-                    src={prod.image}
-                    alt={prod.name}
-                    className="max-h-full max-w-full object-contain transform group-hover:scale-105 transition-transform duration-300 drop-shadow-sm"
-                  />
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-8">
+            {Array.from({ length: 3 }).map((_, idx) => (
+              <div key={idx} className="bg-card rounded-lg p-3 sm:p-5 border shadow-sm relative flex flex-col justify-between">
+                <Skeleton className="w-full aspect-square rounded-md mb-3" />
+                <div className="pt-2 flex flex-col justify-between border-t border-border/50 gap-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/4" />
                 </div>
-
-                {/* Footer Content: Title + Price on left, Pink Heart on right */}
-                <div className="pt-3 sm:pt-4 flex items-end justify-between border-t border-gray-200/50 mt-2">
-                  <div>
-                    <h3 className="font-bold text-sm sm:text-base text-gray-900 group-hover:text-[#E050D0] transition-colors leading-tight mb-1">
-                      {prod.name}
-                    </h3>
-                    <p className="font-extrabold text-sm sm:text-base text-gray-900">
-                      ₹{prod.price.toFixed(2)}
-                    </p>
-                  </div>
-
-                </div>
-
-                {/* Quick Add (Visible on Mobile Touch, Hover on Desktop) */}
-                <div className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 mt-3">
-                  <button
-                    onClick={(e) => handleQuickAdd(prod, e)}
-                    className="w-full py-2.5 rounded-full bg-black hover:bg-neutral-800 text-white text-xs font-bold transition-all shadow-sm active:scale-95 cursor-pointer"
-                  >
-                    Add to Cart
-                  </button>
+                <div className="mt-3">
+                  <Skeleton className="h-9 w-full rounded-md" />
                 </div>
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-8">
+            {featuredProducts.map((prod) => (
+              <ProductCard key={prod._id || prod.id} product={prod} onToast={setAddedToast} />
+            ))}
+          </div>
+        )}
       </section>
 
-      {/* ─────────────────────────────────────────────────────────────
-          4. THE SMARTER WAY TO CARE (Pink Blob + Child & Birds on Wooden Gym)
-      ───────────────────────────────────────────────────────────── */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-20 overflow-hidden">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
 
-          {/* Left Column: Organic Pink Blob with Real Bird Toy Lifestyle Photography */}
-          <div className="lg:col-span-6 flex items-center justify-center order-2 lg:order-1">
-            <div className="relative w-full max-w-[360px] sm:max-w-[460px] aspect-[4/3] sm:aspect-square flex items-center justify-center">
-              {/* Soft Pink Organic Shape */}
-              <div className="absolute inset-0 bg-[#E050D0] rounded-[55%_45%_38%_62%/48%_60%_40%_52%] transform rotate-3 transition-transform duration-700 hover:rotate-0" />
-              {/* Real Bird Lifestyle Photo */}
-              <div className="relative z-10 w-[90%] h-[90%] rounded-[50%_50%_45%_55%/52%_48%_52%_48%] overflow-hidden shadow-2xl border-4 border-white bg-white">
-                <img
-                  src="/assets/asset-b8e1a86b.jpeg"
-                  alt="Pet birds playing on handcrafted wooden gym stand"
-                  className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: Copy & CTA */}
-          <div className="lg:col-span-6 flex flex-col items-start order-1 lg:order-2">
-            <span className="font-bold text-xs sm:text-sm uppercase tracking-wider text-[#E050D0] mb-2 sm:mb-3 inline-block">
-              Avian Enrichment
-            </span>
-
-            <h2 className="text-2xl xs:text-3xl sm:text-4xl lg:text-[46px] font-extrabold tracking-tight text-gray-900 leading-[1.15] mb-3 sm:mb-5">
-              The smarter way to care for your bird
-            </h2>
-
-            <p className="text-xs xs:text-sm sm:text-base md:text-lg text-gray-500 leading-relaxed max-w-xl mb-6 sm:mb-8">
-              Handmade non-toxic pine play gyms, swings, and foraging puzzles crafted to encourage natural climbing, foraging, and active exercise for birds of all sizes.
-            </p>
-
-            <div>
-              <button
-                onClick={() => navigate('/about')}
-                className="inline-flex items-center justify-center font-bold text-xs xs:text-sm sm:text-base bg-black hover:bg-neutral-800 text-white px-7 xs:px-9 py-3 sm:py-3.5 rounded-full transition-all duration-200 active:scale-95 shadow-md hover:shadow-lg cursor-pointer"
-              >
-                Learn More
-              </button>
-            </div>
-          </div>
-
-        </div>
-      </section>
 
       {/* ─────────────────────────────────────────────────────────────
           5. BRAND PARTNERS ROW (5 Icons in Pink Theme)
@@ -447,65 +457,43 @@ export default function Home() {
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          6. BEST SELLING PRODUCTS (8 Real Product Photos Grid)
+          6. BEST SELLING PRODUCTS (Real Product Cards)
       ───────────────────────────────────────────────────────────── */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-20">
         <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold tracking-tight text-gray-900 text-center mb-8 sm:mb-14">
           Best selling products
         </h2>
 
-        {/* 8 Product Cards Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
-          {BEST_SELLING_PRODUCTS.map((prod) => {
-
-            return (
-              <div
-                key={prod.id}
-                onClick={() => navigate('/products')}
-                className="bg-[#F8F9FA] rounded-[20px] sm:rounded-[28px] p-3 xs:p-4 sm:p-6 border border-gray-100/90 relative group flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 cursor-pointer"
-              >
-                {/* Product Photo Center */}
-                <div className="py-2 sm:py-6 flex items-center justify-center h-28 xs:h-36 sm:h-44">
-                  <img
-                    src={prod.image}
-                    alt={prod.name}
-                    className="max-h-full max-w-full object-contain transform group-hover:scale-105 transition-transform duration-300 drop-shadow-sm"
-                  />
+        {loading ? (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
+            {Array.from({ length: 8 }).map((_, idx) => (
+              <div key={idx} className="bg-card rounded-lg p-3 sm:p-5 border shadow-sm relative flex flex-col justify-between">
+                <Skeleton className="w-full aspect-square rounded-md mb-3" />
+                <div className="pt-2 flex flex-col justify-between border-t border-border/50 gap-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/4" />
                 </div>
-
-                {/* Footer Content: Name, Price, Heart */}
-                <div className="pt-2 sm:pt-4 flex items-end justify-between border-t border-gray-200/50">
-                  <div className="pr-1">
-                    <h3 className="font-bold text-xs sm:text-sm text-gray-900 group-hover:text-[#E050D0] transition-colors leading-tight mb-0.5 sm:mb-1 line-clamp-1">
-                      {prod.name}
-                    </h3>
-                    <p className="font-extrabold text-xs sm:text-sm text-gray-900">
-                      ₹{prod.price.toFixed(2)}
-                    </p>
-                  </div>
-
-                </div>
-
-                {/* Quick Add (Visible on Mobile Touch, Hover on Desktop) */}
-                <div className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 mt-2">
-                  <button
-                    onClick={(e) => handleQuickAdd(prod, e)}
-                    className="w-full py-1.5 sm:py-2 rounded-full bg-black hover:bg-neutral-800 text-white text-[10px] sm:text-[11px] font-bold transition-all shadow-sm active:scale-95 cursor-pointer"
-                  >
-                    Add to Cart
-                  </button>
+                <div className="mt-3">
+                  <Skeleton className="h-9 w-full rounded-md" />
                 </div>
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
+            {bestSellingProducts.map((prod) => (
+              <ProductCard key={prod._id || prod.id} product={prod} onToast={setAddedToast} />
+            ))}
+          </div>
+        )}
       </section>
 
 
 
       {/* ─────────────────────────────────────────────────────────────
-          7.5. TESTIMONIALS (Customer Reviews)
+          7.5. TESTIMONIALS (Customer Reviews) - DISABLED (DEMO DATA)
       ───────────────────────────────────────────────────────────── */}
+      {/* 
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
           <span className="inline-block px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#E050D0]/10 text-[#E050D0] mb-3">
@@ -561,6 +549,7 @@ export default function Home() {
           ))}
         </div>
       </section>
+      */}
 
       {/* ─────────────────────────────────────────────────────────────
           8. NEWS & BLOG (3 Real Lifestyle Cards)
