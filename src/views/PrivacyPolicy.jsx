@@ -50,7 +50,7 @@ const PrivacyPolicy = () => {
           </Section>
 
           <Section title="6. Contact Us">
-            <p>support@poonchpetstore.com<br />+1 (800) 123-4567<br />123 Pet Care Way, Suite A, City, State, ZIP</p>
+            <p>support@poonchpetstore.com<br />+91 7088202122<br />Jai Devi Nagar, Garh Road , Meerut</p>
           </Section>
         </div>
       </div>

@@ -183,15 +183,15 @@ const Navbar = () => {
           {/* Left: Phone & Email */}
           <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-3 sm:gap-6">
             <a
-              href="tel:+18001234567"
+              href="tel:+917088202122"
               className="flex items-center gap-1.5 hover:text-[#E050D0] transition-colors whitespace-nowrap"
             >
               <Phone size={13} className="text-gray-900 shrink-0" />
-              <span className="font-medium">+1 (800) 123-4567</span>
+              <span className="font-medium">+91 7088202122</span>
             </a>
             <span className="text-gray-300 sm:hidden">•</span>
             <a
-              href="mailto:support@poonchpetstore.com"
+              href="mailto:[EMAIL_ADDRESS]"
               className="flex items-center gap-1.5 hover:text-[#E050D0] transition-colors truncate"
             >
               <Mail size={13} className="text-gray-900 shrink-0" />
@@ -204,7 +204,7 @@ const Navbar = () => {
           {/* Right: Address (Desktop/Tablet) */}
           <div className="hidden md:flex items-center gap-1.5 text-gray-700 shrink-0">
             <MapPin size={13} className="text-gray-900 shrink-0" />
-            <span className="font-medium truncate">123 Pet Care Way, Suite A, City, State, ZIP</span>
+            <span className="font-medium truncate">Jai Devi Nagar, Garh Road , Meerut</span>
           </div>
         </div>
       </div>

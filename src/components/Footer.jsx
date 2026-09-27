@@ -160,11 +160,11 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3 text-xs sm:text-sm text-muted-foreground">
               <li className="leading-snug">
-                123 Pet Care Way, Suite A, City, State, ZIP
+                Jai Devi Nagar, Garh Road , Meerut
               </li>
               <li>
-                <a href="tel:+18001234567" className="hover:text-primary transition-colors font-medium">
-                  +1 (800) 123-4567
+                <a href="tel:+917088202122" className="hover:text-primary transition-colors font-medium">
+                  +91 7088202122
                 </a>
               </li>
               <li>

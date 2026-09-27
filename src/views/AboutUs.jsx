@@ -90,8 +90,8 @@ const AboutUs = () => {
               <a href="mailto:support@poonchpetstore.com" className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-slate-700 bg-slate-900 text-slate-100 hover:bg-slate-800 h-11 px-8 w-full sm:w-auto">
                 support@poonchpetstore.com
               </a>
-              <a href="tel:+18001234567" className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8 w-full sm:w-auto">
-                +1 (800) 123-4567
+              <a href="tel:+917088202122" className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8 w-full sm:w-auto">
+                +91 7088202122
               </a>
             </div>
           </div>

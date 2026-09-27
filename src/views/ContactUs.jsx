@@ -216,7 +216,7 @@ export default function ContactUs() {
                     <MapPin size={18} />
                   </div>
                   <span className="font-medium text-sm sm:text-base text-foreground">
-                    123 Pet Care Way, Suite A, City, State, ZIP
+                    Jai Devi Nagar, Garh Road , Meerut
                   </span>
                 </div>
 
@@ -239,10 +239,10 @@ export default function ContactUs() {
                     <Phone size={18} />
                   </div>
                   <a
-                    href="tel:+18001234567"
+                    href="tel:+917088202122"
                     className="font-medium text-sm sm:text-base text-foreground hover:underline transition-colors"
                   >
-                    +1 (800) 123-4567
+                    +91 7088202122
                   </a>
                 </div>
 

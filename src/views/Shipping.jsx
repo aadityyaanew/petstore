@@ -77,7 +77,7 @@ const Shipping = () => {
             Once your Poonch Pet Store order has been dispatched, you'll receive an email with your tracking number and carrier link. 
             Please allow up to <strong>24 hours</strong> for updates. If you haven't received tracking within 5 business days, contact us at{' '}
             <a href="mailto:support@poonchpetstore.com" className="text-brand-pink font-semibold hover:underline">support@poonchpetstore.com</a> or call{' '}
-            <a href="tel:+18001234567" className="text-brand-pink font-semibold hover:underline">+1 (800) 123-4567</a>.
+            <a href="tel:+917088202122" className="text-brand-pink font-semibold hover:underline">+91 7088202122</a>.
           </p>
         </div>
       </div>

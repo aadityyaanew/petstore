@@ -4,7 +4,7 @@ import { MapPin, Navigation, ExternalLink, Copy, Check, Clock, Phone } from 'luc
 
 export default function StoreMap() {
   const [copied, setCopied] = useState(false);
-  const address = '123 Pet Care Way, Suite A, City, State, ZIP';
+  const address = 'Jai Devi Nagar, Garh Road , Meerut';
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 
   const handleCopy = () => {
@@ -20,7 +20,7 @@ export default function StoreMap() {
         {/* OpenStreetMap Interactive Iframe */}
         <iframe
           title="Poonch Pet Store Location"
-          src="https://www.openstreetmap.org/export/embed.html?bbox=-84.3200%2C30.4200%2C-84.2400%2C30.4700&amp;layer=mapnik"
+          src={`https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
           className="w-full h-full border-0 filter contrast-[1.02] brightness-[1.01]"
           loading="lazy"
         />
@@ -72,7 +72,7 @@ export default function StoreMap() {
             Poonch Pet Store Flagship Location
           </p>
           <p className="text-[11px] sm:text-xs text-gray-500 mt-0.5 leading-snug line-clamp-1 sm:line-clamp-none">
-            123 Pet Care Way, Suite A, City, State, ZIP
+            Jai Devi Nagar, Garh Road , Meerut
           </p>
         </div>
 

@@ -52,11 +52,11 @@ export default function Blog() {
           onClick={() => navigate(`/blog/${latestPost._id}`)}
           className="group cursor-pointer bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-[0_16px_40px_rgba(224,80,208,0.15)] hover:-translate-y-1 transition-all duration-300 border border-gray-100 grid grid-cols-1 lg:grid-cols-2"
         >
-          <div className="relative h-64 sm:h-80 lg:h-full overflow-hidden bg-gray-100">
+          <div className="relative h-64 sm:h-80 lg:h-full overflow-hidden bg-white">
             <img 
               src={latestPost.image} 
               alt={latestPost.title}
-              className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+              className="w-full h-full object-contain p-4 transform group-hover:scale-105 transition-transform duration-700"
             />
             <div className="absolute top-6 left-6 bg-black text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-md">
               Latest Post
@@ -101,11 +101,11 @@ export default function Blog() {
               onClick={() => navigate(`/blog/${post._id}`)}
               className="bg-white rounded-[24px] sm:rounded-[28px] overflow-hidden border border-gray-100 shadow-[0_2px_15px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_32px_rgba(224,80,208,0.12)] hover:-translate-y-1.5 transition-all duration-300 group cursor-pointer flex flex-col"
             >
-              <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
+              <div className="relative aspect-[16/10] overflow-hidden bg-white">
                 <img 
                   src={post.image} 
                   alt={post.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-gray-900 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
                   {post.tag}

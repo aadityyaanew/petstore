@@ -71,8 +71,8 @@ const Returns = () => {
               support@poonchpetstore.com
             </a>
             <span className="hidden sm:inline text-brand-pink/40">|</span>
-            <a href="tel:+18001234567" className="hover:underline">
-              +1 (800) 123-4567
+            <a href="tel:+917088202122" className="hover:underline">
+              +91 7088202122
             </a>
           </div>
         </div>
