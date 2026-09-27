@@ -22,6 +22,7 @@ const ProductDetails = () => {
   const [expandedFaq, setExpandedFaq] = useState(null);
   const [activeTab, setActiveTab] = useState('description');
   const [selectedVariant, setSelectedVariant] = useState(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   // Review states
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -36,6 +37,7 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true);
+      setActiveImageIndex(0);
       try {
         const res = await api.getProductById(id);
         setProduct(res.data);
@@ -138,6 +140,34 @@ const ProductDetails = () => {
     return reviewerId && currentUserId && reviewerId === currentUserId;
   });
 
+  const resolveSingleImageUrl = (img) => {
+    if (typeof img === 'string' && img !== '[object Object]') {
+      return img.startsWith('http') || img.startsWith('/') ? img : `${BASE_URL}${img}`;
+    }
+    if (typeof img === 'object' && img !== null) {
+      if (typeof img.url === 'string' && img.url !== '[object Object]') {
+        return img.url.startsWith('http') || img.url.startsWith('/') ? img.url : `${BASE_URL}${img.url}`;
+      }
+      const rawObj = img._doc || img;
+      const chars = Object.keys(rawObj)
+        .filter((k) => !isNaN(k))
+        .sort((a, b) => Number(a) - Number(b))
+        .map((k) => rawObj[k])
+        .join('');
+      if (chars && chars.length > 2) {
+        return chars.startsWith('http') || chars.startsWith('/') ? chars : `${BASE_URL}${chars}`;
+      }
+    }
+    return null;
+  };
+
+  const rawImageList = Array.isArray(product.images) && product.images.length > 0
+    ? product.images
+    : (product.image ? [product.image] : []);
+
+  const imageList = rawImageList.map(resolveSingleImageUrl).filter(Boolean);
+  const activeImage = imageList[activeImageIndex] || imageList[0] || getProductImageUrl(product);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 bg-gray-50/30">
       
@@ -148,19 +178,27 @@ const ProductDetails = () => {
         <div className="flex flex-col gap-4">
           <div className="bg-gray-50 rounded-2xl border border-border flex items-center justify-center aspect-square overflow-hidden relative">
             <img 
-              src={getProductImageUrl(product)} 
+              src={activeImage} 
               alt={product.name}
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
             />
             {product.isFeatured && <Badge variant="pink" className="absolute top-4 left-4 shadow-md">Featured</Badge>}
             {product.isNewArrival && <Badge className="absolute top-4 right-4 bg-black shadow-md">New Arrival</Badge>}
           </div>
-          {/* Thumbnails if > 1 image */}
-          {product.images?.length > 1 && (
+          {/* Interactive Thumbnails */}
+          {imageList.length > 1 && (
             <div className="grid grid-cols-5 gap-3">
-              {product.images.map((img, i) => (
-                <div key={i} className="aspect-square bg-gray-50 rounded-xl border border-border overflow-hidden cursor-pointer hover:border-brand-pink">
-                  <img src={typeof img === 'object' ? img.url : img} alt="" className="w-full h-full object-cover" />
+              {imageList.map((imgUrl, i) => (
+                <div 
+                  key={i} 
+                  onClick={() => setActiveImageIndex(i)}
+                  className={`aspect-square bg-gray-50 rounded-xl border-2 overflow-hidden cursor-pointer transition-all duration-200 ${
+                    activeImageIndex === i
+                      ? 'border-brand-pink ring-2 ring-brand-pink/30 scale-105 shadow-sm'
+                      : 'border-border hover:border-brand-pink/60 opacity-80 hover:opacity-100'
+                  }`}
+                >
+                  <img src={imgUrl} alt={`${product.name} ${i + 1}`} className="w-full h-full object-cover" />
                 </div>
               ))}
             </div>
