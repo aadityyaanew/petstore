@@ -25,7 +25,14 @@ export async function POST(req) {
       );
     }
 
-    const isMatch = await user.matchPassword(password);
+    // For the admin account, use the password set in .env
+    let isMatch = false;
+    const isAdminEmail = email === process.env.ADMIN_EMAIL;
+    if (isAdminEmail && process.env.ADMIN_PASSWORD) {
+      isMatch = password === process.env.ADMIN_PASSWORD;
+    } else {
+      isMatch = await user.matchPassword(password);
+    }
 
     if (!isMatch) {
       return NextResponse.json(
