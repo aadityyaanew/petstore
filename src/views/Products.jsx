@@ -27,6 +27,7 @@ export default function Products() {
 
   // Database Products
   const [dbProducts, setDbProducts] = useState([]);
+  const [dbCategories, setDbCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Dynamic Filters Computed from dbProducts
@@ -37,8 +38,11 @@ export default function Products() {
         cats[p.category] = (cats[p.category] || 0) + 1;
       }
     });
-    return Object.keys(cats).map(cat => ({ id: cat, label: cat, count: cats[cat] })).sort((a, b) => b.count - a.count);
-  }, [dbProducts]);
+    return dbCategories
+      .filter(c => c.isActive)
+      .map(cat => ({ id: cat.name, label: cat.name, count: cats[cat.name] || 0 }))
+      .sort((a, b) => b.count - a.count);
+  }, [dbProducts, dbCategories]);
 
   const dynamicTags = useMemo(() => {
     const tagSet = new Set();
@@ -65,11 +69,15 @@ export default function Products() {
     const fetchProductsData = async () => {
       try {
         setLoading(true);
-        const res = await api.getProducts({ limit: 100 });
+        const [res, catsRes] = await Promise.all([
+          api.getProducts({ limit: 100 }),
+          api.getCategories()
+        ]);
         const list = res.data?.products || [];
         if (list.length > 0) {
           setDbProducts(list);
         }
+        setDbCategories(catsRes.data?.categories || []);
       } catch (err) {
         console.error('Failed to load products from database:', err);
       } finally {

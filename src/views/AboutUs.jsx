@@ -34,11 +34,11 @@ const AboutUs = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
         {/* Story Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-16 items-center mb-20 sm:mb-28">
-          <div className="order-2 lg:order-1 mt-6 lg:mt-0 relative aspect-[4/3] w-full rounded-2xl overflow-hidden border bg-muted shadow-sm">
+          <div className="order-2 lg:order-1 mt-6 lg:mt-0 relative w-full max-w-sm mx-auto lg:max-w-md rounded-2xl overflow-hidden border bg-muted shadow-sm flex items-center justify-center">
             <img
-              src="/assets/categories/bags.jpg"
+              src="/assets/asset-9764e424.jpeg"
               alt="Poonch Pet Store Story"
-              className="w-full h-full object-cover"
+              className="w-full h-auto object-contain"
             />
           </div>
           

@@ -148,11 +148,7 @@ const ProductCard = ({ product, onToast }) => {
 
       {/* Title & Category */}
       <div className="flex flex-col flex-1 px-1">
-        {product.category && (
-          <span className="text-[10px] sm:text-[11px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5">
-            {product.category}
-          </span>
-        )}
+
         <h3 className="font-semibold text-sm sm:text-[15px] text-foreground line-clamp-2 leading-tight group-hover:text-primary transition-colors mb-3">
           {product.title || product.name}
         </h3>
