@@ -78,7 +78,17 @@ const Checkout = () => {
   const handlePlaceOrder = async () => {
     try {
       const itemsPrice = calculateTotal();
-      const shippingPrice = itemsPrice > 100 ? 0 : 10;
+      let shippingPrice = 0;
+      if (itemsPrice <= 100) {
+        shippingPrice = cart.items.reduce((acc, item) => {
+          const product = item.product?._id ? item.product : item; // Fallback just in case
+          if (product && !product.shipping?.freeShipping) {
+            const charge = Number(product.shipping?.shippingCharge);
+            return acc + (isNaN(charge) || charge === 0 ? 10 : charge) * item.quantity;
+          }
+          return acc;
+        }, 0);
+      }
       const discountAmount = appliedCoupon?.discountAmount || 0;
       const totalPrice = itemsPrice + shippingPrice - discountAmount;
 
@@ -194,7 +204,17 @@ const Checkout = () => {
   }
 
   const itemsPrice = calculateTotal();
-  const shippingPrice = itemsPrice > 100 ? 0 : 10;
+  let shippingPrice = 0;
+  if (itemsPrice <= 100) {
+    shippingPrice = cart.items.reduce((acc, item) => {
+      const product = item.product?._id ? item.product : item;
+      if (product && !product.shipping?.freeShipping) {
+        const charge = Number(product.shipping?.shippingCharge);
+        return acc + (isNaN(charge) || charge === 0 ? 10 : charge) * item.quantity;
+      }
+      return acc;
+    }, 0);
+  }
   const discountAmount = appliedCoupon?.discountAmount || 0;
 
   return (
@@ -364,7 +384,7 @@ const Checkout = () => {
               </div>
               <div className="flex justify-between">
                 <span>Shipping:</span>
-                <span className="font-medium">₹{shippingPrice.toFixed(2)}</span>
+                <span className="font-medium">{shippingPrice === 0 ? 'Free' : `₹${shippingPrice.toFixed(2)}`}</span>
               </div>
               {appliedCoupon && (
                 <div className="flex justify-between text-emerald-600 font-medium">

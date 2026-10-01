@@ -19,6 +19,7 @@ export const createOrder = async (userId, { shippingAddress, paymentMethod, item
 
   // ── Step 1: Validate stock & recalculate prices from database ─────────────
   let calculatedItemsPrice = 0;
+  let baseShippingPrice = 0;
   for (const item of items) {
     const product = await Product.findById(item.product);
     if (!product) {
@@ -37,9 +38,14 @@ export const createOrder = async (userId, { shippingAddress, paymentMethod, item
     item.price = product.price;
     item.name = product.name;
     calculatedItemsPrice += product.price * item.quantity;
+
+    if (!product.shipping?.freeShipping) {
+      const charge = Number(product.shipping?.shippingCharge);
+      baseShippingPrice += (isNaN(charge) || charge === 0 ? 10 : charge) * item.quantity;
+    }
   }
 
-  const serverShippingPrice = calculatedItemsPrice > 100 ? 0 : 10;
+  const serverShippingPrice = calculatedItemsPrice > 100 ? 0 : baseShippingPrice;
   let serverDiscountAmount = 0;
 
   if (couponCode) {

@@ -16,8 +16,21 @@ const Cart = () => {
 
   const cartItems = cart?.items || [];
   const subtotal = cart?.totalPrice || 0;
+  
+  let shippingPrice = 0;
+  if (subtotal <= 100) {
+    shippingPrice = cartItems.reduce((acc, item) => {
+      const product = (typeof item.product === 'object' && item.product !== null) ? item.product : {};
+      if (product._id && !product.shipping?.freeShipping) {
+        const charge = Number(product.shipping?.shippingCharge);
+        return acc + (isNaN(charge) || charge === 0 ? 10 : charge) * item.quantity;
+      }
+      return acc;
+    }, 0);
+  }
+
   const tax = subtotal * 0.08;
-  const total = subtotal + tax;
+  const total = subtotal + tax + shippingPrice;
 
   const handleUpdateQuantity = async (productId, currentQuantity, change) => {
     const newQuantity = currentQuantity + change;
@@ -145,7 +158,7 @@ const Cart = () => {
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
-                  <span className="font-semibold text-white">Free</span>
+                  <span className="font-semibold text-white">{shippingPrice === 0 ? 'Free' : `₹${shippingPrice.toFixed(2)}`}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Estimated Tax</span>
