@@ -5,7 +5,7 @@ import Product from '../models/Product.js';
  * Get a user's cart
  */
 export const getCart = async (userId) => {
-  const cart = await Cart.findOne({ user: userId }).populate('items.product', 'name images image price stock').lean();
+  const cart = await Cart.findOne({ user: userId }).populate('items.product', 'name images image price stock shipping').lean();
   if (!cart) return { items: [], totalPrice: 0 };
 
   return {
